@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="PullCards - A medieval fantasy RPG card summoning ritual. Roll ancient dice to summon powerful creatures!">
+  <title>PullCards — RPG Card Summoning Ritual</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Screen Effect Overlays -->
+  <div class="screen-overlay" id="overlayTableA"></div>
+  <div class="screen-overlay" id="overlayTableB"></div>
+  <div class="screen-overlay" id="overlayTableC"></div>
+  <div class="screen-overlay" id="overlayTierB"></div>
+  <div class="screen-overlay" id="overlayTierA"></div>
+  <div class="screen-overlay" id="overlayCritical"></div>
+
+  <!-- Fog / Mist Layer -->
+  <div class="fog-layer" aria-hidden="true">
+    <div class="fog-layer__wisp"></div>
+    <div class="fog-layer__wisp"></div>
+    <div class="fog-layer__wisp"></div>
+  </div>
+
+  <!-- Summoning Circle -->
+  <div class="summoning-circle" id="summoningCircle" aria-hidden="true">
+    <svg class="summoning-circle__svg" viewBox="0 0 500 500">
+      <!-- Outer rings -->
+      <circle class="summoning-circle__ring" cx="250" cy="250" r="240" />
+      <circle class="summoning-circle__ring" cx="250" cy="250" r="220" stroke-dasharray="8 12" />
+      <circle class="summoning-circle__ring" cx="250" cy="250" r="180" />
+      <circle class="summoning-circle__ring" cx="250" cy="250" r="160" stroke-dasharray="4 8" />
+      <!-- Inner pentagram -->
+      <polygon class="summoning-circle__ring" points="250,70 375,360 100,170 400,170 125,360" stroke-dasharray="6 4" />
+      <!-- Inner circle -->
+      <circle class="summoning-circle__ring" cx="250" cy="250" r="100" />
+      <!-- Rune texts around the circle -->
+      <text class="summoning-circle__runes">
+        <textPath href="#runePath" startOffset="0%">☽ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᛃ ᛈ ᛇ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ ☾ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ
+        </textPath>
+      </text>
+      <defs>
+        <path id="runePath" d="M 250,250 m -200,0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0" fill="none" />
+      </defs>
+    </svg>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header__title">
+      <span class="header__title-icon">⚔️</span>PullCards
+    </h1>
+    <div class="header__coins" aria-live="polite">
+      <span class="header__coins-icon">🪙</span>
+      <span>Coins:</span>
+      <span class="header__coins-value" id="coinDisplay">100</span>
+    </div>
+  </header>
+
+  <!-- Main Stage -->
+  <main class="stage" id="stage">
+
+    <!-- Controls Zone (top area) -->
+    <div class="stage__controls">
+      <!-- Narration (always visible at top) -->
+      <div class="narration" id="narration"></div>
+
+      <!-- Step Indicator -->
+      <div class="step-indicator" id="stepIndicator">
+        <div class="step-indicator__dot" id="stepDot1"></div>
+        <div class="step-indicator__line" id="stepLine1"></div>
+        <div class="step-indicator__dot" id="stepDot2"></div>
+        <div class="step-indicator__line" id="stepLine2"></div>
+        <div class="step-indicator__dot" id="stepDot3"></div>
+      </div>
+
+      <!-- Ritual Buttons -->
+      <button class="ritual-btn ritual-btn--begin visible" id="btnBegin" type="button">
+        Begin Summoning
+        <span class="ritual-btn__sub">🪙 Offer 10 coins to the circle</span>
+      </button>
+
+      <button class="ritual-btn ritual-btn--d100" id="btnRollD100" type="button">
+        🎲 Roll the Bones
+        <span class="ritual-btn__sub">d100 — Determine which realm answers</span>
+      </button>
+
+      <button class="ritual-btn ritual-btn--d20" id="btnRollD20" type="button">
+        🎲 Roll for Quality
+        <span class="ritual-btn__sub">d20 — What power level answers your call?</span>
+      </button>
+
+      <!-- Dice Arena -->
+      <div class="dice-arena" id="diceArena">
+        <div class="dice-group" id="diceGroupD100">
+          <span class="dice-group__label">d100</span>
+          <div class="dice dice--d100" id="diceD100">
+            <div class="dice__face">?</div>
+          </div>
+          <span class="dice__result" id="resultD100"></span>
+        </div>
+        <div class="dice-group" id="diceGroupD20">
+          <span class="dice-group__label">d20</span>
+          <div class="dice dice--d20" id="diceD20">
+            <div class="dice__face">?</div>
+          </div>
+          <span class="dice__result" id="resultD20"></span>
+        </div>
+      </div>
+
+      <!-- Result Banner -->
+      <div class="result-banner" id="resultBanner">
+        <div class="result-banner__critical" id="resultCritical"></div>
+      </div>
+    </div>
+
+    <!-- Card Reveal Area (centered independently) -->
+    <div class="multi-card-area" id="cardArea"></div>
+
+  </main>
+
+  <!-- Collection Tray -->
+  <section class="collection" id="collectionSection">
+    <h2 class="collection__title">🗃️ Your Collection</h2>
+    <div class="collection__grid" id="collectionGrid">
+      <span class="collection__empty">The summoning circle awaits your first offering...</span>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="logic.js"></script>
+  <script src="sounds.js"></script>
+  <script>
+    // ============================================================
+    // PullCards – Medieval Fantasy Ritual Controller
+    // ============================================================
+    (async () => {
+      // --- Load Database ---
+      let cardsDB = [];
+      try {
+        const resp = await fetch('./cards_database.json');
+        cardsDB = await resp.json();
+      } catch (e) {
+        console.error('Failed to load cards_database.json', e);
+      }
+
+      // --- DOM ---
+      const $ = (id) => document.getElementById(id);
+      const coinDisplay = $('coinDisplay');
+      const stage = $('stage');
+      const btnBegin = $('btnBegin');
+      const btnRollD100 = $('btnRollD100');
+      const btnRollD20 = $('btnRollD20');
+      const narration = $('narration');
+      const diceArena = $('diceArena');
+      const diceGroupD100 = $('diceGroupD100');
+      const diceGroupD20 = $('diceGroupD20');
+      const diceD100 = $('diceD100');
+      const diceD20 = $('diceD20');
+      const resultD100 = $('resultD100');
+      const resultD20 = $('resultD20');
+      const resultCritical = $('resultCritical');
+      const cardArea = $('cardArea');
+      const collectionGrid = $('collectionGrid');
+      const stepIndicator = $('stepIndicator');
+      const stepDots = [$('stepDot1'), $('stepDot2'), $('stepDot3')];
+      const stepLines = [$('stepLine1'), $('stepLine2')];
+      const summoningCircle = $('summoningCircle');
+
+      const overlays = {
+        tableA: $('overlayTableA'),
+        tableB: $('overlayTableB'),
+        tableC: $('overlayTableC'),
+        tierB: $('overlayTierB'),
+        tierA: $('overlayTierA'),
+        critical: $('overlayCritical'),
+      };
+
+      // --- State ---
+      const state = SummonEngine.createGameState(100, 10);
+      const tierNames = { C: 'Common', B: 'Uncommon', A: 'Rare', S: 'Legendary' };
+      let currentTable = null;
+      let ritualHum = null;
+
+      // --- Helpers ---
+      const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+      const updateCoins = () => {
+        coinDisplay.textContent = state.coins;
+        btnBegin.disabled = !SummonEngine.canSummon(state);
+      };
+
+      const shakeCoins = () => {
+        coinDisplay.classList.add('shake');
+        setTimeout(() => coinDisplay.classList.remove('shake'), 400);
+      };
+
+      // --- Typewriter Narration WITH sound ---
+      const typeNarration = (text, speed = 35) => {
+        return new Promise(resolve => {
+          narration.textContent = '';
+          narration.classList.add('visible');
+          let i = 0;
+          const interval = setInterval(() => {
+            narration.textContent += text[i];
+            if (i % 2 === 0) SoundEngine.typewriterTick();
+            i++;
+            if (i >= text.length) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, speed);
+        });
+      };
+
+      const clearNarration = () => {
+        narration.textContent = '';
+        narration.classList.remove('visible', 'parchment', 'dramatic', 'tier-b-text', 'tier-a-text', 'tier-s-text');
+      };
+
+      // --- Screen Effects ---
+      const fireOverlay = (key, cssClass) => {
+        const el = overlays[key];
+        el.className = `screen-overlay screen-overlay--${cssClass} active`;
+        el.addEventListener('animationend', () => {
+          el.className = 'screen-overlay';
+        }, { once: true });
+      };
+
+      const shakeScreen = (heavy = false) => {
+        stage.classList.add(heavy ? 'screen-shake--heavy' : 'screen-shake');
+        setTimeout(() => stage.classList.remove('screen-shake', 'screen-shake--heavy'), heavy ? 700 : 500);
+      };
+
+      // --- Particles ---
+      const spawnParticles = (count = 30, colors = null) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const palette = colors || ['#ffd700', '#ffaa00', '#ff6600', '#ffffff', '#c9a227'];
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('div');
+          el.className = 'particle';
+          const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.5 - 0.25);
+          const dist = 120 + Math.random() * 280;
+          el.style.left = cx + 'px';
+          el.style.top = cy + 'px';
+          el.style.background = palette[Math.floor(Math.random() * palette.length)];
+          el.style.setProperty('--px', Math.cos(angle) * dist + 'px');
+          el.style.setProperty('--py', Math.sin(angle) * dist + 'px');
+          const size = (3 + Math.random() * 7);
+          el.style.width = size + 'px';
+          el.style.height = size + 'px';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 1200);
+        }
+      };
+
+      // --- Summoning Circle ---
+      const activateCircle = (tableClass = null) => {
+        summoningCircle.classList.add('active');
+        summoningCircle.classList.remove('table-c');
+        if (tableClass) summoningCircle.classList.add(tableClass);
+      };
+
+      const deactivateCircle = () => {
+        summoningCircle.classList.remove('active', 'table-c');
+      };
+
+      // --- Step Indicator ---
+      const setStep = (n) => {
+        stepIndicator.classList.add('visible');
+        stepDots.forEach((d, i) => {
+          d.classList.remove('active', 'done');
+          if (i < n - 1) d.classList.add('done');
+          else if (i === n - 1) d.classList.add('active');
+        });
+        stepLines.forEach((l, i) => {
+          l.classList.remove('done');
+          if (i < n - 1) l.classList.add('done');
+        });
+      };
+
+      const hideSteps = () => {
+        stepIndicator.classList.remove('visible');
+        stepDots.forEach(d => d.classList.remove('active', 'done'));
+        stepLines.forEach(l => l.classList.remove('done'));
+      };
+
+      // --- Buttons ---
+      const showBtn = (b) => b.classList.add('visible');
+      const hideBtn = (b) => b.classList.remove('visible');
+
+      // --- Card Builder ---
+      const createCardElement = (card, tier) => {
+        const w = document.createElement('div');
+        w.className = `card card--tier-${tier}`;
+        w.innerHTML = `
+          <div class="card__face card__back">
+            <div class="card__back-pattern">
+              <span class="card__back-symbol">🂠</span>
+            </div>
+          </div>
+          <div class="card__face card__front">
+            <span class="card__tier-badge">${tier}</span>
+            <div class="card__image-wrapper">
+              <img class="card__image" src="${card.imageUrl}" alt="${card.name}" loading="lazy">
+            </div>
+            <div class="card__info">
+              <div class="card__name">${card.name}</div>
+              <div class="card__meta">
+                <span>Table ${card.table}</span>
+                <span>${tierNames[tier] || tier}</span>
+              </div>
+              <div class="card__stats">
+                <span class="card__stat card__stat--atk">⚔ ${card.stats.attack}</span>
+                <span class="card__stat card__stat--def">🛡 ${card.stats.defense}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        return w;
+      };
+
+      const addToCollection = (card, tier) => {
+        const empty = collectionGrid.querySelector('.collection__empty');
+        if (empty) empty.remove();
+        const m = document.createElement('div');
+        m.className = `collection__mini-card collection__mini-card--tier-${tier}`;
+        m.title = `${card.name} (${tierNames[tier]}) — ATK:${card.stats.attack} DEF:${card.stats.defense}`;
+        m.innerHTML = `
+          <img src="${card.imageUrl}" alt="${card.name}" loading="lazy">
+          <span class="collection__mini-card-name">${card.name}</span>
+        `;
+        collectionGrid.appendChild(m);
+      };
+
+      // --- Reset ---
+      const resetStage = () => {
+        diceD100.querySelector('.dice__face').textContent = '?';
+        diceD20.querySelector('.dice__face').textContent = '?';
+        resultD100.textContent = '';
+        resultD20.textContent = '';
+        resultCritical.classList.remove('visible');
+        resultCritical.textContent = '';
+        // Clear cards and auras
+        cardArea.innerHTML = '';
+        clearNarration();
+        diceArena.classList.remove('active');
+        diceGroupD100.classList.remove('visible');
+        diceGroupD20.classList.remove('visible');
+        hideBtn(btnRollD100);
+        hideBtn(btnRollD20);
+        hideSteps();
+        deactivateCircle();
+        currentTable = null;
+        if (ritualHum) { ritualHum.stop(); ritualHum = null; }
+        stage.classList.remove('stage--showcase');
+      };
+
+      // ============================================================
+      // PHASE 1: Begin Summoning
+      // ============================================================
+      btnBegin.addEventListener('click', async () => {
+        if (!SummonEngine.canSummon(state)) return;
+
+        resetStage();
+        SummonEngine.deductCoins(state);
+        updateCoins();
+        shakeCoins();
+        SoundEngine.coinPay();
+        hideBtn(btnBegin);
+
+        // Activate circle + ambient hum
+        activateCircle();
+        ritualHum = SoundEngine.startRitualHum();
+
+        setStep(1);
+
+        narration.className = 'narration parchment';
+        await typeNarration('The ancient circle awakens... your offering is accepted.', 38);
+        await wait(800);
+
+        showBtn(btnRollD100);
+      });
+
+      // ============================================================
+      // PHASE 2: Roll d100 (Table)
+      // ============================================================
+      btnRollD100.addEventListener('click', async () => {
+        hideBtn(btnRollD100);
+
+        diceArena.classList.add('active');
+        diceGroupD100.classList.add('visible');
+        diceD100.classList.add('rolling');
+        SoundEngine.diceRoll();
+
+        const flash = setInterval(() => {
+          diceD100.querySelector('.dice__face').textContent = Math.floor(Math.random() * 100) + 1;
+        }, 80);
+
+        await wait(2000);
+        clearInterval(flash);
+
+        const tableResult = SummonEngine.rollTableStep();
+        currentTable = tableResult.table;
+
+        diceD100.classList.remove('rolling');
+        diceD100.querySelector('.dice__face').textContent = tableResult.d100;
+        resultD100.textContent = `Table ${tableResult.table}`;
+        SoundEngine.diceLand();
+
+        await wait(400);
+        setStep(2);
+
+        // --- Table Dramatization ---
+        if (tableResult.table === 'A') {
+          fireOverlay('tableA', 'table-a');
+          SoundEngine.tableA();
+          narration.className = 'narration parchment';
+          await typeNarration('Common creatures stir in the shadows... the lesser realm responds.', 40);
+
+        } else if (tableResult.table === 'B') {
+          fireOverlay('tableB', 'table-b');
+          shakeScreen(false);
+          SoundEngine.tableB();
+          narration.className = 'narration parchment';
+          await typeNarration('The earth trembles beneath your feet... darker creatures take notice!', 42);
+
+        } else {
+          activateCircle('table-c');
+          fireOverlay('tableC', 'table-c');
+          shakeScreen(true);
+          SoundEngine.tableC();
+          spawnParticles(25, ['#9b59b6', '#c39bd3', '#bb8fce', '#ffffff', '#d2b4de']);
+          narration.className = 'narration parchment dramatic';
+          await typeNarration('⚡ The rift tears open! Ancient beings from the deepest realms answer your call!', 38);
+        }
+
+        await wait(1200);
+        showBtn(btnRollD20);
+      });
+
+      // ============================================================
+      // PHASE 3: Roll d20 (Tier)
+      // ============================================================
+      btnRollD20.addEventListener('click', async () => {
+        hideBtn(btnRollD20);
+
+        diceGroupD20.classList.add('visible');
+        diceD20.classList.add('rolling');
+        SoundEngine.diceRoll();
+
+        const flash = setInterval(() => {
+          diceD20.querySelector('.dice__face').textContent = Math.floor(Math.random() * 20) + 1;
+        }, 80);
+
+        await wait(2000);
+        clearInterval(flash);
+
+        const tierResult = SummonEngine.rollTierStep(currentTable, cardsDB);
+        diceD20.classList.remove('rolling');
+        diceD20.querySelector('.dice__face').textContent = tierResult.d20;
+        SoundEngine.diceLand();
+
+        await wait(400);
+        setStep(3);
+
+        // --- Tier Dramatization ---
+        if (tierResult.isCritical) {
+          fireOverlay('critical', 'critical');
+          shakeScreen(true);
+          SoundEngine.tierS();
+          spawnParticles(60, ['#ffd700', '#ffaa00', '#fff68f', '#ffffff']);
+
+          resultD20.textContent = '⚡ CRITICAL!';
+          narration.className = 'narration parchment tier-s-text';
+          await typeNarration('⚡ THE DICE BURN WITH ANCIENT POWER!', 50);
+          await wait(600);
+          clearNarration();
+
+          if (tierResult.criticalData.type === 'S') {
+            resultCritical.textContent = '🌟 NATURAL 20 × 20! LEGENDARY SUMMON!';
+            spawnParticles(80, ['#ffd700', '#fff68f', '#ffeaa7', '#ffffff']);
+            narration.className = 'narration parchment tier-s-text';
+            await typeNarration('Reality itself shatters... a Legendary creature descends!', 42);
+          } else {
+            resultCritical.textContent = `⚡ CRITICAL! ${tierResult.criticalData.count}× Rare Cards!`;
+            narration.className = 'narration parchment tier-a-text';
+            await typeNarration('The surge of power draws two rare entities from the void!', 40);
+          }
+          resultCritical.classList.add('visible');
+
+        } else if (tierResult.tier === 'C') {
+          SoundEngine.tierC();
+          resultD20.textContent = 'Tier C';
+          narration.className = 'narration parchment';
+          await typeNarration('A common creature answers your call from the mist...', 40);
+
+        } else if (tierResult.tier === 'B') {
+          fireOverlay('tierB', 'tier-b');
+          SoundEngine.tierB();
+          resultD20.textContent = 'Tier B';
+          narration.className = 'narration parchment tier-b-text';
+          await typeNarration('An uncommon beast emerges from the arcane depths!', 40);
+
+        } else if (tierResult.tier === 'A') {
+          fireOverlay('tierA', 'tier-a');
+          shakeScreen(false);
+          SoundEngine.tierA();
+          spawnParticles(18, ['#4a9eff', '#85c1e9', '#aed6f1', '#ffffff']);
+          resultD20.textContent = 'Tier A';
+          narration.className = 'narration parchment tier-a-text';
+          await typeNarration('A rare entity manifests from the arcane rift!', 40);
+        }
+
+        await wait(1200);
+
+        // Stop ritual hum before card reveal
+        if (ritualHum) { ritualHum.stop(); ritualHum = null; }
+
+        // Hide dice area for card focus
+        diceArena.classList.remove('active');
+        hideSteps();
+
+        // ============================================================
+        // PHASE 4: Card Reveal (card stays on screen!)
+        // ============================================================
+        const revealParticles = {
+          C: { count: 8, colors: ['#8a8a8a', '#aaaaaa', '#cccccc'] },
+          B: { count: 20, colors: ['#2ecc71', '#27ae60', '#58d68d', '#ffffff'] },
+          A: { count: 35, colors: ['#4a9eff', '#85c1e9', '#aed6f1', '#d4e6f1', '#ffffff'] },
+          S: { count: 60, colors: ['#ffd700', '#ffaa00', '#fff68f', '#ffeaa7', '#ffffff'] },
+        };
+
+        for (const card of tierResult.cards) {
+          const cardEl = createCardElement(card, tierResult.tier);
+          cardArea.appendChild(cardEl);
+
+          // Create tier-specific aura behind card
+          const aura = document.createElement('div');
+          aura.className = `card-aura card-aura--${tierResult.tier}`;
+          cardArea.appendChild(aura);
+
+          void cardEl.offsetWidth;
+          cardEl.classList.add('visible');
+          await wait(600);
+
+          // Flip card
+          SoundEngine.cardFlip();
+          cardEl.classList.add('flipped');
+          await wait(800);
+
+          // Tier-specific reveal burst
+          const fx = revealParticles[tierResult.tier] || revealParticles.C;
+          spawnParticles(fx.count, fx.colors);
+          SoundEngine.cardReveal(tierResult.tier);
+
+          // Activate aura
+          aura.classList.add('visible');
+
+          // Enter showcase mode (card scales up + floats)
+          await wait(300);
+          cardEl.classList.add('showcase');
+
+          // Tier S: extra screen flash
+          if (tierResult.tier === 'S') {
+            fireOverlay('critical', 'critical');
+            shakeScreen(true);
+            spawnParticles(40, ['#ffd700', '#ffffff', '#ffee88']);
+          }
+
+          addToCollection(card, tierResult.tier);
+          state.collection.push(card);
+        }
+
+        await wait(400);
+
+        // Show narration for the summoned creature
+        const creatureName = tierResult.cards[0]?.name || 'a creature';
+        narration.className = 'narration parchment';
+        await typeNarration(`${creatureName} has been bound to your collection.`, 35);
+
+        // Cleanup dice but KEEP card on screen — show Begin Summoning
+        deactivateCircle();
+        resultCritical.classList.remove('visible');
+        stage.classList.add('stage--showcase');
+        showBtn(btnBegin);
+        updateCoins();
+      });
+
+      // --- Init ---
+      updateCoins();
+
+    })();
+  </script>
+
+</body>
+
+</html>

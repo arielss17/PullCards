@@ -1,0 +1,18 @@
+[
+  { "id": 1, "name": "Goblin Scavenger", "table": "A", "tier": "C", "imageUrl": "https://robohash.org/goblin?set=set2", "stats": { "attack": 2, "defense": 1 } },
+  { "id": 2, "name": "Dire Rat", "table": "A", "tier": "C", "imageUrl": "https://robohash.org/direrat?set=set2", "stats": { "attack": 1, "defense": 1 } },
+  { "id": 3, "name": "Kobold Trapper", "table": "A", "tier": "B", "imageUrl": "https://robohash.org/kobold?set=set2", "stats": { "attack": 3, "defense": 2 } },
+  { "id": 4, "name": "Skeleton Warrior", "table": "B", "tier": "C", "imageUrl": "https://robohash.org/skeleton?set=set2", "stats": { "attack": 3, "defense": 3 } },
+  { "id": 5, "name": "Orc Berserker", "table": "B", "tier": "B", "imageUrl": "https://robohash.org/orc?set=set2", "stats": { "attack": 5, "defense": 3 } },
+  { "id": 6, "name": "Gelatinous Cube", "table": "B", "tier": "A", "imageUrl": "https://robohash.org/cube?set=set2", "stats": { "attack": 4, "defense": 6 } },
+  { "id": 7, "name": "Owlbear", "table": "C", "tier": "B", "imageUrl": "https://robohash.org/owlbear?set=set2", "stats": { "attack": 6, "defense": 5 } },
+  { "id": 8, "name": "Cave Troll", "table": "C", "tier": "A", "imageUrl": "https://robohash.org/troll?set=set2", "stats": { "attack": 7, "defense": 7 } },
+  { "id": 9, "name": "Mind Flayer", "table": "C", "tier": "S", "imageUrl": "https://robohash.org/mindflayer?set=set2", "stats": { "attack": 9, "defense": 5 } },
+  { "id": 10, "name": "Ancient Red Dragon", "table": "C", "tier": "S", "imageUrl": "https://robohash.org/reddragon?set=set2", "stats": { "attack": 10, "defense": 10 } },
+
+  { "id": 11, "name": "Harpy Windcaller", "table": "A", "tier": "A", "imageUrl": "https://robohash.org/harpy?set=set2", "stats": { "attack": 5, "defense": 4 } },
+  { "id": 12, "name": "Pixie Trickster", "table": "A", "tier": "S", "imageUrl": "https://robohash.org/pixie?set=set2", "stats": { "attack": 8, "defense": 6 } },
+  { "id": 13, "name": "Mimic Chest", "table": "B", "tier": "S", "imageUrl": "https://robohash.org/mimic?set=set2", "stats": { "attack": 7, "defense": 8 } },
+  { "id": 14, "name": "Zombie Horde", "table": "C", "tier": "C", "imageUrl": "https://robohash.org/zombie?set=set2", "stats": { "attack": 4, "defense": 2 } },
+  { "id": 15, "name": "Giant Spider", "table": "A", "tier": "B", "imageUrl": "https://robohash.org/spider?set=set2", "stats": { "attack": 3, "defense": 3 } }
+]
