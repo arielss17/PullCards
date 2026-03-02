@@ -1,0 +1,342 @@
+/* ============================================================
+   PullCards — Collection Showcase Styles
+   Grid of all creatures: owned (colored) vs unowned (grayscale)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700;900&family=Inter:wght@400;600;700&display=swap');
+
+:root {
+    --bg-primary: #080810;
+    --bg-secondary: #0e0e1a;
+    --bg-card: #161628;
+    --bg-surface: #12122a;
+    --text-primary: #dcd5c4;
+    --text-secondary: #9b9580;
+    --text-muted: #5a5646;
+    --gold: #c9a227;
+    --gold-bright: #ffd700;
+    --gold-dim: #8b7019;
+    --tier-z: #ffffff;
+    --tier-s: #ffd700;
+    --tier-a: #4a9eff;
+    --tier-b: #2ecc71;
+    --tier-c: #8a8a8a;
+    --tier-d: #8d6e63;
+    --tier-e: #424242;
+    --font-display: 'Cinzel', serif;
+    --font-medieval: 'MedievalSharp', cursive;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+/* --- Header --- */
+.col-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: linear-gradient(180deg, rgba(8, 8, 16, 0.97), rgba(8, 8, 16, 0.85));
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.12);
+}
+
+.col-header__title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.col-header__nav {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.col-header__link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(201, 162, 39, 0.15);
+    transition: all 0.2s ease;
+}
+
+.col-header__link:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+    background: rgba(201, 162, 39, 0.06);
+}
+
+/* --- Progress Bar --- */
+.col-progress {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.06);
+}
+
+.col-progress__text {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.col-progress__text strong {
+    color: var(--gold-bright);
+}
+
+.col-progress__bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(201, 162, 39, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.col-progress__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+/* --- Filters --- */
+.col-filters {
+    padding: 12px 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.06);
+}
+
+.col-filter-btn {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid rgba(201, 162, 39, 0.12);
+    border-radius: 20px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.col-filter-btn:hover {
+    border-color: rgba(201, 162, 39, 0.3);
+    color: var(--text-secondary);
+}
+
+.col-filter-btn.active {
+    background: rgba(201, 162, 39, 0.12);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* --- Grid --- */
+.col-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 20px 24px;
+}
+
+/* --- Creature Card --- */
+.creature-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 2px solid rgba(201, 162, 39, 0.08);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: default;
+    transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+}
+
+.creature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Unowned state */
+.creature-card--unowned {
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0.6;
+}
+
+.creature-card--unowned:hover {
+    filter: grayscale(0.7) brightness(0.6);
+    opacity: 0.8;
+}
+
+/* Tier border colors */
+.creature-card--tier-C {
+    border-color: var(--tier-c);
+}
+
+.creature-card--tier-B {
+    border-color: var(--tier-b);
+}
+
+.creature-card--tier-A {
+    border-color: var(--tier-a);
+}
+
+.creature-card--tier-S {
+    border-color: var(--tier-s);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+}
+
+.creature-card--tier-Z {
+    border-color: var(--tier-z);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.creature-card--tier-D {
+    border-color: var(--tier-d);
+}
+
+.creature-card--tier-E {
+    border-color: var(--tier-e);
+}
+
+/* --- Card Image --- */
+.creature-card__img {
+    width: 100%;
+    flex: 1;
+    object-fit: cover;
+    min-height: 0;
+}
+
+/* --- Card Info --- */
+.creature-card__info {
+    padding: 6px 8px;
+    background: linear-gradient(180deg, rgba(20, 16, 8, 0.8), rgba(20, 16, 8, 1));
+}
+
+.creature-card__name {
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.creature-card__meta {
+    font-size: 0.5rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* --- Quantity Badge --- */
+.creature-card__qty {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--gold-dim);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+    backdrop-filter: blur(4px);
+}
+
+/* --- Empty State --- */
+.col-empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+}
+
+.col-empty__icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.col-empty__text {
+    font-family: var(--font-medieval);
+    font-size: 1.1rem;
+}
+
+/* --- Loading --- */
+.col-loading {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--gold);
+    font-family: var(--font-display);
+    letter-spacing: 2px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+    .col-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .col-header {
+        padding: 10px 16px;
+    }
+
+    .col-progress {
+        padding: 10px 16px;
+    }
+
+    .col-filters {
+        padding: 8px 16px;
+    }
+}

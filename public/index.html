@@ -11,6 +11,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="i18n.js"></script>
+  <script src="auth.js"></script>
 </head>
 
 <body>
@@ -79,15 +80,28 @@
       <span class="header__title-icon">⚔️</span>PullCards
     </h1>
     <div class="header__coins" aria-live="polite">
-      <span class="header__coins-icon">🪙</span>
-      <span data-i18n="header.coins">Moedas:</span>
-      <span class="header__coins-value" id="coinDisplay">100</span>
+      <span class="header__coins-icon">🔮</span>
+      <span data-i18n="header.energy">Cargas:</span>
+      <span class="header__coins-value" id="energyDisplay">? / 6</span>
     </div>
-    <div class="header__lang">
-      <select id="langSelect" class="lang-select">
-        <option value="pt-BR">🇧🇷 PT-BR</option>
-        <option value="en">🇺🇸 EN</option>
-      </select>
+    <div class="header__coins" aria-live="polite" id="timerContainer" style="display: none; margin-left: 10px;">
+      <span class="header__coins-icon">⌛</span>
+      <span class="header__coins-value" id="timerDisplay">00:00:00</span>
+    </div>
+
+    <div class="header__nav" style="display:flex; gap:10px; align-items:center;">
+      <a href="/collection.html"
+        style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; padding:4px 10px; border:1px solid rgba(201,162,39,0.15); border-radius:4px; transition:all 0.2s;"
+        onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'"
+        onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='rgba(201,162,39,0.15)'">📖
+        Bestiário</a>
+      <span id="headerUserInfo" style="font-size:0.8rem; color:var(--text-secondary);"></span>
+      <div class="header__lang">
+        <select id="langSelect" class="lang-select">
+          <option value="pt-BR">🇧🇷 PT-BR</option>
+          <option value="en">🇺🇸 EN</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -111,7 +125,7 @@
       <!-- Ritual Buttons -->
       <button class="ritual-btn ritual-btn--begin visible" id="btnBegin" type="button">
         <span data-i18n="buttons.begin">Iniciar Invocação</span>
-        <span class="ritual-btn__sub" data-i18n="buttons.beginSub">🪙 Ofereça 10 moedas ao círculo</span>
+        <span class="ritual-btn__sub" data-i18n="buttons.beginSub">🔮 Consome 1 carga de energia</span>
       </button>
 
       <button class="ritual-btn ritual-btn--d100" id="btnRollD100" type="button">
@@ -178,8 +192,15 @@
 
       let cardsDB = [];
       try {
-        // Initialize i18n first
+        // Initialize i18n
         await I18n.init();
+
+        // Load Admin Config
+        const configRes = await fetch('/api/config');
+        if (configRes.ok) {
+          const configData = await configRes.json();
+          SummonEngine.setConfig(configData);
+        }
 
         cardsDB = await MonsterAPI.loadAll((done, total) => {
           const pct = Math.round((done / total) * 100);
@@ -199,7 +220,9 @@
 
       // --- DOM ---
       const $ = (id) => document.getElementById(id);
-      const coinDisplay = $('coinDisplay');
+      const energyDisplay = $('energyDisplay');
+      const timerContainer = $('timerContainer');
+      const timerDisplay = $('timerDisplay');
       const stage = $('stage');
       const btnBegin = $('btnBegin');
       const btnRollD100 = $('btnRollD100');
@@ -231,22 +254,98 @@
 
       // --- State ---
       const state = SummonEngine.createGameState(100, 10);
-      const tierNames = { C: 'Common', B: 'Uncommon', A: 'Rare', S: 'Legendary' };
+      let countdownInterval = null;
+      const tierNames = {}; // Populated dynamically
+      const getTierNickname = (tierId) => {
+        const custom = SummonEngine.getConfig().customTiers?.[tierId];
+        return custom ? custom.nickname : (tierNames[tierId] || tierId);
+      };
       let currentTable = null;
       let ritualHum = null;
 
+      // --- UI Updaters ---
+      const formatTime = (ms) => {
+        if (ms <= 0) return '00:00:00';
+        const h = Math.floor(ms / (1000 * 60 * 60));
+        const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((ms % (1000 * 60)) / 1000);
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      };
+
+      const syncEnergyState = async () => {
+        const user = AuthManager.getUser();
+        if (!user) {
+          energyDisplay.textContent = `? / 6`;
+          btnBegin.classList.add('disabled');
+          btnBegin.style.opacity = '0.5';
+          /* btnBegin.style.pointerEvents = 'none'; */ // Allow clicking to trigger the login alert
+          btnBegin.querySelector('.ritual-btn__sub').textContent = "Faça login para invocar";
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/collection/${user.id}/status`);
+          if (res.ok) {
+            const data = await res.json();
+            state.energy.available = data.availableSummons;
+            state.energy.max = data.maxSummons;
+            state.energy.nextSummonAt = data.nextSummonAt;
+            updateEnergyUI();
+          }
+        } catch (e) {
+          console.error("Failed to sync energy", e);
+        }
+      };
+
+      const updateEnergyUI = () => {
+        energyDisplay.textContent = `${state.energy.available} / ${state.energy.max}`;
+
+        // Handle Timer
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        if (state.energy.available < state.energy.max && state.energy.nextSummonAt) {
+          timerContainer.style.display = 'flex';
+
+          countdownInterval = setInterval(() => {
+            const now = Date.now();
+            const next = new Date(state.energy.nextSummonAt).getTime();
+            const diff = next - now;
+
+            if (diff <= 0) {
+              clearInterval(countdownInterval);
+              timerDisplay.textContent = '00:00:00';
+              syncEnergyState(); // Fetch new charge!
+            } else {
+              timerDisplay.textContent = formatTime(diff);
+            }
+          }, 1000);
+        } else {
+          timerContainer.style.display = 'none';
+        }
+
+        if (!SummonEngine.canSummon(state)) {
+          btnBegin.classList.add('disabled');
+          btnBegin.style.opacity = '0.5';
+          btnBegin.style.pointerEvents = 'none';
+          btnBegin.querySelector('.ritual-btn__sub').textContent = "Sem energia. Aguarde...";
+        } else {
+          btnBegin.classList.remove('disabled');
+          btnBegin.style.opacity = '1';
+          btnBegin.style.pointerEvents = 'auto';
+          btnBegin.querySelector('.ritual-btn__sub').textContent = "🔮 Consome 1 carga de energia";
+        }
+      };
+
+      const shakeEnergy = () => {
+        energyDisplay.parentElement.classList.add('shake');
+        setTimeout(() => energyDisplay.parentElement.classList.remove('shake'), 400);
+      };
+
+      // Initial Sync
+      syncEnergyState();
+
       // --- Helpers ---
       const wait = (ms) => new Promise(r => setTimeout(r, ms));
-
-      const updateCoins = () => {
-        coinDisplay.textContent = state.coins;
-        btnBegin.disabled = !SummonEngine.canSummon(state);
-      };
-
-      const shakeCoins = () => {
-        coinDisplay.classList.add('shake');
-        setTimeout(() => coinDisplay.classList.remove('shake'), 400);
-      };
 
       // --- Typewriter Narration WITH sound ---
       const typeNarration = (text, speed = 35) => {
@@ -434,14 +533,40 @@
       // PHASE 1: Begin Summoning
       // ============================================================
       btnBegin.addEventListener('click', async () => {
+        if (!AuthManager.getUser()) {
+          alert(I18n.t('auth.loginRequired'));
+          return;
+        }
         if (!SummonEngine.canSummon(state)) return;
 
         resetStage();
-        SummonEngine.deductCoins(state);
-        updateCoins();
-        shakeCoins();
-        SoundEngine.coinPay();
         hideBtn(btnBegin);
+
+        // Deduct energy via API
+        try {
+          const user = AuthManager.getUser();
+          const res = await fetch(`/api/collection/${user.id}/deduct-summon`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          if (!res.ok) {
+            const errorData = await res.json();
+            alert(errorData.message || I18n.t('errors.deductEnergyFailed'));
+            showBtn(btnBegin); // Show button again if deduction failed
+            syncEnergyState(); // Sync state in case of error
+            return;
+          }
+          syncEnergyState(); // Sync state after successful deduction
+        } catch (e) {
+          console.error("Failed to deduct energy:", e);
+          alert(I18n.t('errors.deductEnergyFailed'));
+          showBtn(btnBegin); // Show button again if deduction failed
+          syncEnergyState(); // Sync state in case of error
+          return;
+        }
+
+        shakeEnergy();
+        SoundEngine.coinPay(); // Keep the sound or change to an arcane hum later
 
         // Activate circle + ambient hum
         activateCircle();
@@ -551,39 +676,64 @@
           await wait(600);
           clearNarration();
 
-          if (tierResult.criticalData.type === 'S') {
+          if (tierResult.criticalData.type === 'Z') {
+            resultCritical.textContent = I18n.t('narration.criticalZ');
+            spawnParticles(100, ['#ffffff', '#fff68f', '#ffeaa7', '#ff33ff']);
+            narration.className = 'narration parchment tier-z-text dramatic';
+            await typeNarration(I18n.t('narration.tierZ'), 42);
+          } else if (tierResult.criticalData.type === 'S') {
             resultCritical.textContent = I18n.t('narration.criticalSBanner');
             spawnParticles(80, ['#ffd700', '#fff68f', '#ffeaa7', '#ffffff']);
             narration.className = 'narration parchment tier-s-text';
             await typeNarration(I18n.t('narration.criticalS'), 42);
           } else {
             resultCritical.textContent = I18n.t('narration.criticalMulti', { count: tierResult.criticalData.count });
-            narration.className = 'narration parchment tier-a-text';
+            narration.className = 'narration parchment tier-s-text';
             await typeNarration(I18n.t('narration.criticalMultiNarration'), 40);
           }
           resultCritical.classList.add('visible');
 
         } else if (tierResult.tier === 'C') {
           SoundEngine.tierC();
-          resultD20.textContent = I18n.t('results.tierC');
+          resultD20.textContent = getTierNickname('C');
           narration.className = 'narration parchment';
           await typeNarration(I18n.t('narration.tierC'), 40);
 
         } else if (tierResult.tier === 'B') {
           fireOverlay('tierB', 'tier-b');
           SoundEngine.tierB();
-          resultD20.textContent = I18n.t('results.tierB');
+          resultD20.textContent = getTierNickname('B');
           narration.className = 'narration parchment tier-b-text';
           await typeNarration(I18n.t('narration.tierB'), 40);
+
+        } else if (tierResult.tier === 'S') {
+          fireOverlay('critical', 'critical');
+          SoundEngine.tierS();
+          spawnParticles(40, ['#ffd700', '#ffaa00', '#fff68f', '#ffffff']);
+          resultD20.textContent = getTierNickname('S');
+          narration.className = 'narration parchment tier-s-text';
+          await typeNarration(I18n.t('narration.tierS'), 40);
 
         } else if (tierResult.tier === 'A') {
           fireOverlay('tierA', 'tier-a');
           shakeScreen(false);
           SoundEngine.tierA();
           spawnParticles(18, ['#4a9eff', '#85c1e9', '#aed6f1', '#ffffff']);
-          resultD20.textContent = I18n.t('results.tierA');
+          resultD20.textContent = getTierNickname('A');
           narration.className = 'narration parchment tier-a-text';
           await typeNarration(I18n.t('narration.tierA'), 40);
+
+        } else if (tierResult.tier === 'D') {
+          SoundEngine.tierC();
+          resultD20.textContent = getTierNickname('D');
+          narration.className = 'narration parchment tier-d-text';
+          await typeNarration(I18n.t('narration.tierD'), 40);
+
+        } else if (tierResult.tier === 'E') {
+          SoundEngine.tierC();
+          resultD20.textContent = getTierNickname('E');
+          narration.className = 'narration parchment tier-e-text';
+          await typeNarration(I18n.t('narration.tierE'), 40);
         }
 
         await wait(1200);
@@ -599,10 +749,13 @@
         // PHASE 4: Card Reveal (card stays on screen!)
         // ============================================================
         const revealParticles = {
+          E: { count: 4, colors: ['#424242', '#616161'] },
+          D: { count: 6, colors: ['#8d6e63', '#a1887f'] },
           C: { count: 8, colors: ['#8a8a8a', '#aaaaaa', '#cccccc'] },
           B: { count: 20, colors: ['#2ecc71', '#27ae60', '#58d68d', '#ffffff'] },
           A: { count: 35, colors: ['#4a9eff', '#85c1e9', '#aed6f1', '#d4e6f1', '#ffffff'] },
           S: { count: 60, colors: ['#ffd700', '#ffaa00', '#fff68f', '#ffeaa7', '#ffffff'] },
+          Z: { count: 100, colors: ['#ffffff', '#ff33ff', '#fff68f', '#ffeaa7'] },
         };
 
         for (const card of tierResult.cards) {
@@ -644,6 +797,16 @@
 
           addToCollection(card, tierResult.tier);
           state.collection.push(card);
+
+          // Persist to server if logged in
+          const currentUser = AuthManager.getUser();
+          if (currentUser) {
+            fetch(`/api/collection/${currentUser.id}/add`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ cardId: card.id, tier: tierResult.tier }),
+            }).catch(err => console.error('Failed to persist card:', err));
+          }
         }
 
         await wait(400);
@@ -658,11 +821,25 @@
         resultCritical.classList.remove('visible');
         stage.classList.add('stage--showcase');
         showBtn(btnBegin);
-        updateCoins();
+        // Ensure UI is accurate using local state if fetch somehow failed, or just a redraw
+        updateEnergyUI();
       });
 
       // --- Init ---
-      updateCoins();
+      updateEnergyUI();
+
+      // --- Auth Header ---
+      const headerUserInfo = document.getElementById('headerUserInfo');
+      const currentUser = AuthManager.getUser();
+      if (currentUser) {
+        let adminLink = '';
+        if (currentUser.isAdmin) {
+          adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
+        }
+        headerUserInfo.innerHTML = `${adminLink}🧙 ${currentUser.name} <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
+      } else {
+        headerUserInfo.innerHTML = '<a href="/auth.html" style="color:var(--gold); text-decoration:none; font-size:0.8rem;">🔑 Entrar</a>';
+      }
 
       // --- Language Selector ---
       const langSelect = document.getElementById('langSelect');

@@ -34,10 +34,13 @@ const MonsterAPI = (() => {
 
     // --- CR → Tier Mapping ---
     const crToTier = (cr) => {
-        if (cr <= 2) return 'C';
-        if (cr <= 6) return 'B';
-        if (cr <= 14) return 'A';
-        return 'S';
+        if (cr >= 19) return 'Z';
+        if (cr >= 13) return 'S';
+        if (cr >= 8) return 'A';
+        if (cr >= 4) return 'B';
+        if (cr >= 2) return 'C';
+        if (cr >= 0.5) return 'D';
+        return 'E';
     };
 
     // --- Stat Scaling ---

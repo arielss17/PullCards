@@ -17,10 +17,12 @@ const SummonEngine = (() => {
   };
 
   const setConfig = (newConfig) => {
-    if (newConfig && newConfig.tables) {
+    if (newConfig) {
       config = newConfig;
     }
   };
+
+  const getConfig = () => config;
 
   // --- Table Resolution (d100) ---
   const getTableFromRoll = (d100) => {
@@ -35,19 +37,47 @@ const SummonEngine = (() => {
 
   // --- Tier Resolution (d20) ---
   const getTierFromRoll = (d20) => {
-    if (d20 <= 11) return "C";
-    if (d20 <= 15) return "B";
-    if (d20 <= 19) return "A";
-    return "CRITICAL";
+    // Safety Fallback: Original hardcoded ranges if config is broken
+    const fallback = (roll) => {
+      if (roll === 1) return "E";
+      if (roll <= 5) return "D";
+      if (roll <= 11) return "C";
+      if (roll <= 15) return "B";
+      if (roll <= 18) return "A";
+      if (roll === 19) return "S";
+      return "CRITICAL";
+    };
+
+    if (!config || !config.customTiers) return fallback(d20);
+
+    // Dynamic resolution based on maxD20
+    const tiersArray = Object.entries(config.customTiers)
+      .filter(([id]) => id !== "Z")
+      .sort((a, b) => a[1].maxD20 - b[1].maxD20);
+
+    // CRITICAL Check: Only if d20 is exactly 20 (or higher than all defined ranges)
+    const maxConfigured = tiersArray.length > 0 ? tiersArray[tiersArray.length - 1][1].maxD20 : 19;
+
+    if (d20 > maxConfigured || d20 === 20) return "CRITICAL";
+
+    for (const [tierId, tierConfig] of tiersArray) {
+      if (tierConfig.maxD20 !== undefined && d20 <= tierConfig.maxD20) {
+        return tierId;
+      }
+    }
+
+    // If we reach here, a tier in the middle was missing maxD20
+    console.warn(`SummonEngine: Missing maxD20 config for a tier. Falling back for roll ${d20}`);
+    return fallback(d20);
   };
 
   // --- Critical Hit Handler ---
   const handleCritical = () => {
     const innerRoll = rollD20();
     if (innerRoll === 20) {
-      return { type: "S", count: 1, innerRoll };
+      return { type: "Z", count: 1, innerRoll };
     }
-    return { type: "A", count: 2, innerRoll };
+    return { type: "S", count: 2, innerRoll };
   };
 
   // --- Card Lookup with Fallback ---
@@ -105,48 +135,58 @@ const SummonEngine = (() => {
     return { d100, table, ...tierResult };
   };
 
-  // --- Game State ---
-  const createGameState = (startingCoins = 100, summonCost = 10) => ({
-    coins: startingCoins,
-    summonCost,
+  // --- Game State (Time-Based) ---
+  const createGameState = () => ({
     collection: [],
     history: [],
+    energy: {
+      available: 0,
+      max: 6,
+      nextSummonAt: null
+    }
   });
 
-  const canSummon = (state) => state.coins >= state.summonCost;
+  const canSummon = (state) => state.energy.available > 0;
 
-  const deductCoins = (state) => {
+  // Real deduction happens in backend, this only updates local UI state
+  const deductEnergy = (state) => {
     if (!canSummon(state)) return false;
-    state.coins -= state.summonCost;
+    state.energy.available -= 1;
     return true;
   };
 
   const performSummon = (state, database) => {
     if (!canSummon(state)) {
-      return { success: false, reason: "Not enough coins" };
+      return { success: false, reason: "Sem energia" };
     }
-    state.coins -= state.summonCost;
+    deductEnergy(state);
     const result = summon(database);
     state.collection.push(...result.cards);
     state.history.push(result);
     return { success: true, result };
   };
 
+
   // --- Probability Test (Dev Only) ---
   const testDistribution = (database, iterations = 10000) => {
-    const counts = { C: 0, B: 0, A: 0, S: 0, criticals: 0 };
+    const counts = {};
+    Object.keys(config.customTiers || { C: 1, B: 1, A: 1, S: 1 }).forEach(tid => counts[tid] = 0);
+    counts.criticals = 0;
+
     for (let i = 0; i < iterations; i++) {
       const r = summon(database);
       if (r.isCritical) counts.criticals++;
-      r.cards.forEach(() => counts[r.tier]++);
+      r.cards.forEach(() => {
+        if (counts[r.tier] !== undefined) counts[r.tier]++;
+      });
     }
-    console.table({
-      "Tier C": `${((counts.C / iterations) * 100).toFixed(1)}%`,
-      "Tier B": `${((counts.B / iterations) * 100).toFixed(1)}%`,
-      "Tier A": `${((counts.A / iterations) * 100).toFixed(1)}%`,
-      "Tier S": `${((counts.S / iterations) * 100).toFixed(1)}%`,
-      "Criticals": `${((counts.criticals / iterations) * 100).toFixed(1)}%`,
+
+    const tableData = {};
+    Object.entries(config.customTiers || {}).forEach(([tid, tData]) => {
+      tableData[tData.nickname || tid] = `${((counts[tid] / iterations) * 100).toFixed(1)}%`;
     });
+    tableData["Criticals"] = `${((counts.criticals / iterations) * 100).toFixed(1)}%`;
+    console.table(tableData);
   };
 
   return {
@@ -154,7 +194,7 @@ const SummonEngine = (() => {
     getTableFromRoll, getTierFromRoll,
     handleCritical, findCards,
     rollTableStep, rollTierStep,
-    summon, createGameState, canSummon, deductCoins, performSummon,
-    testDistribution, setConfig
+    summon, createGameState, canSummon, deductEnergy, performSummon,
+    testDistribution, setConfig, getConfig
   };
 })();

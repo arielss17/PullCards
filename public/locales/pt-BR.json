@@ -29,18 +29,26 @@
         "tierC": "Uma criatura comum responde ao seu chamado através da névoa...",
         "tierB": "Uma besta incomum emerge das profundezas arcanas!",
         "tierA": "Uma entidade rara se manifesta da fenda arcana!",
+        "tierS": "Uma criatura lendária descende sobre o círculo!",
+        "tierZ": "Os céus se abrem... Uma entidade de poder incomensurável atende ao seu chamado!",
+        "tierD": "Uma criatura inferior emerge cabisbaixa da névoa espessa...",
+        "tierE": "As runas se apagam... Apenas um eco de extrema fraqueza resta no círculo.",
         "criticalDice": "⚡ OS DADOS ARDEM COM PODER ANCESTRAL!",
         "criticalS": "A realidade se despedaça... uma criatura Lendária descende!",
-        "criticalSBanner": "🌟 20 NATURAL × 20! INVOCAÇÃO LENDÁRIA!",
-        "criticalMulti": "⚡ CRÍTICO! {count}× Cards Raros!",
-        "criticalMultiNarration": "A onda de poder traz duas entidades raras do vazio!",
+        "criticalSBanner": "🌟 20 NATURAL! INVOCAÇÃO LENDÁRIA!",
+        "criticalZ": "🌟 20 NATURAL × 20! INVOCAÇÃO DIVINA!",
+        "criticalMulti": "⚡ CRÍTICO! {count}× Cards Lendários!",
+        "criticalMultiNarration": "A onda de poder traz duas entidades lendárias do vazio!",
         "boundToCollection": "{name} foi vinculado à sua coleção."
     },
     "results": {
-        "critical": "⚡ CRÍTICO!",
-        "tierC": "Tier C",
-        "tierB": "Tier B",
-        "tierA": "Tier A"
+        "tierZ": "Divino",
+        "tierS": "Lendário",
+        "tierA": "Raro",
+        "tierB": "Incomum",
+        "tierC": "Comum",
+        "tierD": "Inferior",
+        "tierE": "Insignificante"
     },
     "lang": {
         "label": "🌐",
