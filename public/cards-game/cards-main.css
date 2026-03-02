@@ -1,0 +1,397 @@
+/* char card — fixed aspect ratio */
+.combat-char-card {
+    height: 399px;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+    background: linear-gradient(180deg, #1a1208, #100e08);
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+}
+
+.char-card-inner {
+    aspect-ratio: 5/7;
+    width: 100%;
+    border: 2px solid #8b6914;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #1e1810, #141008);
+    position: relative;
+}
+
+.rune-border {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #8b6914 30%, #c9a84c 50%, #8b6914 70%, transparent);
+    flex-shrink: 0;
+}
+
+.combat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 7px 3px;
+    background: linear-gradient(180deg, #241e14, #1a1510);
+    border-bottom: 1px solid #8b6914;
+    flex-shrink: 0;
+}
+
+.card-hp-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #5a1010, #300505);
+    border: 2px solid #b02020;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffb0b0;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(176, 32, 32, 0.4);
+}
+
+.card-name-block {
+    flex: 1;
+    text-align: center;
+    padding: 0 5px;
+}
+
+.card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #e8c96a;
+    text-shadow: 0 0 10px rgba(201, 168, 76, .4);
+    display: block;
+    line-height: 1.2;
+}
+
+.card-subtitle {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: #d4b896;
+    opacity: .7;
+    display: block;
+    margin-top: 1px;
+}
+
+.cr-badge {
+    background: radial-gradient(circle, #2a3a5a, #0a1428);
+    border: 2px solid #4a6a9a;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cr-label {
+    font-size: 6px;
+    letter-spacing: 1px;
+    color: #8aaad4;
+    line-height: 1;
+}
+
+.cr-value {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #c8e0ff;
+    line-height: 1;
+}
+
+.char-image-wrapper {
+    flex: 1;
+    min-height: 60px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.char-image-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.char-image-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(transparent, #141008);
+    pointer-events: none;
+}
+
+.ca-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, #2a2210, #1a1508);
+    border: 2px solid #c9a84c;
+    border-radius: 5px;
+    padding: 6px 12px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(201, 168, 76, .4);
+    z-index: 5;
+}
+
+.ca-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #c9a84c;
+    display: block;
+    line-height: 1;
+}
+
+.ca-value {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 900;
+    color: #e8c96a;
+    line-height: 1;
+}
+
+/* ability panel (within battle areas but part of card interaction) */
+.habilidades-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #c9a84c;
+    text-align: center;
+    opacity: .6;
+    text-transform: uppercase;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(201, 168, 76, .15);
+    flex-shrink: 0;
+}
+
+.ability-panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 2px;
+}
+
+.ability-group {
+    border-bottom: 1px solid rgba(201, 168, 76, .1);
+}
+
+.ability-group:last-child {
+    border-bottom: none;
+}
+
+.ability-group-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 7px;
+    background: linear-gradient(90deg, rgba(20, 16, 8, .9), rgba(30, 24, 14, .5));
+    border-bottom: 1px solid rgba(201, 168, 76, .08);
+    cursor: pointer;
+    user-select: none;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    transition: background .15s;
+}
+
+.ability-group-header:hover {
+    background: linear-gradient(90deg, rgba(30, 24, 12, .95), rgba(40, 32, 18, .7));
+}
+
+.group-icon {
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.group-name {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #c9a84c;
+    text-transform: uppercase;
+    flex: 1;
+    margin-top: 2px;
+}
+
+.group-chevron {
+    font-size: 7px;
+    color: #8b6914;
+    transition: transform .2s;
+    flex-shrink: 0;
+}
+
+.ability-group.collapsed .group-chevron {
+    transform: rotate(-90deg);
+}
+
+.ability-group.collapsed .ability-list {
+    display: none;
+}
+
+.ability-list {
+    padding: 2px 0;
+}
+
+.ability-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px 3px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, .03);
+    transition: background .15s;
+}
+
+.ability-row:hover {
+    background: rgba(201, 168, 76, .04);
+}
+
+.ability-row:last-child {
+    border-bottom: none;
+}
+
+.ability-row.passive-row {
+    opacity: .85;
+}
+
+.ability-row.passive-row:hover {
+    background: rgba(201, 168, 76, .02);
+}
+
+.ability-icon {
+    font-size: 12px;
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+}
+
+.ability-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ability-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: #f5e6c8;
+    letter-spacing: .4px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ability-desc {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 9.5px;
+    color: #d4b896;
+    opacity: .8;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.action-badge {
+    font-size: 6.5px;
+    letter-spacing: .8px;
+    padding: 2px 3px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    white-space: nowrap;
+    border: 1px solid;
+    margin-top: 1px;
+}
+
+.ab-action {
+    background: rgba(180, 50, 30, .15);
+    border-color: rgba(180, 50, 30, .4);
+    color: #ff9090;
+}
+
+.ab-bonus {
+    background: rgba(60, 120, 200, .15);
+    border-color: rgba(60, 120, 200, .4);
+    color: #90c0ff;
+}
+
+.ab-reaction {
+    background: rgba(150, 60, 200, .15);
+    border-color: rgba(150, 60, 200, .4);
+    color: #d090ff;
+}
+
+.ab-free {
+    background: rgba(50, 150, 50, .15);
+    border-color: rgba(50, 150, 50, .4);
+    color: #90e090;
+}
+
+.ability-use-btn {
+    background: linear-gradient(180deg, #2a2218, #1a1510);
+    border: 1px solid #8b6914;
+    color: #c9a84c;
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all .15s;
+    flex-shrink: 0;
+}
+
+.ability-use-btn:hover {
+    background: linear-gradient(180deg, #3a2a10, #2a1e0c);
+    border-color: #c9a84c;
+    color: #e8c96a;
+    box-shadow: 0 0 6px rgba(201, 168, 76, .3);
+}
+
+.ability-use-btn:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+/* Group color themes */
+.ag-basic .ability-group-header {
+    border-left: 2px solid #4a7a30;
+}
+
+.ag-basic .group-name {
+    color: #a0c080;
+}
+
+.ag-special .ability-group-header {
+    border-left: 2px solid #aa2020;
+}
+
+.ag-special .group-name {
+    color: #ff9090;
+}
+
+.ag-passive .ability-group-header {
+    border-left: 2px solid #8a7a5a;
+}
+
+.ag-passive .group-name {
+    color: #d4c090;
+}

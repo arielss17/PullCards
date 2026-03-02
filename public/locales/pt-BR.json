@@ -1,0 +1,50 @@
+{
+    "loading": {
+        "title": "Invocando Criaturas...",
+        "text": "Contatando o reino dos monstros..."
+    },
+    "header": {
+        "coins": "Moedas:"
+    },
+    "buttons": {
+        "begin": "Iniciar Invocação",
+        "beginSub": "🪙 Ofereça 10 moedas ao círculo",
+        "rollD100": "🎲 Lançar os Ossos",
+        "rollD100Sub": "d100 — Determine qual reino responde",
+        "rollD20": "🎲 Rolar Qualidade",
+        "rollD20Sub": "d20 — Que nível de poder atende seu chamado?"
+    },
+    "collection": {
+        "title": "🗃️ Sua Coleção",
+        "empty": "O círculo de invocação aguarda sua primeira oferenda..."
+    },
+    "dice": {
+        "table": "Tabela {table}"
+    },
+    "narration": {
+        "circleAwakens": "O antigo círculo desperta... sua oferenda foi aceita.",
+        "tableA": "Criaturas comuns se agitam nas sombras... o reino inferior responde.",
+        "tableB": "A terra treme sob seus pés... criaturas sombrias tomam conhecimento!",
+        "tableC": "⚡ A fenda se rasga! Seres ancestrais das profundezas atendem ao seu chamado!",
+        "tierC": "Uma criatura comum responde ao seu chamado através da névoa...",
+        "tierB": "Uma besta incomum emerge das profundezas arcanas!",
+        "tierA": "Uma entidade rara se manifesta da fenda arcana!",
+        "criticalDice": "⚡ OS DADOS ARDEM COM PODER ANCESTRAL!",
+        "criticalS": "A realidade se despedaça... uma criatura Lendária descende!",
+        "criticalSBanner": "🌟 20 NATURAL × 20! INVOCAÇÃO LENDÁRIA!",
+        "criticalMulti": "⚡ CRÍTICO! {count}× Cards Raros!",
+        "criticalMultiNarration": "A onda de poder traz duas entidades raras do vazio!",
+        "boundToCollection": "{name} foi vinculado à sua coleção."
+    },
+    "results": {
+        "critical": "⚡ CRÍTICO!",
+        "tierC": "Tier C",
+        "tierB": "Tier B",
+        "tierA": "Tier A"
+    },
+    "lang": {
+        "label": "🌐",
+        "pt-BR": "Português",
+        "en": "English"
+    }
+}

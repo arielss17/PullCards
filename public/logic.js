@@ -7,11 +7,30 @@ const SummonEngine = (() => {
   const rollD100 = () => Math.floor(Math.random() * 100) + 1;
   const rollD20 = () => Math.floor(Math.random() * 20) + 1;
 
+  // --- Dynamic Configuration ---
+  let config = {
+    tables: {
+      A: { maxD100: 50 },
+      B: { maxD100: 80 },
+      C: { maxD100: 100 }
+    }
+  };
+
+  const setConfig = (newConfig) => {
+    if (newConfig && newConfig.tables) {
+      config = newConfig;
+    }
+  };
+
   // --- Table Resolution (d100) ---
   const getTableFromRoll = (d100) => {
-    if (d100 <= 50) return "A";
-    if (d100 <= 80) return "B";
-    return "C";
+    if (!config || !config.tables) return "C";
+    const sortedTables = Object.entries(config.tables).sort((a, b) => a[1].maxD100 - b[1].maxD100);
+    for (const [tableName, tableConfig] of sortedTables) {
+      if (d100 <= tableConfig.maxD100) return tableName;
+    }
+    // Fallback if somehow d100 > all ranges
+    return sortedTables[sortedTables.length - 1]?.[0] || "C";
   };
 
   // --- Tier Resolution (d20) ---
@@ -33,8 +52,8 @@ const SummonEngine = (() => {
 
   // --- Card Lookup with Fallback ---
   const findCards = (database, table, tier, count = 1) => {
-    let pool = database.filter(c => c.table === table && c.tier === tier);
-    if (pool.length === 0) pool = database.filter(c => c.table === table);
+    let pool = database.filter(c => (c.tables && c.tables.includes(table)) && c.tier === tier);
+    if (pool.length === 0) pool = database.filter(c => c.tables && c.tables.includes(table));
     if (pool.length === 0) pool = database.filter(c => c.tier === tier);
     if (pool.length === 0) pool = [...database];
 
@@ -136,6 +155,6 @@ const SummonEngine = (() => {
     handleCritical, findCards,
     rollTableStep, rollTierStep,
     summon, createGameState, canSummon, deductCoins, performSummon,
-    testDistribution,
+    testDistribution, setConfig
   };
 })();

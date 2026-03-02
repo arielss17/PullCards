@@ -1,0 +1,50 @@
+{
+    "loading": {
+        "title": "Summoning Creatures...",
+        "text": "Contacting the realm of monsters..."
+    },
+    "header": {
+        "coins": "Coins:"
+    },
+    "buttons": {
+        "begin": "Begin Summoning",
+        "beginSub": "🪙 Offer 10 coins to the circle",
+        "rollD100": "🎲 Roll the Bones",
+        "rollD100Sub": "d100 — Determine which realm answers",
+        "rollD20": "🎲 Roll for Quality",
+        "rollD20Sub": "d20 — What power level answers your call?"
+    },
+    "collection": {
+        "title": "🗃️ Your Collection",
+        "empty": "The summoning circle awaits your first offering..."
+    },
+    "dice": {
+        "table": "Table {table}"
+    },
+    "narration": {
+        "circleAwakens": "The ancient circle awakens... your offering is accepted.",
+        "tableA": "Common creatures stir in the shadows... the lesser realm responds.",
+        "tableB": "The earth trembles beneath your feet... darker creatures take notice!",
+        "tableC": "⚡ The rift tears open! Ancient beings from the deepest realms answer your call!",
+        "tierC": "A common creature answers your call from the mist...",
+        "tierB": "An uncommon beast emerges from the arcane depths!",
+        "tierA": "A rare entity manifests from the arcane rift!",
+        "criticalDice": "⚡ THE DICE BURN WITH ANCIENT POWER!",
+        "criticalS": "Reality itself shatters... a Legendary creature descends!",
+        "criticalSBanner": "🌟 NATURAL 20 × 20! LEGENDARY SUMMON!",
+        "criticalMulti": "⚡ CRITICAL! {count}× Rare Cards!",
+        "criticalMultiNarration": "The surge of power draws two rare entities from the void!",
+        "boundToCollection": "{name} has been bound to your collection."
+    },
+    "results": {
+        "critical": "⚡ CRITICAL!",
+        "tierC": "Tier C",
+        "tierB": "Tier B",
+        "tierA": "Tier A"
+    },
+    "lang": {
+        "label": "🌐",
+        "pt-BR": "Português",
+        "en": "English"
+    }
+}

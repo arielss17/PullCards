@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Renderer</title>
+    <!-- Reset for clean iframe embedding -->
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        #card-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        /* Fixed aspect ratio container that will be scaled via JS */
+        .scale-wrapper {
+            width: 250px;
+            height: 350px;
+            position: relative;
+            transform-origin: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Inner scaling logic to fit within different frames if necessary */
+        .char-card-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.1s ease;
+        }
+
+        .char-card-inner:hover {
+            transform: scale(0.98);
+        }
+    </style>
+    <!-- We load the main CSS files which contain the card styling -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/combat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=MedievalSharp&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="card-container"></div>
+
+    <!-- Data source -->
+    <script src="js/monsters.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const source = params.get('source');
+        const slot = params.get('slot');
+
+        // Extract from our database
+        let monsterData = null;
+        if (typeof MonstersBD !== 'undefined') {
+            monsterData = MonstersBD.find(m => m.id === id);
+        }
+
+        if (monsterData) {
+            // Render the universal CSS components
+            document.getElementById('card-container').innerHTML = `
+              <div id="scale-wrapper" class="scale-wrapper">
+                  <div class="char-card-inner">
+                    <div class="combat-card-header">
+                      <div class="card-hp-badge">${monsterData.hp}</div>
+                      <div class="card-name-block">
+                        <span class="card-name">${monsterData.name}</span>
+                        <span class="card-subtitle">${monsterData.type}</span>
+                      </div>
+                      <div class="cr-badge"><span class="cr-value">${monsterData.cr}</span></div>
+                    </div>
+                    <div class="char-image-wrapper">
+                      <img src="${monsterData.image}" class="char-image-fallback" alt="${monsterData.name}">
+                      <div class="ca-badge"><span class="ca-label">CA</span><span class="ca-value">${monsterData.ac || monsterData.armorClass}</span></div>
+                    </div>
+                    <div class="rune-border"></div>
+                    <div class="stats-row">
+                      <div class="stat-cell"><span class="stat-label">STR</span><span class="stat-value">${monsterData.stats.str.score}</span><span class="stat-mod">${monsterData.stats.str.modifier}</span></div>
+                      <div class="stat-cell"><span class="stat-label">DEX</span><span class="stat-value">${monsterData.stats.dex.score}</span><span class="stat-mod">${monsterData.stats.dex.modifier}</span></div>
+                      <div class="stat-cell"><span class="stat-label">CON</span><span class="stat-value">${monsterData.stats.con.score}</span><span class="stat-mod">${monsterData.stats.con.modifier}</span></div>
+                      <div class="stat-cell"><span class="stat-label">INT</span><span class="stat-value">${monsterData.stats.int.score}</span><span class="stat-mod">${monsterData.stats.int.modifier}</span></div>
+                      <div class="stat-cell"><span class="stat-label">WIS</span><span class="stat-value">${monsterData.stats.wis.score}</span><span class="stat-mod">${monsterData.stats.wis.modifier}</span></div>
+                      <div class="stat-cell"><span class="stat-label">CHA</span><span class="stat-value">${monsterData.stats.cha.score}</span><span class="stat-mod">${monsterData.stats.cha.modifier}</span></div>
+                    </div>
+                  </div>
+              </div>
+            `;
+
+            // Dynamic scaling logic
+            function updateScale() {
+                const wrapper = document.getElementById('scale-wrapper');
+                if (!wrapper) return;
+                const scaleX = window.innerWidth / 250;
+                const scaleY = window.innerHeight / 350;
+                const scale = Math.min(scaleX, scaleY);
+                wrapper.style.transform = `scale(${scale})`;
+            }
+
+            window.addEventListener('resize', updateScale);
+            // Run initially
+            updateScale();
+
+            // Setup event bubbling so the main game can perceive clicks on this iframe
+            document.body.onclick = () => {
+                window.parent.postMessage({
+                    type: 'CARD_IFRAME_CLICK',
+                    id: id,
+                    source: source,
+                    slot: slot
+                }, '*');
+            };
+        } else {
+            document.getElementById('card-container').innerHTML = `< div style = "color:white; text-align:center;" > Card Not Found</div >`;
+        }
+    </script>
+</body>
+
+</html>

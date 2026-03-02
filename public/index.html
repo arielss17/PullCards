@@ -7,10 +7,33 @@
   <meta name="description"
     content="PullCards - A medieval fantasy RPG card summoning ritual. Roll ancient dice to summon powerful creatures!">
   <title>PullCards — RPG Card Summoning Ritual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="i18n.js"></script>
 </head>
 
 <body>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay__content">
+      <div class="loading-overlay__circle">
+        <svg viewBox="0 0 500 500">
+          <circle cx="250" cy="250" r="220" stroke="rgba(201,162,39,0.3)" fill="none" stroke-width="2" />
+          <circle cx="250" cy="250" r="180" stroke="rgba(201,162,39,0.2)" fill="none" stroke-width="1"
+            stroke-dasharray="8 12" />
+          <polygon points="250,70 375,360 100,170 400,170 125,360" stroke="rgba(201,162,39,0.25)" fill="none"
+            stroke-width="1" />
+        </svg>
+      </div>
+      <h2 class="loading-overlay__title" data-i18n="loading.title">Invocando Criaturas...</h2>
+      <div class="loading-overlay__bar">
+        <div class="loading-overlay__fill" id="loadingFill"></div>
+      </div>
+      <p class="loading-overlay__text" id="loadingText" data-i18n="loading.text">Contatando o reino dos monstros...</p>
+    </div>
+  </div>
 
   <!-- Screen Effect Overlays -->
   <div class="screen-overlay" id="overlayTableA"></div>
@@ -57,8 +80,14 @@
     </h1>
     <div class="header__coins" aria-live="polite">
       <span class="header__coins-icon">🪙</span>
-      <span>Coins:</span>
+      <span data-i18n="header.coins">Moedas:</span>
       <span class="header__coins-value" id="coinDisplay">100</span>
+    </div>
+    <div class="header__lang">
+      <select id="langSelect" class="lang-select">
+        <option value="pt-BR">🇧🇷 PT-BR</option>
+        <option value="en">🇺🇸 EN</option>
+      </select>
     </div>
   </header>
 
@@ -81,18 +110,18 @@
 
       <!-- Ritual Buttons -->
       <button class="ritual-btn ritual-btn--begin visible" id="btnBegin" type="button">
-        Begin Summoning
-        <span class="ritual-btn__sub">🪙 Offer 10 coins to the circle</span>
+        <span data-i18n="buttons.begin">Iniciar Invocação</span>
+        <span class="ritual-btn__sub" data-i18n="buttons.beginSub">🪙 Ofereça 10 moedas ao círculo</span>
       </button>
 
       <button class="ritual-btn ritual-btn--d100" id="btnRollD100" type="button">
-        🎲 Roll the Bones
-        <span class="ritual-btn__sub">d100 — Determine which realm answers</span>
+        <span data-i18n="buttons.rollD100">🎲 Lançar os Ossos</span>
+        <span class="ritual-btn__sub" data-i18n="buttons.rollD100Sub">d100 — Determine qual reino responde</span>
       </button>
 
       <button class="ritual-btn ritual-btn--d20" id="btnRollD20" type="button">
-        🎲 Roll for Quality
-        <span class="ritual-btn__sub">d20 — What power level answers your call?</span>
+        <span data-i18n="buttons.rollD20">🎲 Rolar Qualidade</span>
+        <span class="ritual-btn__sub" data-i18n="buttons.rollD20Sub">d20 — Que nível de poder atende seu chamado?</span>
       </button>
 
       <!-- Dice Arena -->
@@ -126,13 +155,15 @@
 
   <!-- Collection Tray -->
   <section class="collection" id="collectionSection">
-    <h2 class="collection__title">🗃️ Your Collection</h2>
+    <h2 class="collection__title" data-i18n="collection.title">🗃️ Sua Coleção</h2>
     <div class="collection__grid" id="collectionGrid">
-      <span class="collection__empty">The summoning circle awaits your first offering...</span>
+      <span class="collection__empty" data-i18n="collection.empty">O círculo de invocação aguarda sua primeira
+        oferenda...</span>
     </div>
   </section>
 
   <!-- Scripts -->
+  <script src="api.js"></script>
   <script src="logic.js"></script>
   <script src="sounds.js"></script>
   <script>
@@ -140,14 +171,31 @@
     // PullCards – Medieval Fantasy Ritual Controller
     // ============================================================
     (async () => {
-      // --- Load Database ---
+      // --- Load Database from D&D 5e API ---
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const loadingFill = document.getElementById('loadingFill');
+      const loadingText = document.getElementById('loadingText');
+
       let cardsDB = [];
       try {
-        const resp = await fetch('./cards_database.json');
-        cardsDB = await resp.json();
+        // Initialize i18n first
+        await I18n.init();
+
+        cardsDB = await MonsterAPI.loadAll((done, total) => {
+          const pct = Math.round((done / total) * 100);
+          loadingFill.style.width = pct + '%';
+          loadingText.textContent = `${done} / ${total}`;
+        });
+        loadingText.textContent = `${cardsDB.length} ✅`;
       } catch (e) {
-        console.error('Failed to load cards_database.json', e);
+        console.error('Failed to load monsters', e);
+        loadingText.textContent = '❌';
       }
+
+      // Hide loading overlay
+      await new Promise(r => setTimeout(r, 600));
+      loadingOverlay.classList.add('hidden');
+      loadingOverlay.addEventListener('transitionend', () => loadingOverlay.remove(), { once: true });
 
       // --- DOM ---
       const $ = (id) => document.getElementById(id);
@@ -295,10 +343,25 @@
       const showBtn = (b) => b.classList.add('visible');
       const hideBtn = (b) => b.classList.remove('visible');
 
-      // --- Card Builder ---
+      // --- Card Builder (Original Game Card Design) ---
       const createCardElement = (card, tier) => {
         const w = document.createElement('div');
         w.className = `card card--tier-${tier}`;
+        const imgSrc = card.image || card.imageUrl || '';
+        const typeName = card.type || '???';
+        const crLabel = card.cr ?? '?';
+        const hp = card.hp ?? '?';
+        const ac = card.armorClass ?? card.ac ?? '?';
+        const s = card.stats || {};
+        const statCells = ['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => {
+          const st = s[k] || { score: 10, modifier: '+0' };
+          return `<div class="stat-cell">
+            <span class="stat-label">${k.toUpperCase()}</span>
+            <span class="stat-value">${st.score}</span>
+            <span class="stat-mod">${st.modifier}</span>
+          </div>`;
+        }).join('');
+
         w.innerHTML = `
           <div class="card__face card__back">
             <div class="card__back-pattern">
@@ -306,20 +369,24 @@
             </div>
           </div>
           <div class="card__face card__front">
-            <span class="card__tier-badge">${tier}</span>
-            <div class="card__image-wrapper">
-              <img class="card__image" src="${card.imageUrl}" alt="${card.name}" loading="lazy">
-            </div>
-            <div class="card__info">
-              <div class="card__name">${card.name}</div>
-              <div class="card__meta">
-                <span>Table ${card.table}</span>
-                <span>${tierNames[tier] || tier}</span>
+            <div class="char-card-inner">
+              <div class="combat-card-header">
+                <div class="card-hp-badge">${hp}</div>
+                <div class="card-name-block">
+                  <span class="card-name">${card.name}</span>
+                  <span class="card-subtitle">${typeName}</span>
+                </div>
+                <div class="cr-badge"><span class="cr-value">${crLabel}</span></div>
               </div>
-              <div class="card__stats">
-                <span class="card__stat card__stat--atk">⚔ ${card.stats.attack}</span>
-                <span class="card__stat card__stat--def">🛡 ${card.stats.defense}</span>
+              <div class="char-image-wrapper">
+                <img src="${imgSrc}" class="char-image-fallback" alt="${card.name}" loading="lazy">
+                <div class="ca-badge">
+                  <span class="ca-label">CA</span>
+                  <span class="ca-value">${ac}</span>
+                </div>
               </div>
+              <div class="rune-border"></div>
+              <div class="stats-row">${statCells}</div>
             </div>
           </div>
         `;
@@ -331,9 +398,10 @@
         if (empty) empty.remove();
         const m = document.createElement('div');
         m.className = `collection__mini-card collection__mini-card--tier-${tier}`;
-        m.title = `${card.name} (${tierNames[tier]}) — ATK:${card.stats.attack} DEF:${card.stats.defense}`;
+        const imgSrc = card.image || card.imageUrl || '';
+        m.title = `${card.name} (${card.type}) — HP:${card.hp} CA:${card.armorClass ?? card.ac} CR:${card.cr}`;
         m.innerHTML = `
-          <img src="${card.imageUrl}" alt="${card.name}" loading="lazy">
+          <img src="${imgSrc}" alt="${card.name}" loading="lazy">
           <span class="collection__mini-card-name">${card.name}</span>
         `;
         collectionGrid.appendChild(m);
@@ -382,7 +450,7 @@
         setStep(1);
 
         narration.className = 'narration parchment';
-        await typeNarration('The ancient circle awakens... your offering is accepted.', 38);
+        await typeNarration(I18n.t('narration.circleAwakens'), 38);
         await wait(800);
 
         showBtn(btnRollD100);
@@ -411,7 +479,7 @@
 
         diceD100.classList.remove('rolling');
         diceD100.querySelector('.dice__face').textContent = tableResult.d100;
-        resultD100.textContent = `Table ${tableResult.table}`;
+        resultD100.textContent = I18n.t('dice.table', { table: tableResult.table });
         SoundEngine.diceLand();
 
         await wait(400);
@@ -422,14 +490,14 @@
           fireOverlay('tableA', 'table-a');
           SoundEngine.tableA();
           narration.className = 'narration parchment';
-          await typeNarration('Common creatures stir in the shadows... the lesser realm responds.', 40);
+          await typeNarration(I18n.t('narration.tableA'), 40);
 
         } else if (tableResult.table === 'B') {
           fireOverlay('tableB', 'table-b');
           shakeScreen(false);
           SoundEngine.tableB();
           narration.className = 'narration parchment';
-          await typeNarration('The earth trembles beneath your feet... darker creatures take notice!', 42);
+          await typeNarration(I18n.t('narration.tableB'), 42);
 
         } else {
           activateCircle('table-c');
@@ -438,7 +506,7 @@
           SoundEngine.tableC();
           spawnParticles(25, ['#9b59b6', '#c39bd3', '#bb8fce', '#ffffff', '#d2b4de']);
           narration.className = 'narration parchment dramatic';
-          await typeNarration('⚡ The rift tears open! Ancient beings from the deepest realms answer your call!', 38);
+          await typeNarration(I18n.t('narration.tableC'), 38);
         }
 
         await wait(1200);
@@ -477,45 +545,45 @@
           SoundEngine.tierS();
           spawnParticles(60, ['#ffd700', '#ffaa00', '#fff68f', '#ffffff']);
 
-          resultD20.textContent = '⚡ CRITICAL!';
+          resultD20.textContent = I18n.t('results.critical');
           narration.className = 'narration parchment tier-s-text';
-          await typeNarration('⚡ THE DICE BURN WITH ANCIENT POWER!', 50);
+          await typeNarration(I18n.t('narration.criticalDice'), 50);
           await wait(600);
           clearNarration();
 
           if (tierResult.criticalData.type === 'S') {
-            resultCritical.textContent = '🌟 NATURAL 20 × 20! LEGENDARY SUMMON!';
+            resultCritical.textContent = I18n.t('narration.criticalSBanner');
             spawnParticles(80, ['#ffd700', '#fff68f', '#ffeaa7', '#ffffff']);
             narration.className = 'narration parchment tier-s-text';
-            await typeNarration('Reality itself shatters... a Legendary creature descends!', 42);
+            await typeNarration(I18n.t('narration.criticalS'), 42);
           } else {
-            resultCritical.textContent = `⚡ CRITICAL! ${tierResult.criticalData.count}× Rare Cards!`;
+            resultCritical.textContent = I18n.t('narration.criticalMulti', { count: tierResult.criticalData.count });
             narration.className = 'narration parchment tier-a-text';
-            await typeNarration('The surge of power draws two rare entities from the void!', 40);
+            await typeNarration(I18n.t('narration.criticalMultiNarration'), 40);
           }
           resultCritical.classList.add('visible');
 
         } else if (tierResult.tier === 'C') {
           SoundEngine.tierC();
-          resultD20.textContent = 'Tier C';
+          resultD20.textContent = I18n.t('results.tierC');
           narration.className = 'narration parchment';
-          await typeNarration('A common creature answers your call from the mist...', 40);
+          await typeNarration(I18n.t('narration.tierC'), 40);
 
         } else if (tierResult.tier === 'B') {
           fireOverlay('tierB', 'tier-b');
           SoundEngine.tierB();
-          resultD20.textContent = 'Tier B';
+          resultD20.textContent = I18n.t('results.tierB');
           narration.className = 'narration parchment tier-b-text';
-          await typeNarration('An uncommon beast emerges from the arcane depths!', 40);
+          await typeNarration(I18n.t('narration.tierB'), 40);
 
         } else if (tierResult.tier === 'A') {
           fireOverlay('tierA', 'tier-a');
           shakeScreen(false);
           SoundEngine.tierA();
           spawnParticles(18, ['#4a9eff', '#85c1e9', '#aed6f1', '#ffffff']);
-          resultD20.textContent = 'Tier A';
+          resultD20.textContent = I18n.t('results.tierA');
           narration.className = 'narration parchment tier-a-text';
-          await typeNarration('A rare entity manifests from the arcane rift!', 40);
+          await typeNarration(I18n.t('narration.tierA'), 40);
         }
 
         await wait(1200);
@@ -583,7 +651,7 @@
         // Show narration for the summoned creature
         const creatureName = tierResult.cards[0]?.name || 'a creature';
         narration.className = 'narration parchment';
-        await typeNarration(`${creatureName} has been bound to your collection.`, 35);
+        await typeNarration(I18n.t('narration.boundToCollection', { name: creatureName }), 35);
 
         // Cleanup dice but KEEP card on screen — show Begin Summoning
         deactivateCircle();
@@ -595,6 +663,16 @@
 
       // --- Init ---
       updateCoins();
+
+      // --- Language Selector ---
+      const langSelect = document.getElementById('langSelect');
+      langSelect.value = I18n.getLang();
+      langSelect.addEventListener('change', async (e) => {
+        await I18n.setLang(e.target.value);
+        // Reload monsters for new locale
+        cardsDB = await MonsterAPI.loadAll();
+        console.log(`🌐 Reloaded ${cardsDB.length} monsters for ${e.target.value}`);
+      });
 
     })();
   </script>
