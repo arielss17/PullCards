@@ -70,7 +70,17 @@ const AuthManager = (() => {
         window.location.href = '/auth.html';
     };
 
-    return { getUser, setUser, clearUser, isLoggedIn, login, register, logout };
+    const requireAuth = () => {
+        if (window.location.pathname.includes('auth.html')) return; // Don't guard the login page itself
+        if (!isLoggedIn()) {
+            document.documentElement.style.visibility = 'hidden';
+            window.location.href = '/auth.html';
+            return false;
+        }
+        return true;
+    };
+
+    return { getUser, setUser, clearUser, isLoggedIn, login, register, logout, requireAuth };
 })();
 
 // --- Page Logic (only runs on auth.html) ---
@@ -126,7 +136,7 @@ const AuthManager = (() => {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             await AuthManager.login(email, password);
-            showMessage('Ritual aceito! Redirecionando...', 'success');
+            showMessage(I18n.t('auth.loginSuccess'), 'success');
             setTimeout(() => { window.location.href = '/'; }, 800);
         } catch (err) {
             showMessage(err.message);
@@ -146,7 +156,7 @@ const AuthManager = (() => {
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             await AuthManager.register(name, email, password);
-            showMessage('Selo forjado! Redirecionando...', 'success');
+            showMessage(I18n.t('auth.registerSuccess'), 'success');
             setTimeout(() => { window.location.href = '/'; }, 800);
         } catch (err) {
             console.error('[Auth] Catch error em formRegister:', err);

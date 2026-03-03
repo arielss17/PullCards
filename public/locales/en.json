@@ -4,19 +4,66 @@
         "text": "Contacting the realm of monsters..."
     },
     "header": {
-        "coins": "Coins:"
+        "energy": "Charges:",
+        "bestiary": "📖 Bestiary",
+        "admin": "⚙️ Admin",
+        "logout": "logout"
     },
     "buttons": {
         "begin": "Begin Summoning",
-        "beginSub": "🪙 Offer 10 coins to the circle",
+        "beginSub": "🔮 Consume 1 charge from the circle",
         "rollD100": "🎲 Roll the Bones",
         "rollD100Sub": "d100 — Determine which realm answers",
         "rollD20": "🎲 Roll for Quality",
         "rollD20Sub": "d20 — What power level answers your call?"
     },
+    "auth": {
+        "title": "PullCards",
+        "subtitle": "Summoner's Portal",
+        "tabLogin": "Login",
+        "tabRegister": "Register",
+        "emailLabel": "Email",
+        "emailPlaceholder": "your@email.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "••••••••",
+        "nameLabel": "Summoner Name",
+        "namePlaceholder": "Your name",
+        "loginBtn": "Begin Ritual",
+        "registerBtn": "Forge Seal",
+        "loginSuccess": "Ritual accepted! Redirecting...",
+        "registerSuccess": "Seal forged! Redirecting...",
+        "loginRequired": "Please log in to summon creatures."
+    },
+    "profile": {
+        "title": "Summoner Profile",
+        "subtitle": "Change your name or password",
+        "nameLabel": "Summoner Name",
+        "currentPasswordLabel": "Current Password (required)",
+        "newPasswordLabel": "New Password (leave empty to keep)",
+        "submitBtn": "Seal Changes",
+        "submitting": "⏳ Sealing...",
+        "success": "Profile updated successfully!",
+        "submitted": "✅ Sealed!",
+        "backToGame": "⚔️ Back to Game",
+        "bestiary": "📖 Bestiary",
+        "memberSince": "Member since {date}",
+        "connectionError": "Connection error with the server."
+    },
     "collection": {
         "title": "🗃️ Your Collection",
-        "empty": "The summoning circle awaits your first offering..."
+        "pageTitle": "📖 Bestiary",
+        "play": "⚔️ Play",
+        "loading": "Awakening Bestiary...",
+        "filterAll": "All",
+        "filterOwned": "Owned",
+        "filterMissing": "Missing",
+        "empty": "The summoning circle awaits your first offering...",
+        "emptyLogin": "Log in to see your collection.",
+        "progress": "{owned} of {total} creatures ({percent}%)"
+    },
+    "energy": {
+        "charges": "Charges:",
+        "loginToSummon": "Log in to summon"
     },
     "dice": {
         "table": "Table {table}"
@@ -29,18 +76,31 @@
         "tierC": "A common creature answers your call from the mist...",
         "tierB": "An uncommon beast emerges from the arcane depths!",
         "tierA": "A rare entity manifests from the arcane rift!",
+        "tierS": "A legendary creature descends upon the circle!",
+        "tierZ": "The heavens open... An entity of immeasurable power answers your call!",
+        "tierD": "A lesser creature emerges dejected from the thick mist...",
+        "tierE": "The runes fade... Only an echo of extreme weakness remains in the circle.",
         "criticalDice": "⚡ THE DICE BURN WITH ANCIENT POWER!",
         "criticalS": "Reality itself shatters... a Legendary creature descends!",
-        "criticalSBanner": "🌟 NATURAL 20 × 20! LEGENDARY SUMMON!",
-        "criticalMulti": "⚡ CRITICAL! {count}× Rare Cards!",
-        "criticalMultiNarration": "The surge of power draws two rare entities from the void!",
+        "criticalSBanner": "🌟 NATURAL 20! LEGENDARY SUMMON!",
+        "criticalZ": "🌟 NATURAL 20 × 20! DIVINE SUMMON!",
+        "criticalMulti": "⚡ CRITICAL! {count}× Legendary Cards!",
+        "criticalMultiNarration": "The surge of power draws two legendary entities from the void!",
         "boundToCollection": "{name} has been bound to your collection."
     },
     "results": {
         "critical": "⚡ CRITICAL!",
-        "tierC": "Tier C",
-        "tierB": "Tier B",
-        "tierA": "Tier A"
+        "tierZ": "Divine",
+        "tierS": "Legendary",
+        "tierA": "Rare",
+        "tierB": "Uncommon",
+        "tierC": "Common",
+        "tierD": "Inferior",
+        "tierE": "Insignificant"
+    },
+    "errors": {
+        "deductEnergyFailed": "Failed to consume charge. Try again.",
+        "updateFailed": "Failed to update."
     },
     "lang": {
         "label": "🌐",

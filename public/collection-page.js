@@ -4,6 +4,21 @@
 // ============================================================
 
 (async () => {
+    // --- i18n ---
+    const lang = await I18n.init();
+    const langSelect = document.getElementById('langSelect');
+    if (langSelect) {
+        langSelect.value = lang;
+        langSelect.addEventListener('change', async (e) => {
+            await I18n.setLang(e.target.value);
+            // Optional: redesenhar a página se necessário, 
+            // mas o applyToDOM do I18n já cuida dos [data-i18n]
+        });
+    }
+
+    // --- Auth Guard ---
+    if (!AuthManager.requireAuth()) return;
+
     const grid = document.getElementById('colGrid');
     const loading = document.getElementById('colLoading');
     const emptyState = document.getElementById('colEmpty');
@@ -14,15 +29,11 @@
 
     // --- Auth Check ---
     const user = AuthManager.getUser();
-    if (user) {
-        let adminLink = '';
-        if (user.isAdmin) {
-            adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
-        }
-        userInfo.innerHTML = `${adminLink}🧙 ${user.name} <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
-    } else {
-        userInfo.innerHTML = '<a href="/auth.html" style="color: var(--gold); text-decoration: none;">Entrar</a>';
+    let adminLink = '';
+    if (user.isAdmin) {
+        adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
     }
+    userInfo.innerHTML = `${adminLink}<a href="/profile.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem;">🧙 ${user.name}</a> <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
 
     // --- Load Data ---
     let allMonsters = [];
@@ -48,7 +59,7 @@
     const totalOwned = ownedIds.size;
     const pct = totalCreatures > 0 ? Math.round((totalOwned / totalCreatures) * 100) : 0;
 
-    progressText.innerHTML = `<strong>${totalOwned}</strong> / ${totalCreatures} criaturas descobertas (${pct}%)`;
+    progressText.innerHTML = `<strong>${totalOwned}</strong> / ${totalCreatures} — ${I18n.t('collection.progress', { owned: totalOwned, total: totalCreatures, percent: pct })}`;
     progressFill.style.width = `${pct}%`;
 
     // --- Render Tier Filter Buttons ---

@@ -4,19 +4,66 @@
         "text": "Contatando o reino dos monstros..."
     },
     "header": {
-        "coins": "Moedas:"
+        "energy": "Cargas:",
+        "bestiary": "📖 Bestiário",
+        "admin": "⚙️ Admin",
+        "logout": "sair"
     },
     "buttons": {
         "begin": "Iniciar Invocação",
-        "beginSub": "🪙 Ofereça 10 moedas ao círculo",
+        "beginSub": "🔮 Consuma 1 carga do círculo",
         "rollD100": "🎲 Lançar os Ossos",
         "rollD100Sub": "d100 — Determine qual reino responde",
         "rollD20": "🎲 Rolar Qualidade",
         "rollD20Sub": "d20 — Que nível de poder atende seu chamado?"
     },
+    "auth": {
+        "title": "PullCards",
+        "subtitle": "Portal do Invocador",
+        "tabLogin": "Entrar",
+        "tabRegister": "Registrar",
+        "emailLabel": "Email",
+        "emailPlaceholder": "seu@email.com",
+        "passwordLabel": "Senha",
+        "passwordPlaceholder": "••••••••",
+        "nameLabel": "Nome do Invocador",
+        "namePlaceholder": "Seu nome",
+        "loginBtn": "Iniciar Ritual",
+        "registerBtn": "Forjar Selo",
+        "loginSuccess": "Ritual aceito! Redirecionando...",
+        "registerSuccess": "Selo forjado! Redirecionando...",
+        "loginRequired": "Faça login para invocar criaturas."
+    },
+    "profile": {
+        "title": "Perfil do Invocador",
+        "subtitle": "Altere seu nome ou senha",
+        "nameLabel": "Nome do Invocador",
+        "currentPasswordLabel": "Senha Atual (obrigatória)",
+        "newPasswordLabel": "Nova Senha (deixe vazio para manter)",
+        "submitBtn": "Selar Alterações",
+        "submitting": "⏳ Selando...",
+        "success": "Perfil atualizado com sucesso!",
+        "submitted": "✅ Selado!",
+        "backToGame": "⚔️ Voltar ao Jogo",
+        "bestiary": "📖 Bestiário",
+        "memberSince": "Membro desde {date}",
+        "connectionError": "Erro de conexão com o servidor."
+    },
     "collection": {
         "title": "🗃️ Sua Coleção",
-        "empty": "O círculo de invocação aguarda sua primeira oferenda..."
+        "pageTitle": "📖 Bestiário",
+        "play": "⚔️ Jogar",
+        "loading": "Despertando Bestiário...",
+        "filterAll": "Todas",
+        "filterOwned": "Possuídas",
+        "filterMissing": "Faltando",
+        "empty": "O círculo de invocação aguarda sua primeira oferenda...",
+        "emptyLogin": "Faça login para ver sua coleção.",
+        "progress": "{owned} de {total} criaturas ({percent}%)"
+    },
+    "energy": {
+        "charges": "Cargas:",
+        "loginToSummon": "Faça login para invocar"
     },
     "dice": {
         "table": "Tabela {table}"
@@ -42,6 +89,7 @@
         "boundToCollection": "{name} foi vinculado à sua coleção."
     },
     "results": {
+        "critical": "⚡ CRÍTICO!",
         "tierZ": "Divino",
         "tierS": "Lendário",
         "tierA": "Raro",
@@ -49,6 +97,10 @@
         "tierC": "Comum",
         "tierD": "Inferior",
         "tierE": "Insignificante"
+    },
+    "errors": {
+        "deductEnergyFailed": "Falha ao consumir carga. Tente novamente.",
+        "updateFailed": "Falha ao atualizar."
     },
     "lang": {
         "label": "🌐",

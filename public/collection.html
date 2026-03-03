@@ -13,17 +13,23 @@
 <body>
     <!-- Header -->
     <header class="col-header">
-        <h1 class="col-header__title">📖 Bestiário</h1>
+        <h1 class="col-header__title" data-i18n="collection.pageTitle">📖 Bestiário</h1>
         <nav class="col-header__nav">
-            <a href="/" class="col-header__link">⚔️ Jogar</a>
-            <a href="/admin.html" class="col-header__link">⚙️ Admin</a>
+            <a href="/" class="col-header__link" data-i18n="collection.play">⚔️ Jogar</a>
+            <a href="/admin.html" class="col-header__link" data-i18n="header.admin">⚙️ Admin</a>
             <span class="col-header__link" id="userInfo" style="cursor: default;"></span>
+            <div class="header__lang">
+                <select id="langSelect" class="lang-select">
+                    <option value="pt-BR">🇧🇷 PT-BR</option>
+                    <option value="en">🇺🇸 EN</option>
+                </select>
+            </div>
         </nav>
     </header>
 
     <!-- Progress -->
     <div class="col-progress">
-        <span class="col-progress__text" id="progressText">Carregando...</span>
+        <span class="col-progress__text" id="progressText" data-i18n="collection.loading">Carregando...</span>
         <div class="col-progress__bar">
             <div class="col-progress__fill" id="progressFill" style="width: 0%"></div>
         </div>
@@ -31,14 +37,14 @@
 
     <!-- Filters -->
     <div class="col-filters" id="filterBar">
-        <button class="col-filter-btn active" data-filter="all">Todas</button>
-        <button class="col-filter-btn" data-filter="owned">Possuídas</button>
-        <button class="col-filter-btn" data-filter="missing">Faltando</button>
+        <button class="col-filter-btn active" data-filter="all" data-i18n="collection.filterAll">Todas</button>
+        <button class="col-filter-btn" data-filter="owned" data-i18n="collection.filterOwned">Possuídas</button>
+        <button class="col-filter-btn" data-filter="missing" data-i18n="collection.filterMissing">Faltando</button>
         <!-- Injected via JS -->
     </div>
 
     <!-- Loading -->
-    <div class="col-loading" id="colLoading">Despertando Bestiário...</div>
+    <div class="col-loading" id="colLoading" data-i18n="collection.loading">Despertando Bestiário...</div>
 
     <!-- Grid -->
     <div class="col-grid" id="colGrid" style="display: none;"></div>
@@ -46,7 +52,7 @@
     <!-- Empty State -->
     <div class="col-empty" id="colEmpty" style="display: none;">
         <span class="col-empty__icon">🔮</span>
-        <p class="col-empty__text">Faça login para ver sua coleção.</p>
+        <p class="col-empty__text" data-i18n="collection.emptyLogin">Faça login para ver sua coleção.</p>
     </div>
 
     <script src="auth.js"></script>

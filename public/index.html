@@ -90,7 +90,7 @@
     </div>
 
     <div class="header__nav" style="display:flex; gap:10px; align-items:center;">
-      <a href="/collection.html"
+      <a href="/collection.html" data-i18n="header.bestiary"
         style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; padding:4px 10px; border:1px solid rgba(201,162,39,0.15); border-radius:4px; transition:all 0.2s;"
         onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'"
         onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='rgba(201,162,39,0.15)'">📖
@@ -185,6 +185,9 @@
     // PullCards – Medieval Fantasy Ritual Controller
     // ============================================================
     (async () => {
+      // --- Auth Guard ---
+      if (!AuthManager.requireAuth()) return;
+
       // --- Load Database from D&D 5e API ---
       const loadingOverlay = document.getElementById('loadingOverlay');
       const loadingFill = document.getElementById('loadingFill');
@@ -274,14 +277,7 @@
 
       const syncEnergyState = async () => {
         const user = AuthManager.getUser();
-        if (!user) {
-          energyDisplay.textContent = `? / 6`;
-          btnBegin.classList.add('disabled');
-          btnBegin.style.opacity = '0.5';
-          /* btnBegin.style.pointerEvents = 'none'; */ // Allow clicking to trigger the login alert
-          btnBegin.querySelector('.ritual-btn__sub').textContent = "Faça login para invocar";
-          return;
-        }
+        if (!user) return; // Guard already handles redirect
 
         try {
           const res = await fetch(`/api/collection/${user.id}/status`);
@@ -831,15 +827,11 @@
       // --- Auth Header ---
       const headerUserInfo = document.getElementById('headerUserInfo');
       const currentUser = AuthManager.getUser();
-      if (currentUser) {
-        let adminLink = '';
-        if (currentUser.isAdmin) {
-          adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
-        }
-        headerUserInfo.innerHTML = `${adminLink}🧙 ${currentUser.name} <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
-      } else {
-        headerUserInfo.innerHTML = '<a href="/auth.html" style="color:var(--gold); text-decoration:none; font-size:0.8rem;">🔑 Entrar</a>';
+      let adminLink = '';
+      if (currentUser.isAdmin) {
+        adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
       }
+      headerUserInfo.innerHTML = `${adminLink}<a href="/profile.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem;">🧙 ${currentUser.name}</a> <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
 
       // --- Language Selector ---
       const langSelect = document.getElementById('langSelect');

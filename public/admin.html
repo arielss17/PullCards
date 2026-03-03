@@ -9,6 +9,142 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600&family=MedievalSharp&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Admin Navigation Layout */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            min-height: calc(100vh - 65px);
+        }
+
+        .admin-nav {
+            background: rgba(12, 12, 20, 0.95);
+            border-right: 1px solid rgba(201, 162, 39, 0.12);
+            padding: 24px 0;
+            position: sticky;
+            top: 65px;
+            height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        .admin-nav__title {
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            padding: 0 20px 12px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.08);
+        }
+
+        .admin-nav__item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .admin-nav__item:hover {
+            color: var(--gold);
+            background: rgba(201, 162, 39, 0.05);
+        }
+
+        .admin-nav__item.active {
+            color: var(--gold);
+            background: rgba(201, 162, 39, 0.08);
+            border-left-color: var(--gold);
+        }
+
+        .admin-nav__icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .admin-panel {
+            padding: 24px;
+            max-width: 1200px;
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+            animation: adminFadeIn 0.3s ease;
+        }
+
+        @keyframes adminFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Config section: side-by-side cards */
+        .admin-config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-nav {
+                position: static;
+                height: auto;
+                display: flex;
+                overflow-x: auto;
+                padding: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(201, 162, 39, 0.12);
+            }
+
+            .admin-nav__title {
+                display: none;
+            }
+
+            .admin-nav__item {
+                white-space: nowrap;
+                padding: 12px 16px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                font-size: 0.7rem;
+            }
+
+            .admin-nav__item.active {
+                border-bottom-color: var(--gold);
+                border-left-color: transparent;
+            }
+
+            .admin-config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body class="admin-body">
@@ -24,79 +160,142 @@
         </div>
     </header>
 
-    <main class="admin-grid-layout">
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="admin-nav">
+            <div class="admin-nav__title">Painéis</div>
+            <button class="admin-nav__item active" data-tab="config">
+                <span class="admin-nav__icon">⚙️</span> Configuração
+            </button>
+            <button class="admin-nav__item" data-tab="bestiary">
+                <span class="admin-nav__icon">📖</span> Bestiário
+            </button>
+            <button class="admin-nav__item" data-tab="i18n">
+                <span class="admin-nav__icon">📜</span> Traduções
+            </button>
+        </nav>
 
-        <!-- Sidebar: Config de Mesas -->
-        <aside class="admin-sidebar">
-            <section class="admin-card">
-                <h2 class="admin-title">Dimensões (Mesas)</h2>
-                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
-                    Defina as faixas do D100 para cada reino de invocação.
-                </p>
-                <div id="tablesConfig" class="tables-grid" style="grid-template-columns: 1fr;">
-                    <!-- Injected via JS -->
+        <!-- Content Panels -->
+        <div class="admin-panel">
+
+            <!-- Tab 1: Configuration (Tables + Tiers) -->
+            <div class="admin-tab-content active" id="tab-config">
+                <div class="admin-config-grid">
+                    <section class="admin-card">
+                        <h2 class="admin-title">Dimensões (Mesas)</h2>
+                        <p
+                            style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
+                            Defina as faixas do D100 para cada reino de invocação.
+                        </p>
+                        <div id="tablesConfig" class="tables-grid" style="grid-template-columns: 1fr;">
+                            <!-- Injected via JS -->
+                        </div>
+                        <button id="btnAddTable" class="admin-btn" style="width: 100%; margin-top: 1rem;">Nova Mesa
+                            +</button>
+                    </section>
+
+                    <section class="admin-card">
+                        <h2 class="admin-title">Gestão de Tiers</h2>
+                        <p
+                            style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
+                            Configure raridades (Classificação vs Apelido).
+                        </p>
+                        <div id="tiersConfig" class="tables-grid" style="grid-template-columns: 1fr;">
+                            <!-- Injected via JS -->
+                        </div>
+                        <button id="btnAddTier" class="admin-btn" style="width: 100%; margin-top: 1rem;">Adicionar Tier
+                            +</button>
+                    </section>
                 </div>
-                <button id="btnAddTable" class="admin-btn" style="width: 100%; margin-top: 1rem;">Nova Mesa +</button>
-            </section>
+            </div>
 
-            <section class="admin-card">
-                <h2 class="admin-title">Gestão de Tiers</h2>
-                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
-                    Configure raridades (Classificação vs Apelido).
-                </p>
-                <div id="tiersConfig" class="tables-grid" style="grid-template-columns: 1fr;">
-                    <!-- Injected via JS -->
-                </div>
-                <button id="btnAddTier" class="admin-btn" style="width: 100%; margin-top: 1rem;">Adicionar Tier
-                    +</button>
-            </section>
-        </aside>
+            <!-- Tab 2: Bestiary -->
+            <div class="admin-tab-content" id="tab-bestiary">
+                <section class="admin-card">
+                    <h2 class="admin-title">O Bestiário Eterno</h2>
 
-        <!-- Content: Bestiário -->
-        <section class="admin-content">
-            <section class="admin-card">
-                <h2 class="admin-title">O Bestiário Eterno</h2>
+                    <div class="admin-controls">
+                        <input type="text" id="monsterSearch" placeholder="Rastrear criatura..." class="admin-input"
+                            style="flex: 1; min-width: 200px;">
 
-                <div class="admin-controls">
-                    <input type="text" id="monsterSearch" placeholder="Rastrear criatura..." class="admin-input"
-                        style="flex: 1; min-width: 200px;">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <select id="filterTier" class="admin-input" style="width: auto; font-size: 0.8rem;">
+                                <option value="">Todas as Raridades</option>
+                                <!-- Injected via JS -->
+                            </select>
 
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <select id="filterTier" class="admin-input" style="width: auto; font-size: 0.8rem;">
-                            <option value="">Todas as Raridades</option>
-                            <!-- Injected via JS -->
-                        </select>
+                            <select id="filterType" class="admin-input" style="width: auto; font-size: 0.8rem;">
+                                <option value="">Todos os Tipos</option>
+                                <!-- Injected via JS -->
+                            </select>
 
-                        <select id="filterType" class="admin-input" style="width: auto; font-size: 0.8rem;">
-                            <option value="">Todos os Tipos</option>
-                            <!-- Injected via JS -->
-                        </select>
+                            <select id="filterTable" class="admin-input" style="width: auto; font-size: 0.8rem;">
+                                <option value="">Todas as Mesas</option>
+                                <!-- Injected via JS -->
+                            </select>
 
-                        <select id="filterTable" class="admin-input" style="width: auto; font-size: 0.8rem;">
-                            <option value="">Todas as Mesas</option>
-                            <!-- Injected via JS -->
-                        </select>
-
-                        <select id="sortConfig" class="admin-input" style="width: auto; font-size: 0.8rem;">
-                            <option value="crDes">CR (Maior → Menor)</option>
-                            <option value="crAsc">CR (Menor → Maior)</option>
-                            <option value="nameAsc">Nome (A-Z)</option>
-                            <option value="typeAsc">Tipo (A-Z)</option>
-                        </select>
+                            <select id="sortConfig" class="admin-input" style="width: auto; font-size: 0.8rem;">
+                                <option value="crDes">CR (Maior → Menor)</option>
+                                <option value="crAsc">CR (Menor → Maior)</option>
+                                <option value="nameAsc">Nome (A-Z)</option>
+                                <option value="typeAsc">Tipo (A-Z)</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div id="loadingBestiary"
-                    style="text-align: center; padding: 3rem; color: var(--gold-dim); font-family: var(--font-medieval);">
-                    Invocando essências...
-                </div>
+                    <div id="loadingBestiary"
+                        style="text-align: center; padding: 3rem; color: var(--gold-dim); font-family: var(--font-medieval);">
+                        Invocando essências...
+                    </div>
 
-                <div id="monsterListings" class="monster-list-grid" style="display: none;">
-                    <!-- Monsters injected via JS -->
-                </div>
-            </section>
-        </section>
-    </main>
+                    <div id="monsterListings" class="monster-list-grid" style="display: none;">
+                        <!-- Monsters injected via JS -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab 3: i18n Editor -->
+            <div class="admin-tab-content" id="tab-i18n">
+                <section class="admin-card">
+                    <h2 class="admin-title">📜 Grimório de Traduções</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.4;">
+                        Gerencie as traduções de cada idioma. Referência: <strong>Português-BR</strong>. Strings
+                        faltantes aparecem destacadas.
+                    </p>
+
+                    <div class="admin-controls" style="margin-bottom: 1rem;">
+                        <select id="i18nLangSelect" class="admin-input" style="width: auto; font-size: 0.85rem;">
+                            <!-- Injected via JS -->
+                        </select>
+                        <span id="i18nStats"
+                            style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 12px;"></span>
+                        <button id="btnSaveI18n" class="admin-btn admin-btn--primary" style="margin-left: auto;"
+                            disabled>
+                            SELAR TRADUÇÕES
+                        </button>
+                    </div>
+
+                    <div id="i18nLoading"
+                        style="text-align: center; padding: 2rem; color: var(--gold-dim); font-family: var(--font-medieval); display: none;">
+                        Decifrando pergaminhos...
+                    </div>
+
+                    <!-- Filter tabs -->
+                    <div id="i18nFilterBar" style="display: flex; gap: 8px; margin-bottom: 1rem;">
+                        <button class="admin-btn i18n-filter active" data-i18n-filter="missing"
+                            style="font-size: 0.75rem;">⚠️ Faltantes</button>
+                        <button class="admin-btn i18n-filter" data-i18n-filter="all" style="font-size: 0.75rem;">📋
+                            Todas</button>
+                    </div>
+
+                    <div id="i18nEditor" style="display: none;">
+                        <!-- Injected via JS -->
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
 
     <script src="auth.js"></script>
     <script src="i18n.js"></script>

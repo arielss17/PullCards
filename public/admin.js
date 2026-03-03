@@ -1,11 +1,29 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    if (typeof AuthManager !== 'undefined') {
-        const user = AuthManager.getUser();
-        if (!user || user.email !== 'arielssilva@hotmail.com' || !user.isAdmin) {
-            window.location.href = '/';
-            return;
-        }
+    // Auth Guard (redirects to login if not authenticated)
+    if (!AuthManager.requireAuth()) return;
+
+    // Admin Guard (redirects to home if not admin)
+    const user = AuthManager.getUser();
+    if (!user || user.email !== 'arielssilva@hotmail.com' || !user.isAdmin) {
+        window.location.href = '/';
+        return;
     }
+
+    // --- Tab Navigation ---
+    const navItems = document.querySelectorAll('.admin-nav__item[data-tab]');
+    const tabContents = document.querySelectorAll('.admin-tab-content');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const tabId = item.dataset.tab;
+
+            navItems.forEach(n => n.classList.remove('active'));
+            tabContents.forEach(t => t.classList.remove('active'));
+
+            item.classList.add('active');
+            document.getElementById(`tab-${tabId}`)?.classList.add('active');
+        });
+    });
 
     const tablesConfig = document.getElementById('tablesConfig');
     const tiersConfig = document.getElementById('tiersConfig');
@@ -435,4 +453,185 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error loading monsters", e);
         loadingBestiary.innerHTML = "❌ Erro ao despertar bestiário.";
     }
+
+    // ============================================================
+    // i18n Editor
+    // ============================================================
+    const i18nLangSelect = document.getElementById('i18nLangSelect');
+    const i18nStats = document.getElementById('i18nStats');
+    const i18nLoading = document.getElementById('i18nLoading');
+    const i18nEditor = document.getElementById('i18nEditor');
+    const btnSaveI18n = document.getElementById('btnSaveI18n');
+    const i18nFilterBar = document.getElementById('i18nFilterBar');
+
+    let i18nData = null;
+    let i18nFilter = 'missing';
+    let i18nPendingChanges = {};
+
+    // Load available locales
+    const loadLocales = async () => {
+        try {
+            const res = await fetch('/api/locales');
+            const data = await res.json();
+            i18nLangSelect.innerHTML = '<option value="">Selecione um idioma...</option>';
+            data.locales
+                .filter(l => l !== 'pt-BR')
+                .forEach(l => {
+                    const opt = document.createElement('option');
+                    opt.value = l;
+                    opt.textContent = l;
+                    i18nLangSelect.appendChild(opt);
+                });
+        } catch (err) {
+            console.error('Error loading locales:', err);
+        }
+    };
+
+    // Load missing keys for selected locale
+    const loadMissing = async (lang) => {
+        if (!lang) {
+            i18nEditor.style.display = 'none';
+            i18nStats.textContent = '';
+            return;
+        }
+
+        i18nLoading.style.display = 'block';
+        i18nEditor.style.display = 'none';
+        i18nPendingChanges = {};
+        btnSaveI18n.disabled = true;
+
+        try {
+            const res = await fetch(`/api/locales/${lang}/missing`, {
+                headers: { 'x-user-email': user.email }
+            });
+            i18nData = await res.json();
+
+            const pct = Math.round((i18nData.translatedCount / i18nData.totalKeys) * 100);
+            i18nStats.innerHTML = `<span style="color:${i18nData.missingCount > 0 ? 'var(--danger)' : 'var(--success)'}">` +
+                `${i18nData.translatedCount}/${i18nData.totalKeys} traduzidas (${pct}%) — ` +
+                `${i18nData.missingCount} faltante(s)</span>`;
+
+            renderI18nEditor();
+        } catch (err) {
+            console.error('Error loading missing keys:', err);
+            i18nStats.textContent = '❌ Erro ao carregar';
+        } finally {
+            i18nLoading.style.display = 'none';
+        }
+    };
+
+    // Render the editor rows
+    const renderI18nEditor = () => {
+        if (!i18nData) return;
+
+        const entries = i18nFilter === 'missing'
+            ? Object.entries(i18nData.missing)
+            : [...Object.entries(i18nData.missing), ...Object.entries(i18nData.existing)];
+
+        if (entries.length === 0) {
+            i18nEditor.innerHTML = '<p style="text-align:center; color:var(--success); padding:2rem; font-family:var(--font-medieval);">✅ Todas as strings estão traduzidas!</p>';
+            i18nEditor.style.display = 'block';
+            return;
+        }
+
+        let html = '<div style="display:flex; flex-direction:column; gap:6px; max-height:500px; overflow-y:auto; padding-right:8px;">';
+
+        for (const [key, info] of entries) {
+            const isMissing = key in i18nData.missing;
+            const borderColor = isMissing ? 'rgba(231,76,60,0.3)' : 'rgba(201,162,39,0.1)';
+            const bgColor = isMissing ? 'rgba(231,76,60,0.05)' : 'transparent';
+            const badge = isMissing ? '<span style="color:var(--danger); font-size:0.65rem; font-weight:700;">⚠️ FALTA</span>' : '';
+
+            html += `
+            <div style="display:grid; grid-template-columns:200px 1fr 1fr; gap:8px; align-items:center; padding:8px 10px; border:1px solid ${borderColor}; border-radius:6px; background:${bgColor};">
+                <div style="font-size:0.7rem; font-family:var(--font-display); color:var(--text-secondary); word-break:break-all;">
+                    <code>${key}</code> ${badge}
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-muted); padding:6px 8px; background:rgba(0,0,0,0.2); border-radius:4px; white-space:pre-wrap; max-height:60px; overflow-y:auto;" title="Referência (PT-BR)">
+                    ${escapeHtml(info.reference)}
+                </div>
+                <input type="text" class="admin-input i18n-input" data-key="${key}" 
+                    value="${escapeHtml(info.current || '')}" 
+                    placeholder="Traduza aqui..."
+                    style="font-size:0.8rem; padding:6px 8px; ${isMissing ? 'border-color:rgba(231,76,60,0.4);' : ''}">
+            </div>`;
+        }
+
+        html += '</div>';
+        i18nEditor.innerHTML = html;
+        i18nEditor.style.display = 'block';
+
+        // Track changes
+        i18nEditor.querySelectorAll('.i18n-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const key = e.target.dataset.key;
+                const original = (i18nData.existing[key]?.current || i18nData.missing[key]?.current || '');
+                if (e.target.value !== original) {
+                    i18nPendingChanges[key] = e.target.value;
+                } else {
+                    delete i18nPendingChanges[key];
+                }
+                btnSaveI18n.disabled = Object.keys(i18nPendingChanges).length === 0;
+            });
+        });
+    };
+
+    const escapeHtml = (str) => {
+        if (typeof str !== 'string') return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    };
+
+    // Save translations
+    btnSaveI18n.addEventListener('click', async () => {
+        const lang = i18nLangSelect.value;
+        if (!lang || Object.keys(i18nPendingChanges).length === 0) return;
+
+        btnSaveI18n.disabled = true;
+        btnSaveI18n.textContent = '⏳ Selando...';
+
+        try {
+            const res = await fetch(`/api/locales/${lang}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-user-email': user.email
+                },
+                body: JSON.stringify({ translations: i18nPendingChanges })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                btnSaveI18n.textContent = `✅ ${data.keysUpdated} chaves seladas!`;
+                setTimeout(() => {
+                    btnSaveI18n.textContent = 'SELAR TRADUÇÕES';
+                    loadMissing(lang); // Refresh
+                }, 1500);
+            } else {
+                alert(data.error || 'Erro ao salvar');
+                btnSaveI18n.textContent = 'SELAR TRADUÇÕES';
+                btnSaveI18n.disabled = false;
+            }
+        } catch (err) {
+            console.error('Error saving i18n:', err);
+            alert('Erro de conexão');
+            btnSaveI18n.textContent = 'SELAR TRADUÇÕES';
+            btnSaveI18n.disabled = false;
+        }
+    });
+
+    // Filter tabs
+    i18nFilterBar.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-i18n-filter]');
+        if (!btn) return;
+        i18nFilterBar.querySelectorAll('.i18n-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        i18nFilter = btn.dataset.i18nFilter;
+        renderI18nEditor();
+    });
+
+    // Language selector change
+    i18nLangSelect.addEventListener('change', (e) => loadMissing(e.target.value));
+
+    // Initialize
+    loadLocales();
 });

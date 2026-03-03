@@ -93,4 +93,46 @@ router.get('/me/:userId', async (req, res) => {
     }
 });
 
+// PUT /api/auth/update
+router.put('/update', async (req, res) => {
+    try {
+        const { userId, currentPassword, newName, newPassword } = req.body;
+
+        if (!userId || !currentPassword) {
+            return res.status(400).json({ error: 'userId e senha atual são obrigatórios.' });
+        }
+
+        const users = (await readJSON(USERS_FILE)) || [];
+        const userIndex = users.findIndex(u => u.id === userId);
+
+        if (userIndex === -1) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+
+        const user = users[userIndex];
+
+        if (user.password !== currentPassword) {
+            return res.status(401).json({ error: 'Senha atual incorreta.' });
+        }
+
+        // Update fields
+        if (newName && newName.trim()) {
+            user.name = newName.trim();
+        }
+        if (newPassword && newPassword.trim()) {
+            user.password = newPassword.trim();
+        }
+
+        users[userIndex] = user;
+        await writeJSON(USERS_FILE, users);
+
+        const { password: _, ...safeUser } = user;
+        const isAdmin = safeUser.email === 'arielssilva@hotmail.com';
+        res.json({ success: true, user: { ...safeUser, isAdmin } });
+    } catch (error) {
+        console.error('Update error:', error);
+        res.status(500).json({ error: 'Falha ao atualizar usuário.' });
+    }
+});
+
 module.exports = router;

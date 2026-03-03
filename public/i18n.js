@@ -1,6 +1,6 @@
 // ============================================================
 // PullCards - i18n Module
-// Simple internationalization with JSON locale files
+// Cascading fallback: active locale → pt-BR → key itself
 // Default: pt-BR | Stored in localStorage
 // ============================================================
 
@@ -9,54 +9,78 @@ const I18n = (() => {
     const DEFAULT_LANG = 'pt-BR';
     let currentLang = DEFAULT_LANG;
     let strings = {};
+    let fallbackStrings = {};
 
     const init = async (lang) => {
         currentLang = lang || localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
+
+        // Always load PT-BR as fallback
         try {
-            const res = await fetch(`./locales/${currentLang}.json`);
-            if (!res.ok) throw new Error(`Locale ${currentLang} not found`);
-            strings = await res.json();
+            const fbRes = await fetch(`./locales/${DEFAULT_LANG}.json`);
+            if (fbRes.ok) fallbackStrings = await fbRes.json();
         } catch {
-            console.warn(`⚠️ Locale '${currentLang}' failed, falling back to ${DEFAULT_LANG}`);
-            currentLang = DEFAULT_LANG;
-            const res = await fetch(`./locales/${DEFAULT_LANG}.json`);
-            strings = await res.json();
+            console.warn('⚠️ Failed to load fallback locale pt-BR');
         }
+
+        // Load active locale (if different from PT-BR)
+        if (currentLang === DEFAULT_LANG) {
+            strings = fallbackStrings;
+        } else {
+            try {
+                const res = await fetch(`./locales/${currentLang}.json`);
+                if (!res.ok) throw new Error(`Locale ${currentLang} not found`);
+                strings = await res.json();
+            } catch {
+                console.warn(`⚠️ Locale '${currentLang}' failed, falling back to ${DEFAULT_LANG}`);
+                currentLang = DEFAULT_LANG;
+                strings = fallbackStrings;
+            }
+        }
+
         localStorage.setItem(STORAGE_KEY, currentLang);
         applyToDOM();
         return currentLang;
     };
 
-    // Get translation by dot-notation key: I18n.t('buttons.begin')
-    const t = (key, replacements) => {
+    // Resolve a dot-notation key from an object
+    const resolve = (obj, key) => {
         const keys = key.split('.');
-        let val = strings;
+        let val = obj;
         for (const k of keys) {
             if (val && typeof val === 'object' && k in val) {
                 val = val[k];
             } else {
-                return key; // fallback to key itself
+                return undefined;
             }
         }
-        if (typeof val !== 'string') return key;
-        if (replacements) {
+        return typeof val === 'string' ? val : undefined;
+    };
+
+    // Get translation: active locale → fallback (pt-BR) → key itself
+    const t = (key, replacements) => {
+        const val = resolve(strings, key) ?? resolve(fallbackStrings, key) ?? key;
+        if (replacements && typeof val === 'string') {
             return val.replace(/\{(\w+)\}/g, (_, k) => replacements[k] ?? `{${k}}`);
         }
         return val;
     };
 
-    // Auto-apply to all elements with data-i18n attribute
+    // Auto-apply to all elements with data-i18n attributes
     const applyToDOM = () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             const translated = t(key);
             if (translated !== key) el.textContent = translated;
         });
-        // Also handle data-i18n-placeholder, data-i18n-title etc
         document.querySelectorAll('[data-i18n-title]').forEach(el => {
             const key = el.getAttribute('data-i18n-title');
             const translated = t(key);
             if (translated !== key) el.title = translated;
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            const translated = t(key);
+            if (translated !== key) el.placeholder = translated;
         });
     };
 
@@ -64,7 +88,6 @@ const I18n = (() => {
 
     const setLang = async (lang) => {
         await init(lang);
-        // Dispatch event so other modules can react
         window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: currentLang } }));
     };
 

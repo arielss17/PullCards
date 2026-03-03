@@ -11,18 +11,24 @@
 </head>
 
 <body>
+    <div class="header__lang" style="position: fixed; top: 15px; right: 20px; z-index: 100;">
+        <select id="langSelect" class="lang-select">
+            <option value="pt-BR">🇧🇷 PT-BR</option>
+            <option value="en">🇺🇸 EN</option>
+        </select>
+    </div>
     <div class="auth-container">
         <div class="auth-logo">
             <span class="auth-logo__icon">⚔️</span>
-            <h1 class="auth-logo__title">PullCards</h1>
-            <p class="auth-logo__subtitle">Portal do Invocador</p>
+            <h1 class="auth-logo__title" data-i18n="auth.title">PullCards</h1>
+            <p class="auth-logo__subtitle" data-i18n="auth.subtitle">Portal do Invocador</p>
         </div>
 
         <div class="auth-card">
             <!-- Tabs -->
             <div class="auth-tabs">
-                <button class="auth-tab active" id="tabLogin" type="button">Entrar</button>
-                <button class="auth-tab" id="tabRegister" type="button">Registrar</button>
+                <button class="auth-tab active" id="tabLogin" type="button" data-i18n="auth.tabLogin">Entrar</button>
+                <button class="auth-tab" id="tabRegister" type="button" data-i18n="auth.tabRegister">Registrar</button>
             </div>
 
             <!-- Message -->
@@ -31,43 +37,60 @@
             <!-- Login Form -->
             <form class="auth-form active" id="formLogin">
                 <div class="auth-field">
-                    <label class="auth-field__label" for="loginEmail">Email</label>
-                    <input class="auth-field__input" id="loginEmail" type="email" placeholder="seu@email.com" required
+                    <label class="auth-field__label" for="loginEmail" data-i18n="auth.emailLabel">Email</label>
+                    <input class="auth-field__input" id="loginEmail" type="email"
+                        data-i18n-placeholder="auth.emailPlaceholder" placeholder="seu@email.com" required
                         autocomplete="email">
                 </div>
                 <div class="auth-field">
-                    <label class="auth-field__label" for="loginPassword">Senha</label>
-                    <input class="auth-field__input" id="loginPassword" type="password" placeholder="••••••••" required
+                    <label class="auth-field__label" for="loginPassword" data-i18n="auth.passwordLabel">Senha</label>
+                    <input class="auth-field__input" id="loginPassword" type="password"
+                        data-i18n-placeholder="auth.passwordPlaceholder" placeholder="••••••••" required
                         autocomplete="current-password">
                 </div>
-                <button class="auth-submit" type="submit">Iniciar Ritual</button>
+                <button class="auth-submit" type="submit" data-i18n="auth.loginBtn">Iniciar Ritual</button>
             </form>
 
             <!-- Register Form -->
             <form class="auth-form" id="formRegister">
                 <div class="auth-field">
-                    <label class="auth-field__label" for="registerName">Nome do Invocador</label>
-                    <input class="auth-field__input" id="registerName" type="text" placeholder="Seu nome" required
+                    <label class="auth-field__label" for="registerName" data-i18n="auth.nameLabel">Nome do
+                        Invocador</label>
+                    <input class="auth-field__input" id="registerName" type="text"
+                        data-i18n-placeholder="auth.namePlaceholder" placeholder="Seu nome" required
                         autocomplete="name">
                 </div>
                 <div class="auth-field">
-                    <label class="auth-field__label" for="registerEmail">Email</label>
-                    <input class="auth-field__input" id="registerEmail" type="email" placeholder="seu@email.com"
-                        required autocomplete="email">
+                    <label class="auth-field__label" for="registerEmail" data-i18n="auth.emailLabel">Email</label>
+                    <input class="auth-field__input" id="registerEmail" type="email"
+                        data-i18n-placeholder="auth.emailPlaceholder" placeholder="seu@email.com" required
+                        autocomplete="email">
                 </div>
                 <div class="auth-field">
-                    <label class="auth-field__label" for="registerPassword">Senha</label>
-                    <input class="auth-field__input" id="registerPassword" type="password" placeholder="••••••••"
-                        required autocomplete="new-password">
+                    <label class="auth-field__label" for="registerPassword" data-i18n="auth.passwordLabel">Senha</label>
+                    <input class="auth-field__input" id="registerPassword" type="password"
+                        data-i18n-placeholder="auth.passwordPlaceholder" placeholder="••••••••" required
+                        autocomplete="new-password">
                 </div>
-                <button class="auth-submit" type="submit">Forjar Selo</button>
+                <button class="auth-submit" type="submit" data-i18n="auth.registerBtn">Forjar Selo</button>
             </form>
         </div>
 
-        <a href="/" class="auth-back">← Jogar sem conta (coleção não será salva)</a>
-    </div>
-
-    <script src="auth.js"></script>
+        <script src="i18n.js"></script>
+        <script src="auth.js"></script>
+        <script>
+            (async () => {
+                // Initialize i18n for the auth page
+                const lang = await I18n.init();
+                const langSelect = document.getElementById('langSelect');
+                if (langSelect) {
+                    langSelect.value = lang;
+                    langSelect.addEventListener('change', async (e) => {
+                        await I18n.setLang(e.target.value);
+                    });
+                }
+            })();
+        </script>
 </body>
 
 </html>
