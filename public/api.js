@@ -13,13 +13,7 @@ const MonsterAPI = (() => {
 
     const fetchConfig = async () => {
         try {
-            const resp = await fetch('/api/config');
-            if (resp.ok) {
-                config = await resp.json();
-                if (typeof SummonEngine !== 'undefined') {
-                    SummonEngine.setConfig(config);
-                }
-            }
+            config = await ApiClient.get('/api/config');
         } catch (e) {
             console.error('Failed to load admin config:', e);
         }

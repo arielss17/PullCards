@@ -427,23 +427,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const user = AuthManager.getUser(); // Safe because it's validated on load
 
-            const res = await fetch('/api/config', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-user-email': user.email
-                },
-                body: JSON.stringify(config)
-            });
-
-            if (res.ok) {
-                btnSaveConfig.innerHTML = "✅ Pactos Feitos!";
-                btnSaveConfig.style.background = "#2ecc71";
-                btnSaveConfig.style.color = "#000";
-            } else {
-                alert("Falha arcana. Verifique o servidor.");
-                btnSaveConfig.innerHTML = "❌ Falha";
-            }
+            await ApiClient.post('/api/config', config);
+            btnSaveConfig.innerHTML = "✅ Pactos Feitos!";
+            btnSaveConfig.style.background = "#2ecc71";
+            btnSaveConfig.style.color = "#000";
         } catch (e) {
             console.error(e);
             alert("A conexão com o cofre foi perdida.");
@@ -462,8 +449,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await I18n.init();
 
     try {
-        const res = await fetch('/api/config');
-        if (res.ok) config = await res.json();
+        config = await ApiClient.get('/api/config');
         if (!config.monsterOverrides) config.monsterOverrides = {};
         if (!config.customTiers) config.customTiers = {};
         if (!config.criticalRules) {
@@ -516,8 +502,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load available locales
     const loadLocales = async () => {
         try {
-            const res = await fetch('/api/locales');
-            const data = await res.json();
+            const data = await ApiClient.get('/api/locales');
             i18nLangSelect.innerHTML = '<option value="">Selecione um idioma...</option>';
             data.locales
                 .filter(l => l !== 'pt-BR')
@@ -546,10 +531,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnSaveI18n.disabled = true;
 
         try {
-            const res = await fetch(`/api/locales/${lang}/missing`, {
-                headers: { 'x-user-email': user.email }
-            });
-            i18nData = await res.json();
+            i18nData = await ApiClient.get(`/api/locales/${lang}/missing`);
 
             const pct = Math.round((i18nData.translatedCount / i18nData.totalKeys) * 100);
             i18nStats.innerHTML = `<span style="color:${i18nData.missingCount > 0 ? 'var(--danger)' : 'var(--success)'}">` +
@@ -635,30 +617,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnSaveI18n.textContent = '⏳ Selando...';
 
         try {
-            const res = await fetch(`/api/locales/${lang}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-user-email': user.email
-                },
-                body: JSON.stringify({ translations: i18nPendingChanges })
-            });
-            const data = await res.json();
-
-            if (res.ok) {
-                btnSaveI18n.textContent = `✅ ${data.keysUpdated} chaves seladas!`;
-                setTimeout(() => {
-                    btnSaveI18n.textContent = 'SELAR TRADUÇÕES';
-                    loadMissing(lang); // Refresh
-                }, 1500);
-            } else {
-                alert(data.error || 'Erro ao salvar');
+            const data = await ApiClient.put(`/api/locales/${lang}`, { translations: i18nPendingChanges });
+            btnSaveI18n.textContent = `✅ ${data.keysUpdated} chaves seladas!`;
+            setTimeout(() => {
                 btnSaveI18n.textContent = 'SELAR TRADUÇÕES';
-                btnSaveI18n.disabled = false;
-            }
+                loadMissing(lang); // Refresh
+            }, 1500);
         } catch (err) {
             console.error('Error saving i18n:', err);
-            alert('Erro de conexão');
+            alert(err.message || 'Erro de conexão');
             btnSaveI18n.textContent = 'SELAR TRADUÇÕES';
             btnSaveI18n.disabled = false;
         }

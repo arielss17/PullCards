@@ -25,44 +25,25 @@ const AuthManager = (() => {
     const isLoggedIn = () => !!getUser();
 
     const login = async (email, password) => {
-        const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Falha ao fazer login.');
-        setUser(data.user);
-        return data.user;
+        try {
+            const data = await ApiClient.post('/api/auth/login', { email, password });
+            setUser(data.user);
+            return data.user;
+        } catch (err) {
+            throw new Error(err.message || 'Falha ao fazer login.');
+        }
     };
 
     const register = async (name, email, password) => {
         console.log('[Auth] Tentando registrar:', email);
-        const res = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }),
-        });
-
-        const contentType = res.headers.get('content-type');
-        let data;
-
-        if (contentType && contentType.includes('application/json')) {
-            data = await res.json();
-        } else {
-            const text = await res.text();
-            console.error('[Auth] Resposta não-JSON do servidor:', text);
-            throw new Error(`Erro no servidor (${res.status})`);
+        try {
+            const data = await ApiClient.post('/api/auth/register', { name, email, password });
+            setUser(data.user);
+            return data.user;
+        } catch (err) {
+            console.warn('[Auth] Falha no registro:', err.message);
+            throw new Error(err.message || 'Falha ao registrar.');
         }
-
-        if (!res.ok) {
-            console.warn('[Auth] Falha no registro:', data.error);
-            throw new Error(data.error || 'Falha ao registrar.');
-        }
-
-        console.log('[Auth] Registro ok:', data.user.id);
-        setUser(data.user);
-        return data.user;
     };
 
     const logout = () => {

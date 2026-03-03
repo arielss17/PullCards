@@ -30,7 +30,7 @@
     // --- Auth Check ---
     const user = AuthManager.getUser();
     let adminLink = '';
-    if (user.isAdmin) {
+    if (user && user.isAdmin && user.email === 'arielssilva@hotmail.com') {
         adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
     }
     userInfo.innerHTML = `${adminLink}<a href="/profile.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem;">🧙 ${user.name}</a> <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
@@ -38,16 +38,20 @@
     // --- Load Data ---
     let allMonsters = [];
     let userCollection = { cards: {} };
+    let gameConfig = {};
 
     try {
         await I18n.init();
         allMonsters = await MonsterAPI.loadAll();
 
+        try {
+            gameConfig = await ApiClient.get('/api/config');
+        } catch (e) {
+            console.warn('Could not load config', e);
+        }
+
         if (user) {
-            const res = await fetch(`/api/collection/${user.id}`);
-            if (res.ok) {
-                userCollection = await res.json();
-            }
+            userCollection = await ApiClient.get(`/api/collection/${user.id}`);
         }
     } catch (e) {
         console.error('Failed to load data:', e);
@@ -64,7 +68,7 @@
 
     // --- Render Tier Filter Buttons ---
     const renderTierFilters = () => {
-        const config = SummonEngine.getConfig();
+        const config = gameConfig;
         if (!config || !config.customTiers) return;
 
         // Keep 'Todas', 'Possuídas', 'Faltando'
@@ -84,7 +88,7 @@
     // --- Render Grid ---
     const renderCards = (filter = 'all') => {
         grid.innerHTML = '';
-        const config = SummonEngine.getConfig();
+        const config = gameConfig;
         const customTiers = config?.customTiers || {};
 
         const filtered = allMonsters.filter(m => {
@@ -102,16 +106,11 @@
             return;
         }
 
-        // Sort: owned first (by qty desc), then unowned (alphabetical)
+        // Sort: numerical order (cardNumber) or fallback to name
         filtered.sort((a, b) => {
-            const aOwned = ownedIds.has(a.id) ? 1 : 0;
-            const bOwned = ownedIds.has(b.id) ? 1 : 0;
-            if (aOwned !== bOwned) return bOwned - aOwned;
-            if (aOwned && bOwned) {
-                const aQty = userCollection.cards[a.id]?.quantity || 0;
-                const bQty = userCollection.cards[b.id]?.quantity || 0;
-                return bQty - aQty;
-            }
+            const numA = parseInt(a.cardNumber) || 9999;
+            const numB = parseInt(b.cardNumber) || 9999;
+            if (numA !== numB) return numA - numB;
             return a.name.localeCompare(b.name);
         });
 

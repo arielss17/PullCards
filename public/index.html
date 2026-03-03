@@ -11,6 +11,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="i18n.js"></script>
+  <script src="api-client.js"></script>
   <script src="auth.js"></script>
 </head>
 
@@ -178,7 +179,7 @@
 
   <!-- Scripts -->
   <script src="api.js"></script>
-  <script src="logic.js"></script>
+  <script src="player-session.js"></script>
   <script src="sounds.js"></script>
   <script>
     // ============================================================
@@ -194,15 +195,16 @@
       const loadingText = document.getElementById('loadingText');
 
       let cardsDB = [];
+      let gameConfig = {};
       try {
         // Initialize i18n
         await I18n.init();
 
         // Load Admin Config
-        const configRes = await fetch('/api/config');
-        if (configRes.ok) {
-          const configData = await configRes.json();
-          SummonEngine.setConfig(configData);
+        try {
+          gameConfig = await ApiClient.get('/api/config');
+        } catch (e) {
+          console.warn('Could not load config', e);
         }
 
         cardsDB = await MonsterAPI.loadAll((done, total) => {
@@ -256,11 +258,11 @@
       };
 
       // --- State ---
-      const state = SummonEngine.createGameState(100, 10);
+      let state = PlayerSession.createGameState();
       let countdownInterval = null;
       const tierNames = {}; // Populated dynamically
       const getTierNickname = (tierId) => {
-        const custom = SummonEngine.getConfig().customTiers?.[tierId];
+        const custom = gameConfig.customTiers?.[tierId];
         return custom ? custom.nickname : (tierNames[tierId] || tierId);
       };
       let currentTable = null;
@@ -280,14 +282,11 @@
         if (!user) return; // Guard already handles redirect
 
         try {
-          const res = await fetch(`/api/collection/${user.id}/status`);
-          if (res.ok) {
-            const data = await res.json();
-            state.energy.available = data.availableSummons;
-            state.energy.max = data.maxSummons;
-            state.energy.nextSummonAt = data.nextSummonAt;
-            updateEnergyUI();
-          }
+          const data = await ApiClient.get(`/api/collection/${user.id}/status`);
+          state.energy.available = data.availableSummons;
+          state.energy.max = data.maxSummons;
+          state.energy.nextSummonAt = data.nextSummonAt;
+          updateEnergyUI();
         } catch (e) {
           console.error("Failed to sync energy", e);
         }
@@ -319,7 +318,7 @@
           timerContainer.style.display = 'none';
         }
 
-        if (!SummonEngine.canSummon(state)) {
+        if (!PlayerSession.canSummon(state)) {
           btnBegin.classList.add('disabled');
           btnBegin.style.opacity = '0.5';
           btnBegin.style.pointerEvents = 'none';
@@ -525,6 +524,8 @@
         stage.classList.remove('stage--showcase');
       };
 
+      let resolvedRollData = null;
+
       // ============================================================
       // PHASE 1: Begin Summoning
       // ============================================================
@@ -533,33 +534,10 @@
           alert(I18n.t('auth.loginRequired'));
           return;
         }
-        if (!SummonEngine.canSummon(state)) return;
+        if (!PlayerSession.canSummon(state)) return;
 
         resetStage();
         hideBtn(btnBegin);
-
-        // Deduct energy via API
-        try {
-          const user = AuthManager.getUser();
-          const res = await fetch(`/api/collection/${user.id}/deduct-summon`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          if (!res.ok) {
-            const errorData = await res.json();
-            alert(errorData.message || I18n.t('errors.deductEnergyFailed'));
-            showBtn(btnBegin); // Show button again if deduction failed
-            syncEnergyState(); // Sync state in case of error
-            return;
-          }
-          syncEnergyState(); // Sync state after successful deduction
-        } catch (e) {
-          console.error("Failed to deduct energy:", e);
-          alert(I18n.t('errors.deductEnergyFailed'));
-          showBtn(btnBegin); // Show button again if deduction failed
-          syncEnergyState(); // Sync state in case of error
-          return;
-        }
 
         shakeEnergy();
         SoundEngine.coinPay(); // Keep the sound or change to an arcane hum later
@@ -583,6 +561,21 @@
       btnRollD100.addEventListener('click', async () => {
         hideBtn(btnRollD100);
 
+        // --- BACKEND API CALL --- 
+        // Execute the entire roll on the backend now to lock in the destiny
+        const { success, result, reason } = await PlayerSession.performSummon(state);
+
+        if (!success) {
+          alert(reason || "A invocação falhou.");
+          resetStage();
+          showBtn(btnBegin);
+          syncEnergyState();
+          return;
+        }
+
+        resolvedRollData = result; // Save for phase 3!
+        syncEnergyState(); // Update UI energy now that backend deducted it
+
         diceArena.classList.add('active');
         diceGroupD100.classList.add('visible');
         diceD100.classList.add('rolling');
@@ -595,7 +588,7 @@
         await wait(2000);
         clearInterval(flash);
 
-        const tableResult = SummonEngine.rollTableStep();
+        const tableResult = resolvedRollData;
         currentTable = tableResult.table;
 
         diceD100.classList.remove('rolling');
@@ -651,7 +644,7 @@
         await wait(2000);
         clearInterval(flash);
 
-        const tierResult = SummonEngine.rollTierStep(currentTable, cardsDB);
+        const tierResult = resolvedRollData;
         diceD20.classList.remove('rolling');
         diceD20.querySelector('.dice__face').textContent = tierResult.d20;
         SoundEngine.diceLand();
@@ -797,11 +790,8 @@
           // Persist to server if logged in
           const currentUser = AuthManager.getUser();
           if (currentUser) {
-            fetch(`/api/collection/${currentUser.id}/add`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ cardId: card.id, tier: tierResult.tier }),
-            }).catch(err => console.error('Failed to persist card:', err));
+            ApiClient.post(`/api/collection/${currentUser.id}/add`, { cardId: card.id, tier: tierResult.tier })
+              .catch(err => console.error('Failed to persist card:', err));
           }
         }
 
