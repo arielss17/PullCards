@@ -97,7 +97,6 @@
 
             return true;
         });
-
         if (filtered.length === 0) {
             grid.innerHTML = '<div class="col-empty" style="grid-column: 1/-1;"><span class="col-empty__icon">🔍</span><p class="col-empty__text">Nenhuma criatura encontrada com este filtro.</p></div>';
             return;
@@ -123,23 +122,119 @@
             const tier = cardData?.tier || monster.tier || 'C';
             const tData = customTiers[tier] || { label: tier, nickname: tier };
             const imgSrc = monster.image || monster.imageUrl || `https://robohash.org/${monster.id}?set=set2`;
+            // Format card number as 3 digits (e.g. 001)
+            const cardNumStr = monster.cardNumber ? String(monster.cardNumber).padStart(3, '0') : '???';
 
-            const card = document.createElement('div');
-            card.className = `creature-card creature-card--tier-${tier}${owned ? '' : ' creature-card--unowned'}`;
-            card.title = `${monster.name} — CR:${monster.cr ?? '?'} | ${tData.nickname}${owned ? ` | x${qty}` : ' | Não obtida'}`;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'col-card-wrapper';
 
-            card.innerHTML = `
-                <img class="creature-card__img" src="${imgSrc}" alt="${monster.name}" loading="lazy">
-                <div class="creature-card__info">
-                    <div class="creature-card__name">${monster.name}</div>
-                    <div class="creature-card__meta">CR ${monster.cr ?? '?'} · ${monster.type || '???'}</div>
-                </div>
-                ${owned ? `<span class="creature-card__qty">x${qty}</span>` : ''}
-            `;
+            if (owned) {
+                // Determine CSS classes for glow/effects based on tier
+                let isFoil = tier === 'S' || tier === 'Z';
+                let specialClass = config.specialEffects?.[tier] || '';
 
-            grid.appendChild(card);
+                // Parse specific stats
+                const crLabel = monster.cr ?? '?';
+                const hp = monster.hp ?? '?';
+                const ac = monster.armorClass ?? monster.ac ?? '?';
+                const typeName = monster.type || '???';
+
+                const s = monster.stats || {};
+                const statCells = ['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => {
+                    const st = s[k] || { score: 10, modifier: '+0' };
+                    return `<div class="stat-cell">
+                    <span class="stat-label">${k.toUpperCase()}</span>
+                    <span class="stat-value">${st.score}</span>
+                    <span class="stat-mod">${st.modifier}</span>
+                  </div>`;
+                }).join('');
+
+                // Full Size TCG Card (Same structure as ritual)
+                // We add "flipped" by default so it shows the front face.
+                wrapper.innerHTML = `
+                    <div class="card card--tier-${tier} ${isFoil ? 'card--foil' : ''} ${specialClass} flipped">
+                      <div class="card__face card__back">
+                        <div class="card__back-pattern">
+                          <span class="card__back-symbol">🂠</span>
+                        </div>
+                      </div>
+                      <div class="card__face card__front">
+                        <div class="char-card-inner">
+                          <div class="combat-card-header">
+                            <div class="card-hp-badge">${hp}</div>
+                            <div class="card-name-block">
+                              <span class="card-name">${monster.name}</span>
+                              <span class="card-subtitle">${typeName}</span>
+                            </div>
+                            <div class="cr-badge"><span class="cr-value">${crLabel}</span></div>
+                          </div>
+                          <div class="char-image-wrapper">
+                            <img src="${imgSrc}" class="char-image-fallback" alt="${monster.name}" loading="lazy">
+                            <div class="ca-badge">
+                              <span class="ca-label">CA</span>
+                              <span class="ca-value">${ac}</span>
+                            </div>
+                          </div>
+                          <div class="rune-border"></div>
+                          <div class="stats-row">${statCells}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="qty-badge">x${qty}</div>
+                `;
+
+                // Add click listener for modal
+                wrapper.addEventListener('click', () => openModal(monster, cardData, wrapper.innerHTML, cardNumStr));
+            } else {
+                // Missing Card Frame
+                wrapper.innerHTML = `
+                    <div class="card-missing">
+                        <span class="card-missing__number">${cardNumStr}</span>
+                    </div>
+                `;
+            }
+
+            grid.appendChild(wrapper);
         }
     };
+
+    // --- Modal Logic ---
+    const overlay = document.getElementById('cardOverlay');
+    const closeBtn = document.getElementById('overlayClose');
+    const mContainer = document.getElementById('modalCardContainer');
+    const mTitle = document.getElementById('modalTitle');
+    const mSub = document.getElementById('modalSubtitle');
+    const mFooter = document.getElementById('modalFooter');
+
+    const openModal = (monster, cardData, htmlContent, cardNumStr) => {
+        // Strip out the quantity badge from the HTML for the modal view
+        const cleanHtml = htmlContent.replace(/<div class="qty-badge".*?<\/div>/, '');
+        mContainer.innerHTML = cleanHtml;
+
+        mTitle.textContent = monster.name;
+        mSub.textContent = `#${cardNumStr} • CR ${monster.cr ?? '?'} • ${monster.type || 'Desconhecido'}`;
+
+        // Format Date
+        let dateStr = 'Data desconhecida';
+        if (cardData && cardData.firstObtained) {
+            dateStr = new Date(cardData.firstObtained).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        mFooter.textContent = `Invocado pela primeira vez em: ${dateStr}`;
+
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    };
+
+    const closeModal = () => {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        setTimeout(() => mContainer.innerHTML = '', 300); // Clear after animation
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
 
     renderTierFilters();
     renderCards();

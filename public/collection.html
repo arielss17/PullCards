@@ -7,6 +7,10 @@
     <meta name="description"
         content="PullCards — Seu bestiário completo. Acompanhe sua coleção de criaturas invocadas.">
     <title>PullCards — Bestiário do Invocador</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="collection.css">
 </head>
 
@@ -53,6 +57,24 @@
     <div class="col-empty" id="colEmpty" style="display: none;">
         <span class="col-empty__icon">🔮</span>
         <p class="col-empty__text" data-i18n="collection.emptyLogin">Faça login para ver sua coleção.</p>
+    </div>
+
+    <!-- Full Size Card Modal / Overlay -->
+    <div class="col-overlay" id="cardOverlay">
+        <div class="col-modal">
+            <button class="col-modal__close" id="overlayClose">&times;</button>
+            <div class="col-modal__card-container" id="modalCardContainer">
+                <!-- Javascript will inject the exact .card structure here -->
+            </div>
+            <div class="col-modal__content">
+                <h2 class="col-modal__title" id="modalTitle">Nome do Monstro</h2>
+                <div class="col-modal__subtitle" id="modalSubtitle">CR 5 • Elemento</div>
+
+                <div class="col-modal__footer" id="modalFooter">
+                    <!-- Javascript will inject "Invocado pela primeira vez em XYZ" -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="auth.js"></script>

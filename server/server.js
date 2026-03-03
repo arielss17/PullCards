@@ -48,15 +48,26 @@ const initConfig = async () => {
             const defaults = {
                 "Z": 20, "S": 19, "A": 18, "B": 16, "C": 14, "D": 10, "E": 5
             };
-            let modified = false;
             for (const [id, tier] of Object.entries(current.customTiers)) {
                 if (tier.maxD20 === undefined && defaults[id] !== undefined) {
                     tier.maxD20 = defaults[id];
                     modified = true;
                 }
             }
-            if (modified) await writeJSON('admin_config.json', current);
+        } // End of customTiers else block
+
+        // Ensure criticalRules exists
+        if (!current.criticalRules) {
+            current.criticalRules = {
+                baseRewardTier: "S",
+                baseRewardCount: 2,
+                innerCriticalTier: "Z",
+                innerCriticalCount: 1
+            };
+            modified = true;
         }
+
+        if (modified) await writeJSON('admin_config.json', current);
     } catch {
         const defaultConfig = {
             tables: {
@@ -72,6 +83,12 @@ const initConfig = async () => {
                 "C": { "label": "TIER C", "nickname": "Comum", "maxD20": 14 },
                 "D": { "label": "TIER D", "nickname": "Inferior", "maxD20": 10 },
                 "E": { "label": "TIER E", "nickname": "Insignificante", "maxD20": 5 }
+            },
+            criticalRules: {
+                baseRewardTier: "S",
+                baseRewardCount: 2,
+                innerCriticalTier: "Z",
+                innerCriticalCount: 1
             },
             monsterOverrides: {}
         };

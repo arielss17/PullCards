@@ -73,11 +73,21 @@ const SummonEngine = (() => {
 
   // --- Critical Hit Handler ---
   const handleCritical = () => {
-    const innerRoll = rollD20();
+    // Rolagem com Vantagem: Rola 2 vezes e pega o maior.
+    const innerRoll = Math.max(rollD20(), rollD20());
+
+    // Config-driven rewards
+    const rules = config.criticalRules || {
+      baseRewardTier: "S",
+      baseRewardCount: 2,
+      innerCriticalTier: "Z",
+      innerCriticalCount: 1
+    };
+
     if (innerRoll === 20) {
-      return { type: "Z", count: 1, innerRoll };
+      return { type: rules.innerCriticalTier, count: rules.innerCriticalCount, innerRoll };
     }
-    return { type: "S", count: 2, innerRoll };
+    return { type: rules.baseRewardTier, count: rules.baseRewardCount, innerRoll };
   };
 
   // --- Card Lookup with Fallback ---

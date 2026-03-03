@@ -206,6 +206,66 @@
                         <button id="btnAddTier" class="admin-btn" style="width: 100%; margin-top: 1rem;">Adicionar Tier
                             +</button>
                     </section>
+
+                    <section class="admin-card" style="grid-column: 1 / -1;">
+                        <h2 class="admin-title">Regras de Crítico (D20 = 20)</h2>
+                        <p
+                            style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
+                            Configure as recompensas para o acerto crítico padrão e Crítico Duplo (dois 20s naturais).
+                        </p>
+
+                        <div class="tables-grid" style="grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <!-- Crítico Padrão -->
+                            <div
+                                style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05);">
+                                <h3
+                                    style="font-size: 0.9rem; color: var(--gold-bright); margin-bottom: 12px; font-family: var(--font-display);">
+                                    Crítico Padrão</h3>
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Tier
+                                            da Recompensa</label>
+                                        <select id="critBaseTier" class="admin-input" style="width: 100%;">
+                                            <!-- Injected via JS -->
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Qtd.
+                                            de Cartas</label>
+                                        <input type="number" id="critBaseCount" min="1" max="10" class="admin-input"
+                                            style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Crítico Duplo -->
+                            <div
+                                style="background: rgba(0,0,0,0.2); padding: 16px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.05);">
+                                <h3
+                                    style="font-size: 0.9rem; color: var(--gold-bright); margin-bottom: 12px; font-family: var(--font-display);">
+                                    Crítico Duplo</h3>
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Tier
+                                            da Recompensa</label>
+                                        <select id="critInnerTier" class="admin-input" style="width: 100%;">
+                                            <!-- Injected via JS -->
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Qtd.
+                                            de Cartas</label>
+                                        <input type="number" id="critInnerCount" min="1" max="10" class="admin-input"
+                                            style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
 

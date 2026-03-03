@@ -91,7 +91,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 280
   },
   {
     "id": "acolyte",
@@ -158,7 +159,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 49
   },
   {
     "id": "adult-black-dragon",
@@ -267,7 +269,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 303
   },
   {
     "id": "adult-blue-dragon",
@@ -372,7 +375,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 310
   },
   {
     "id": "adult-brass-dragon",
@@ -473,7 +477,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 295
   },
   {
     "id": "adult-bronze-dragon",
@@ -578,7 +583,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 306
   },
   {
     "id": "adult-copper-dragon",
@@ -679,7 +685,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 304
   },
   {
     "id": "adult-gold-dragon",
@@ -784,7 +791,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 315
   },
   {
     "id": "adult-green-dragon",
@@ -894,7 +902,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 307
   },
   {
     "id": "adult-red-dragon",
@@ -999,7 +1008,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 316
   },
   {
     "id": "adult-silver-dragon",
@@ -1100,7 +1110,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 311
   },
   {
     "id": "adult-white-dragon",
@@ -1209,7 +1220,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 296
   },
   {
     "id": "air-elemental",
@@ -1295,7 +1307,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 219
   },
   {
     "id": "ancient-black-dragon",
@@ -1404,7 +1417,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 323
   },
   {
     "id": "ancient-blue-dragon",
@@ -1509,7 +1523,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 329
   },
   {
     "id": "ancient-brass-dragon",
@@ -1616,7 +1631,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 320
   },
   {
     "id": "ancient-bronze-dragon",
@@ -1727,7 +1743,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 327
   },
   {
     "id": "ancient-copper-dragon",
@@ -1834,7 +1851,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 324
   },
   {
     "id": "ancient-gold-dragon",
@@ -1945,7 +1963,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 332
   },
   {
     "id": "ancient-green-dragon",
@@ -2055,7 +2074,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 328
   },
   {
     "id": "ancient-red-dragon",
@@ -2160,7 +2180,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 333
   },
   {
     "id": "ancient-silver-dragon",
@@ -2267,7 +2288,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 330
   },
   {
     "id": "ancient-white-dragon",
@@ -2376,7 +2398,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 321
   },
   {
     "id": "androsphinx",
@@ -2493,7 +2516,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 317
   },
   {
     "id": "animated-armor",
@@ -2575,7 +2599,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 114
   },
   {
     "id": "ankheg",
@@ -2641,7 +2666,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 139
   },
   {
     "id": "ape",
@@ -2712,7 +2738,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 81
   },
   {
     "id": "archmage",
@@ -2826,7 +2853,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 293
   },
   {
     "id": "assassin",
@@ -2912,7 +2940,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 262
   },
   {
     "id": "awakened-shrub",
@@ -2976,7 +3005,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 1
   },
   {
     "id": "awakened-tree",
@@ -3041,7 +3071,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 140
   },
   {
     "id": "axe-beak",
@@ -3097,7 +3128,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 50
   },
   {
     "id": "azer",
@@ -3170,7 +3202,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 141
   },
   {
     "id": "baboon",
@@ -3231,7 +3264,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 2
   },
   {
     "id": "badger",
@@ -3292,7 +3326,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 3
   },
   {
     "id": "balor",
@@ -3393,7 +3428,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 319
   },
   {
     "id": "bandit",
@@ -3458,7 +3494,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 30
   },
   {
     "id": "bandit-captain",
@@ -3529,7 +3566,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 142
   },
   {
     "id": "barbed-devil",
@@ -3628,7 +3666,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 220
   },
   {
     "id": "basilisk",
@@ -3689,7 +3728,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 182
   },
   {
     "id": "bat",
@@ -3754,7 +3794,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 4
   },
   {
     "id": "bearded-devil",
@@ -3844,7 +3885,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 183
   },
   {
     "id": "behir",
@@ -3935,7 +3977,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 286
   },
   {
     "id": "berserker",
@@ -3996,7 +4039,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 143
   },
   {
     "id": "black-bear",
@@ -4072,7 +4116,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 82
   },
   {
     "id": "black-dragon-wyrmling",
@@ -4145,7 +4190,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 144
   },
   {
     "id": "black-pudding",
@@ -4224,7 +4270,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 204
   },
   {
     "id": "blink-dog",
@@ -4291,7 +4338,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 51
   },
   {
     "id": "blood-hawk",
@@ -4356,7 +4404,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 31
   },
   {
     "id": "blue-dragon-wyrmling",
@@ -4424,7 +4473,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 184
   },
   {
     "id": "boar",
@@ -4489,7 +4539,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 52
   },
   {
     "id": "bone-devil",
@@ -4575,7 +4626,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 272
   },
   {
     "id": "brass-dragon-wyrmling",
@@ -4639,7 +4691,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 115
   },
   {
     "id": "bronze-dragon-wyrmling",
@@ -4708,7 +4761,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 145
   },
   {
     "id": "brown-bear",
@@ -4784,7 +4838,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 116
   },
   {
     "id": "bugbear",
@@ -4858,7 +4913,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 117
   },
   {
     "id": "bulette",
@@ -4925,7 +4981,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 221
   },
   {
     "id": "camel",
@@ -4981,7 +5038,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 32
   },
   {
     "id": "cat",
@@ -5042,7 +5100,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 5
   },
   {
     "id": "centaur",
@@ -5127,7 +5186,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 146
   },
   {
     "id": "chain-devil",
@@ -5210,7 +5270,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 263
   },
   {
     "id": "chimera",
@@ -5300,7 +5361,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 246
   },
   {
     "id": "chuul",
@@ -5382,7 +5444,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 205
   },
   {
     "id": "clay-golem",
@@ -5482,7 +5545,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 273
   },
   {
     "id": "cloaker",
@@ -5580,7 +5644,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 264
   },
   {
     "id": "cloud-giant",
@@ -5660,7 +5725,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 274
   },
   {
     "id": "cockatrice",
@@ -5716,7 +5782,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 83
   },
   {
     "id": "commoner",
@@ -5772,7 +5839,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 6
   },
   {
     "id": "constrictor-snake",
@@ -5837,7 +5905,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 53
   },
   {
     "id": "copper-dragon-wyrmling",
@@ -5901,7 +5970,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 118
   },
   {
     "id": "couatl",
@@ -5989,7 +6059,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 206
   },
   {
     "id": "crab",
@@ -6050,7 +6121,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 7
   },
   {
     "id": "crocodile",
@@ -6111,7 +6183,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 84
   },
   {
     "id": "cult-fanatic",
@@ -6193,7 +6266,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 147
   },
   {
     "id": "cultist",
@@ -6254,7 +6328,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 33
   },
   {
     "id": "darkmantle",
@@ -6325,7 +6400,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 85
   },
   {
     "id": "death-dog",
@@ -6392,7 +6468,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 119
   },
   {
     "id": "deep-gnome-svirfneblin",
@@ -6470,7 +6547,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 86
   },
   {
     "id": "deer",
@@ -6526,7 +6604,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 8
   },
   {
     "id": "deva",
@@ -6619,7 +6698,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 281
   },
   {
     "id": "dire-wolf",
@@ -6684,7 +6764,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 120
   },
   {
     "id": "djinni",
@@ -6766,7 +6847,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 287
   },
   {
     "id": "doppelganger",
@@ -6849,7 +6931,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 185
   },
   {
     "id": "draft-horse",
@@ -6905,7 +6988,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 54
   },
   {
     "id": "dragon-turtle",
@@ -7002,7 +7086,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 318
   },
   {
     "id": "dretch",
@@ -7087,7 +7172,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 55
   },
   {
     "id": "drider",
@@ -7186,7 +7272,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 247
   },
   {
     "id": "drow",
@@ -7264,7 +7351,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 56
   },
   {
     "id": "druid",
@@ -7334,7 +7422,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 148
   },
   {
     "id": "dryad",
@@ -7415,7 +7504,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 121
   },
   {
     "id": "duergar",
@@ -7503,7 +7593,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 122
   },
   {
     "id": "dust-mephit",
@@ -7580,7 +7671,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 87
   },
   {
     "id": "eagle",
@@ -7641,7 +7733,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 9
   },
   {
     "id": "earth-elemental",
@@ -7721,7 +7814,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 222
   },
   {
     "id": "efreeti",
@@ -7803,7 +7897,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 288
   },
   {
     "id": "elephant",
@@ -7873,7 +7968,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 207
   },
   {
     "id": "elk",
@@ -7943,7 +8039,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 57
   },
   {
     "id": "erinyes",
@@ -8027,7 +8124,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 294
   },
   {
     "id": "ettercap",
@@ -8118,7 +8216,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 149
   },
   {
     "id": "ettin",
@@ -8198,7 +8297,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 208
   },
   {
     "id": "fire-elemental",
@@ -8285,7 +8385,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 223
   },
   {
     "id": "fire-giant",
@@ -8358,7 +8459,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 275
   },
   {
     "id": "flesh-golem",
@@ -8455,7 +8557,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 224
   },
   {
     "id": "flying-snake",
@@ -8516,7 +8619,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 34
   },
   {
     "id": "flying-sword",
@@ -8591,7 +8695,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 58
   },
   {
     "id": "frog",
@@ -8646,7 +8751,8 @@
     ],
     "actions": [],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 10
   },
   {
     "id": "frost-giant",
@@ -8719,7 +8825,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 265
   },
   {
     "id": "gargoyle",
@@ -8801,7 +8908,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 150
   },
   {
     "id": "gelatinous-cube",
@@ -8883,7 +8991,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 151
   },
   {
     "id": "ghast",
@@ -8963,7 +9072,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 152
   },
   {
     "id": "ghost",
@@ -9068,7 +9178,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 209
   },
   {
     "id": "ghoul",
@@ -9138,7 +9249,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 123
   },
   {
     "id": "giant-ape",
@@ -9209,7 +9321,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 256
   },
   {
     "id": "giant-badger",
@@ -9285,7 +9398,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 59
   },
   {
     "id": "giant-bat",
@@ -9350,7 +9464,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 60
   },
   {
     "id": "giant-boar",
@@ -9415,7 +9530,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 153
   },
   {
     "id": "giant-centipede",
@@ -9471,7 +9587,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 61
   },
   {
     "id": "giant-constrictor-snake",
@@ -9536,7 +9653,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 154
   },
   {
     "id": "giant-crab",
@@ -9597,7 +9715,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 35
   },
   {
     "id": "giant-crocodile",
@@ -9673,7 +9792,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 225
   },
   {
     "id": "giant-eagle",
@@ -9749,7 +9869,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 124
   },
   {
     "id": "giant-elk",
@@ -9819,7 +9940,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 155
   },
   {
     "id": "giant-fire-beetle",
@@ -9880,7 +10002,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 11
   },
   {
     "id": "giant-frog",
@@ -9951,7 +10074,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 62
   },
   {
     "id": "giant-goat",
@@ -10016,7 +10140,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 88
   },
   {
     "id": "giant-hyena",
@@ -10077,7 +10202,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 125
   },
   {
     "id": "giant-lizard",
@@ -10133,7 +10259,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 63
   },
   {
     "id": "giant-octopus",
@@ -10208,7 +10335,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 126
   },
   {
     "id": "giant-owl",
@@ -10273,7 +10401,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 64
   },
   {
     "id": "giant-poisonous-snake",
@@ -10329,7 +10458,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 65
   },
   {
     "id": "giant-rat",
@@ -10394,7 +10524,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 36
   },
   {
     "id": "giant-rat-diseased",
@@ -10459,7 +10590,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 37
   },
   {
     "id": "giant-scorpion",
@@ -10530,7 +10662,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 186
   },
   {
     "id": "giant-sea-horse",
@@ -10595,7 +10728,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 89
   },
   {
     "id": "giant-shark",
@@ -10660,7 +10794,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 226
   },
   {
     "id": "giant-spider",
@@ -10736,7 +10871,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 127
   },
   {
     "id": "giant-toad",
@@ -10807,7 +10943,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 128
   },
   {
     "id": "giant-vulture",
@@ -10887,7 +11024,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 129
   },
   {
     "id": "giant-wasp",
@@ -10943,7 +11081,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 90
   },
   {
     "id": "giant-weasel",
@@ -11004,7 +11143,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 38
   },
   {
     "id": "giant-wolf-spider",
@@ -11073,7 +11213,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 66
   },
   {
     "id": "gibbering-mouther",
@@ -11154,7 +11295,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 156
   },
   {
     "id": "glabrezu",
@@ -11241,7 +11383,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 276
   },
   {
     "id": "gladiator",
@@ -11319,7 +11462,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 227
   },
   {
     "id": "gnoll",
@@ -11396,7 +11540,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 91
   },
   {
     "id": "goat",
@@ -11461,7 +11606,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 12
   },
   {
     "id": "goblin",
@@ -11531,7 +11677,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 67
   },
   {
     "id": "gold-dragon-wyrmling",
@@ -11600,7 +11747,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 187
   },
   {
     "id": "gorgon",
@@ -11680,7 +11828,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 228
   },
   {
     "id": "gray-ooze",
@@ -11759,7 +11908,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 92
   },
   {
     "id": "green-dragon-wyrmling",
@@ -11833,7 +11983,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 157
   },
   {
     "id": "green-hag",
@@ -11914,7 +12065,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 188
   },
   {
     "id": "grick",
@@ -11992,7 +12144,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 158
   },
   {
     "id": "griffon",
@@ -12068,7 +12221,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 159
   },
   {
     "id": "grimlock",
@@ -12139,7 +12293,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 68
   },
   {
     "id": "guard",
@@ -12193,7 +12348,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 39
   },
   {
     "id": "guardian-naga",
@@ -12300,7 +12456,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 282
   },
   {
     "id": "gynosphinx",
@@ -12406,7 +12563,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 289
   },
   {
     "id": "half-red-dragon-veteran",
@@ -12496,7 +12654,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 229
   },
   {
     "id": "harpy",
@@ -12573,7 +12732,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 130
   },
   {
     "id": "hawk",
@@ -12634,7 +12794,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 13
   },
   {
     "id": "hell-hound",
@@ -12711,7 +12872,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 189
   },
   {
     "id": "hezrou",
@@ -12798,7 +12960,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 266
   },
   {
     "id": "hill-giant",
@@ -12869,7 +13032,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 230
   },
   {
     "id": "hippogriff",
@@ -12945,7 +13109,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 131
   },
   {
     "id": "hobgoblin",
@@ -13013,7 +13178,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 93
   },
   {
     "id": "homunculus",
@@ -13078,7 +13244,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 14
   },
   {
     "id": "horned-devil",
@@ -13173,7 +13340,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 290
   },
   {
     "id": "hunter-shark",
@@ -13238,7 +13406,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 160
   },
   {
     "id": "hydra",
@@ -13317,7 +13486,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 267
   },
   {
     "id": "hyena",
@@ -13378,7 +13548,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 15
   },
   {
     "id": "ice-devil",
@@ -13478,7 +13649,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 305
   },
   {
     "id": "ice-mephit",
@@ -13563,7 +13735,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 94
   },
   {
     "id": "imp",
@@ -13644,7 +13817,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 132
   },
   {
     "id": "invisible-stalker",
@@ -13726,7 +13900,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 248
   },
   {
     "id": "iron-golem",
@@ -13835,7 +14010,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 312
   },
   {
     "id": "jackal",
@@ -13900,7 +14076,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 16
   },
   {
     "id": "killer-whale",
@@ -13969,7 +14146,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 190
   },
   {
     "id": "knight",
@@ -14051,7 +14229,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 191
   },
   {
     "id": "kobold",
@@ -14125,7 +14304,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 40
   },
   {
     "id": "kraken",
@@ -14230,7 +14410,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 331
   },
   {
     "id": "lamia",
@@ -14313,7 +14494,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 210
   },
   {
     "id": "lemure",
@@ -14385,7 +14567,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 17
   },
   {
     "id": "lich",
@@ -14515,7 +14698,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 325
   },
   {
     "id": "lion",
@@ -14597,7 +14781,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 133
   },
   {
     "id": "lizard",
@@ -14653,7 +14838,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 18
   },
   {
     "id": "lizardfolk",
@@ -14747,7 +14933,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 95
   },
   {
     "id": "mage",
@@ -14834,7 +15021,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 249
   },
   {
     "id": "magma-mephit",
@@ -14918,7 +15106,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 96
   },
   {
     "id": "magmin",
@@ -14986,7 +15175,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 97
   },
   {
     "id": "mammoth",
@@ -15056,7 +15246,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 250
   },
   {
     "id": "manticore",
@@ -15141,7 +15332,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 192
   },
   {
     "id": "marilith",
@@ -15238,7 +15430,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 313
   },
   {
     "id": "mastiff",
@@ -15299,7 +15492,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 41
   },
   {
     "id": "medusa",
@@ -15384,7 +15578,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 251
   },
   {
     "id": "merfolk",
@@ -15443,7 +15638,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 42
   },
   {
     "id": "merrow",
@@ -15528,7 +15724,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 161
   },
   {
     "id": "mimic",
@@ -15613,7 +15810,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 162
   },
   {
     "id": "minotaur",
@@ -15691,7 +15889,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 193
   },
   {
     "id": "minotaur-skeleton",
@@ -15766,7 +15965,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 163
   },
   {
     "id": "mule",
@@ -15831,7 +16031,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 43
   },
   {
     "id": "mummy",
@@ -15911,7 +16112,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 194
   },
   {
     "id": "mummy-lord",
@@ -16035,7 +16237,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 308
   },
   {
     "id": "nalfeshnee",
@@ -16132,7 +16335,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 297
   },
   {
     "id": "night-hag",
@@ -16224,7 +16428,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 231
   },
   {
     "id": "nightmare",
@@ -16297,7 +16502,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 195
   },
   {
     "id": "noble",
@@ -16353,7 +16559,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 44
   },
   {
     "id": "ochre-jelly",
@@ -16428,7 +16635,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 164
   },
   {
     "id": "octopus",
@@ -16504,7 +16712,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 19
   },
   {
     "id": "ogre",
@@ -16569,7 +16778,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 165
   },
   {
     "id": "ogre-zombie",
@@ -16633,7 +16843,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 166
   },
   {
     "id": "oni",
@@ -16723,7 +16934,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 257
   },
   {
     "id": "orc",
@@ -16793,7 +17005,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 98
   },
   {
     "id": "otyugh",
@@ -16877,7 +17090,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 232
   },
   {
     "id": "owl",
@@ -16942,7 +17156,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 20
   },
   {
     "id": "owlbear",
@@ -17018,7 +17233,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 196
   },
   {
     "id": "panther",
@@ -17092,7 +17308,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 69
   },
   {
     "id": "pegasus",
@@ -17148,7 +17365,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 167
   },
   {
     "id": "phase-spider",
@@ -17217,7 +17435,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 197
   },
   {
     "id": "pit-fiend",
@@ -17329,7 +17548,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 322
   },
   {
     "id": "planetar",
@@ -17420,7 +17640,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 314
   },
   {
     "id": "plesiosaurus",
@@ -17481,7 +17702,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 168
   },
   {
     "id": "poisonous-snake",
@@ -17537,7 +17759,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 45
   },
   {
     "id": "polar-bear",
@@ -17613,7 +17836,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 169
   },
   {
     "id": "pony",
@@ -17669,7 +17893,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 46
   },
   {
     "id": "priest",
@@ -17750,7 +17975,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 170
   },
   {
     "id": "pseudodragon",
@@ -17828,7 +18054,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 70
   },
   {
     "id": "purple-worm",
@@ -17904,7 +18131,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 309
   },
   {
     "id": "quasit",
@@ -17990,7 +18218,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 134
   },
   {
     "id": "quipper",
@@ -18055,7 +18284,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 21
   },
   {
     "id": "rakshasa",
@@ -18129,7 +18359,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 298
   },
   {
     "id": "rat",
@@ -18190,7 +18421,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 22
   },
   {
     "id": "raven",
@@ -18251,7 +18483,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 23
   },
   {
     "id": "red-dragon-wyrmling",
@@ -18319,7 +18552,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 211
   },
   {
     "id": "reef-shark",
@@ -18384,7 +18618,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 99
   },
   {
     "id": "remorhaz",
@@ -18454,7 +18689,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 291
   },
   {
     "id": "rhinoceros",
@@ -18515,7 +18751,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 171
   },
   {
     "id": "riding-horse",
@@ -18571,7 +18808,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 71
   },
   {
     "id": "roc",
@@ -18647,7 +18885,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 292
   },
   {
     "id": "roper",
@@ -18735,7 +18974,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 233
   },
   {
     "id": "rug-of-smothering",
@@ -18812,7 +19052,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 172
   },
   {
     "id": "rust-monster",
@@ -18883,7 +19124,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 100
   },
   {
     "id": "saber-toothed-tiger",
@@ -18957,7 +19199,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 173
   },
   {
     "id": "sahuagin",
@@ -19048,7 +19291,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 101
   },
   {
     "id": "salamander",
@@ -19130,7 +19374,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 234
   },
   {
     "id": "satyr",
@@ -19209,7 +19454,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 102
   },
   {
     "id": "scorpion",
@@ -19265,7 +19511,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 24
   },
   {
     "id": "scout",
@@ -19341,7 +19588,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 103
   },
   {
     "id": "sea-hag",
@@ -19420,7 +19668,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 174
   },
   {
     "id": "sea-horse",
@@ -19471,7 +19720,8 @@
     ],
     "actions": [],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 25
   },
   {
     "id": "shadow",
@@ -19558,7 +19808,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 104
   },
   {
     "id": "shambling-mound",
@@ -19638,7 +19889,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 235
   },
   {
     "id": "shield-guardian",
@@ -19720,7 +19972,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 258
   },
   {
     "id": "shrieker",
@@ -19775,7 +20028,8 @@
     ],
     "actions": [],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 26
   },
   {
     "id": "silver-dragon-wyrmling",
@@ -19839,7 +20093,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 175
   },
   {
     "id": "skeleton",
@@ -19909,7 +20164,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 72
   },
   {
     "id": "solar",
@@ -20018,7 +20274,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 326
   },
   {
     "id": "specter",
@@ -20101,7 +20358,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 135
   },
   {
     "id": "spider",
@@ -20170,7 +20428,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 27
   },
   {
     "id": "spirit-naga",
@@ -20265,7 +20524,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 268
   },
   {
     "id": "sprite",
@@ -20344,7 +20604,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 73
   },
   {
     "id": "spy",
@@ -20424,7 +20685,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 136
   },
   {
     "id": "steam-mephit",
@@ -20503,7 +20765,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 74
   },
   {
     "id": "stirge",
@@ -20559,7 +20822,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 47
   },
   {
     "id": "stone-giant",
@@ -20635,7 +20899,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 259
   },
   {
     "id": "stone-golem",
@@ -20728,7 +20993,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 283
   },
   {
     "id": "storm-giant",
@@ -20822,7 +21088,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 299
   },
   {
     "id": "succubus-incubus",
@@ -20915,7 +21182,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 212
   },
   {
     "id": "swarm-of-bats",
@@ -20996,7 +21264,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 75
   },
   {
     "id": "swarm-of-beetles",
@@ -21069,7 +21338,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 105
   },
   {
     "id": "swarm-of-centipedes",
@@ -21142,7 +21412,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 106
   },
   {
     "id": "swarm-of-insects",
@@ -21215,7 +21486,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 107
   },
   {
     "id": "swarm-of-poisonous-snakes",
@@ -21288,7 +21560,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 176
   },
   {
     "id": "swarm-of-quippers",
@@ -21369,7 +21642,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 137
   },
   {
     "id": "swarm-of-rats",
@@ -21446,7 +21720,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 76
   },
   {
     "id": "swarm-of-ravens",
@@ -21519,7 +21794,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 77
   },
   {
     "id": "swarm-of-spiders",
@@ -21603,7 +21879,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 108
   },
   {
     "id": "swarm-of-wasps",
@@ -21676,7 +21953,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 109
   },
   {
     "id": "tarrasque",
@@ -21804,7 +22082,8 @@
       }
     ],
     "table": "C",
-    "tier": "S"
+    "tier": "S",
+    "cardNumber": 334
   },
   {
     "id": "thug",
@@ -21880,7 +22159,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 110
   },
   {
     "id": "tiger",
@@ -21954,7 +22234,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 138
   },
   {
     "id": "treant",
@@ -22044,7 +22325,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 277
   },
   {
     "id": "tribal-warrior",
@@ -22103,7 +22385,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 48
   },
   {
     "id": "triceratops",
@@ -22173,7 +22456,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 236
   },
   {
     "id": "troll",
@@ -22253,7 +22537,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 237
   },
   {
     "id": "tyrannosaurus-rex",
@@ -22324,7 +22609,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 269
   },
   {
     "id": "unicorn",
@@ -22429,7 +22715,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 238
   },
   {
     "id": "vampire-bat",
@@ -22527,7 +22814,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 300
   },
   {
     "id": "vampire-mist",
@@ -22601,7 +22889,8 @@
     ],
     "actions": [],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 301
   },
   {
     "id": "vampire-spawn",
@@ -22688,7 +22977,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 239
   },
   {
     "id": "vampire-vampire",
@@ -22801,7 +23091,8 @@
       }
     ],
     "table": "C",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 302
   },
   {
     "id": "veteran",
@@ -22879,7 +23170,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 198
   },
   {
     "id": "violet-fungus",
@@ -22950,7 +23242,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 78
   },
   {
     "id": "vrock",
@@ -23049,7 +23342,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 252
   },
   {
     "id": "vulture",
@@ -23114,7 +23408,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 28
   },
   {
     "id": "warhorse",
@@ -23175,7 +23470,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 111
   },
   {
     "id": "warhorse-skeleton",
@@ -23236,7 +23532,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 112
   },
   {
     "id": "water-elemental",
@@ -23329,7 +23626,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 240
   },
   {
     "id": "weasel",
@@ -23390,7 +23688,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 29
   },
   {
     "id": "werebear-bear",
@@ -23472,7 +23771,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 241
   },
   {
     "id": "werebear-human",
@@ -23545,7 +23845,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 242
   },
   {
     "id": "werebear-hybrid",
@@ -23636,7 +23937,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 243
   },
   {
     "id": "wereboar-boar",
@@ -23707,7 +24009,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 213
   },
   {
     "id": "wereboar-human",
@@ -23780,7 +24083,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 214
   },
   {
     "id": "wereboar-hybrid",
@@ -23866,7 +24170,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 215
   },
   {
     "id": "wererat-human",
@@ -23948,7 +24253,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 177
   },
   {
     "id": "wererat-hybrid",
@@ -24039,7 +24345,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 178
   },
   {
     "id": "wererat-rat",
@@ -24106,7 +24413,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 179
   },
   {
     "id": "weretiger-human",
@@ -24188,7 +24496,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 216
   },
   {
     "id": "weretiger-hybrid",
@@ -24292,7 +24601,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 217
   },
   {
     "id": "weretiger-tiger",
@@ -24372,7 +24682,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 218
   },
   {
     "id": "werewolf-human",
@@ -24443,7 +24754,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 199
   },
   {
     "id": "werewolf-hybrid",
@@ -24525,7 +24837,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 200
   },
   {
     "id": "werewolf-wolf",
@@ -24592,7 +24905,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 201
   },
   {
     "id": "white-dragon-wyrmling",
@@ -24660,7 +24974,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 180
   },
   {
     "id": "wight",
@@ -24749,7 +25064,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 202
   },
   {
     "id": "will-o-wisp",
@@ -24844,7 +25160,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 181
   },
   {
     "id": "winter-wolf",
@@ -24925,7 +25242,8 @@
       }
     ],
     "table": "A",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 203
   },
   {
     "id": "wolf",
@@ -24990,7 +25308,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 79
   },
   {
     "id": "worg",
@@ -25051,7 +25370,8 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 113
   },
   {
     "id": "wraith",
@@ -25139,7 +25459,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 244
   },
   {
     "id": "wyvern",
@@ -25219,7 +25540,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 253
   },
   {
     "id": "xorn",
@@ -25305,7 +25627,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 245
   },
   {
     "id": "young-black-dragon",
@@ -25393,7 +25716,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 260
   },
   {
     "id": "young-blue-dragon",
@@ -25476,7 +25800,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 278
   },
   {
     "id": "young-brass-dragon",
@@ -25555,7 +25880,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 254
   },
   {
     "id": "young-bronze-dragon",
@@ -25639,7 +25965,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 270
   },
   {
     "id": "young-copper-dragon",
@@ -25718,7 +26045,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 261
   },
   {
     "id": "young-gold-dragon",
@@ -25802,7 +26130,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 284
   },
   {
     "id": "young-green-dragon",
@@ -25891,7 +26220,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 271
   },
   {
     "id": "young-red-dragon",
@@ -25974,7 +26304,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 285
   },
   {
     "id": "young-silver-dragon",
@@ -26053,7 +26384,8 @@
       }
     ],
     "table": "B",
-    "tier": "A"
+    "tier": "A",
+    "cardNumber": 279
   },
   {
     "id": "young-white-dragon",
@@ -26141,7 +26473,8 @@
       }
     ],
     "table": "B",
-    "tier": "B"
+    "tier": "B",
+    "cardNumber": 255
   },
   {
     "id": "zombie",
@@ -26205,6 +26538,7 @@
       }
     ],
     "table": "A",
-    "tier": "C"
+    "tier": "C",
+    "cardNumber": 80
   }
 ]

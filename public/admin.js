@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnAddTier = document.getElementById('btnAddTier');
     const loadingBestiary = document.getElementById('loadingBestiary');
 
+    // Critical Rules inputs
+    const critBaseTier = document.getElementById('critBaseTier');
+    const critBaseCount = document.getElementById('critBaseCount');
+    const critInnerTier = document.getElementById('critInnerTier');
+    const critInnerCount = document.getElementById('critInnerCount');
+
     let config = { tables: {}, customTiers: {}, monsterOverrides: {} };
     let monsters = [];
 
@@ -135,6 +141,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             tiersConfig.appendChild(div);
         });
         populateTierFilter();
+        renderCriticalRules();
+    };
+
+    // --- Render Critical Rules Configuration ---
+    const renderCriticalRules = () => {
+        if (!config.criticalRules) return;
+
+        critBaseTier.innerHTML = '';
+        critInnerTier.innerHTML = '';
+
+        Object.entries(config.customTiers).forEach(([id, tData]) => {
+            const opt1 = document.createElement('option');
+            opt1.value = id; opt1.textContent = `${tData.label} (${tData.nickname})`;
+            if (id === config.criticalRules.baseRewardTier) opt1.selected = true;
+            critBaseTier.appendChild(opt1);
+
+            const opt2 = document.createElement('option');
+            opt2.value = id; opt2.textContent = `${tData.label} (${tData.nickname})`;
+            if (id === config.criticalRules.innerCriticalTier) opt2.selected = true;
+            critInnerTier.appendChild(opt2);
+        });
+
+        // Set Values
+        critBaseCount.value = config.criticalRules.baseRewardCount || 2;
+        critInnerCount.value = config.criticalRules.innerCriticalCount || 1;
     };
 
     // --- Table Renaming Logic ---
@@ -381,6 +412,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderMonsters();
     });
 
+    // --- Critical Rules Input Changes ---
+    critBaseTier.addEventListener('change', (e) => config.criticalRules.baseRewardTier = e.target.value);
+    critBaseCount.addEventListener('change', (e) => config.criticalRules.baseRewardCount = Math.max(1, parseInt(e.target.value) || 1));
+    critInnerTier.addEventListener('change', (e) => config.criticalRules.innerCriticalTier = e.target.value);
+    critInnerCount.addEventListener('change', (e) => config.criticalRules.innerCriticalCount = Math.max(1, parseInt(e.target.value) || 1));
+
     btnSaveConfig.addEventListener('click', async () => {
         const originalText = btnSaveConfig.innerHTML;
         btnSaveConfig.innerHTML = "⏳ Selando...";
@@ -429,6 +466,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.ok) config = await res.json();
         if (!config.monsterOverrides) config.monsterOverrides = {};
         if (!config.customTiers) config.customTiers = {};
+        if (!config.criticalRules) {
+            config.criticalRules = {
+                baseRewardTier: "S",
+                baseRewardCount: 2,
+                innerCriticalTier: "Z",
+                innerCriticalCount: 1
+            };
+        }
     } catch (e) {
         console.error("Error loading config", e);
     }
