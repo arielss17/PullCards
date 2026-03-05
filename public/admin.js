@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const summonSubD100 = document.getElementById('summonSubD100');
     const summonBtnD20 = document.getElementById('summonBtnD20');
     const summonSubD20 = document.getElementById('summonSubD20');
+    const summonCritSingle = document.getElementById('summonCritSingle');
+    const summonCritMulti = document.getElementById('summonCritMulti');
     const studioLangSelect = document.getElementById('studioLangSelect');
 
     // Studio Elements
@@ -182,11 +184,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; width: 100%;">
-                    <div>
-                        <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Chance Base (%)</span>
-                        <input type="number" min="0" max="100" step="0.1" value="${tData.rateTarget || 0}" 
-                            class="admin-input" style="width: 80px;"
-                            onchange="updateTierRateTarget('${tierId}', this.value)">
+                    <div style="flex: 1; min-width: 220px;">
+                        <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Intensidade Visual</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" min="0" max="100" value="${tData.visualIntensity ?? tData.rateTarget ?? 50}" 
+                                class="tier-intensity-slider" data-tier="${tierId}"
+                                style="flex: 1; accent-color: var(--gold); cursor: pointer;"
+                                oninput="updateTierIntensity('${tierId}', this.value, this)">
+                            <span class="tier-intensity-value" data-tier="${tierId}" 
+                                style="font-size: 0.8rem; font-family: var(--font-display); min-width: 110px; text-align: right; color: var(--gold);">
+                                ${getIntensityLabel(tData.visualIntensity ?? tData.rateTarget ?? 50)}
+                            </span>
+                        </div>
                     </div>
                     <div>
                         <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Cor Primária (Card/Aura)</span>
@@ -205,12 +214,49 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
                 </div>
+                <!-- NOVO CAMPO: Narrativa de Invocação da Tier Mapeado Globalmente -->
+                <div style="width: 100%; margin-top: 10px;">
+                     <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Narrativa de Invocação (Typewriter)</span>
+                     <textarea class="admin-input tier-narration-input" data-tier="${tierId}" 
+                         style="width: 100%; min-height: 40px; resize: vertical; background: rgba(0,0,0,0.5); font-size: 0.8rem;"
+                         placeholder="Uma criatura classe ${tData.label} surge..."></textarea>
+                </div>
             `;
             studioTiersConfig.appendChild(div);
         });
+
+        // Bind tier narration textareas after DOM injection
+        const lang = studioLangSelect.value || 'pt-BR';
+        document.querySelectorAll('.tier-narration-input').forEach(ta => {
+            const tierId = ta.dataset.tier;
+            ta.value = config.customTiers[tierId]?.narration?.[lang] || '';
+            ta.addEventListener('input', (e) => {
+                const currentLang = studioLangSelect.value || 'pt-BR';
+                if (!config.customTiers[tierId].narration) config.customTiers[tierId].narration = {};
+                config.customTiers[tierId].narration[currentLang] = e.target.value;
+            });
+        });
     };
 
-    window.updateTierRateTarget = (id, val) => { config.customTiers[id].rateTarget = parseFloat(val) || 0; };
+    const getIntensityLabel = (val) => {
+        const v = parseInt(val) || 0;
+        if (v === 0) return '0 — Nenhum';
+        if (v <= 15) return `${v} — Insignificante`;
+        if (v <= 35) return `${v} — Comum`;
+        if (v <= 55) return `${v} — Notável`;
+        if (v <= 75) return `${v} — Impressionante`;
+        if (v <= 90) return `${v} — Épico`;
+        return `${v} — Lendário`;
+    };
+
+    window.updateTierIntensity = (id, val, inputEl) => {
+        const v = Math.max(0, Math.min(100, parseInt(val) || 0));
+        config.customTiers[id].visualIntensity = v;
+        // Update live label
+        const label = inputEl?.closest('div')?.querySelector('.tier-intensity-value')
+            || document.querySelector(`.tier-intensity-value[data-tier="${id}"]`);
+        if (label) label.textContent = getIntensityLabel(v);
+    };
     window.updateTierColor = (id, index, val) => {
         if (!config.customTiers[id].colors) config.customTiers[id].colors = ['#ffffff', '#ffffff'];
         config.customTiers[id].colors[index] = val;
@@ -226,7 +272,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             label: "Nova Raridade",
             nickname: "Incomum",
             maxD20: 5,
-            rateTarget: 5.0,
+            visualIntensity: 50,
             colors: ['#ffffff', '#aaaaaa']
         };
         renderTiers();
@@ -377,6 +423,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const override = config.monsterOverrides[m.id] || {};
             const activeTablesForMonster = override.tables || m.tables || [m.table];
             const activeTierForMonster = override.tier || m.tier;
+            const dropWeightForMonster = override.dropWeight !== undefined ? override.dropWeight : (m.dropWeight !== undefined ? m.dropWeight : 100);
 
             const checkboxesHtml = activeTableNames.map(tName => {
                 const isChecked = activeTablesForMonster.includes(tName);
@@ -406,6 +453,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <select class="admin-input" onchange="updateMonsterTier('${m.id}', this.value)">
                         ${tierOptionsHtml}
                     </select>
+                </div>
+
+                <div class="monster-options" style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <label>Peso de Drop (Weight):</label>
+                        <p style="font-size:0.65rem; color:var(--text-muted); margin:0;">Chances atreladas (Padrão: 100)</p>
+                    </div>
+                    <input type="number" class="admin-input" min="1" max="9999" value="${dropWeightForMonster}" onchange="updateMonsterWeight('${m.id}', this.value)" style="width: 80px;">
                 </div>
 
                 <div class="monster-options">
@@ -451,6 +506,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.updateMonsterTier = (id, val) => {
         if (!config.monsterOverrides[id]) config.monsterOverrides[id] = {};
         config.monsterOverrides[id].tier = val;
+        cleanUpOverride(id);
+    };
+
+    window.updateMonsterWeight = (id, val) => {
+        if (!config.monsterOverrides[id]) config.monsterOverrides[id] = {};
+        const parsed = parseInt(val, 10);
+        if (isNaN(parsed)) {
+            delete config.monsterOverrides[id].dropWeight;
+        } else {
+            config.monsterOverrides[id].dropWeight = Math.max(1, parsed);
+        }
         cleanUpOverride(id);
     };
 
@@ -573,6 +639,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             config.summonExperience.subD100 = mapLocales(config.summonExperience.subD100);
             config.summonExperience.btnD20 = mapLocales(config.summonExperience.btnD20);
             config.summonExperience.subD20 = mapLocales(config.summonExperience.subD20);
+            config.summonExperience.critSingle = mapLocales(config.summonExperience.critSingle);
+            config.summonExperience.critMulti = mapLocales(config.summonExperience.critMulti);
+
+            // Migrate tier narrations
+            Object.entries(config.customTiers).forEach(([id, tData]) => {
+                tData.narration = mapLocales(tData.narration);
+            });
 
             renderStudioTexts();
 
@@ -644,10 +717,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!config.summonExperience) return;
 
         studioIntroText.value = config.summonExperience.introText?.[lang] || '';
-        summonBtnD100.value = config.summonExperience.btnD100[lang] || '';
-        summonSubD100.value = config.summonExperience.subD100[lang] || '';
-        summonBtnD20.value = config.summonExperience.btnD20[lang] || '';
-        summonSubD20.value = config.summonExperience.subD20[lang] || '';
+        summonBtnD100.value = config.summonExperience.btnD100?.[lang] || '';
+        summonSubD100.value = config.summonExperience.subD100?.[lang] || '';
+        summonBtnD20.value = config.summonExperience.btnD20?.[lang] || '';
+        summonSubD20.value = config.summonExperience.subD20?.[lang] || '';
+        summonCritSingle.value = config.summonExperience.critSingle?.[lang] || '';
+        summonCritMulti.value = config.summonExperience.critMulti?.[lang] || '';
+
+        // Sync tier narration textareas
+        document.querySelectorAll('.tier-narration-input').forEach(ta => {
+            const tierId = ta.dataset.tier;
+            ta.value = config.customTiers[tierId]?.narration?.[lang] || '';
+        });
     };
 
     const bindStudioTextInput = (inputEl, stateKey) => {
@@ -663,8 +744,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindStudioTextInput(summonSubD100, 'subD100');
     bindStudioTextInput(summonBtnD20, 'btnD20');
     bindStudioTextInput(summonSubD20, 'subD20');
+    bindStudioTextInput(summonCritSingle, 'critSingle');
+    bindStudioTextInput(summonCritMulti, 'critMulti');
 
-    studioLangSelect.addEventListener('change', renderStudioTexts);
+    studioLangSelect.addEventListener('change', () => {
+        renderStudioTexts();
+        renderStudioTiers();
+    });
 
     // ============================================================
     // i18n Editor

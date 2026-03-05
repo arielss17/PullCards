@@ -88,7 +88,8 @@ class SummonService {
             return {
                 ...m,
                 tier: override.tier || m.tier,
-                tables: override.tables || m.tables || [m.table]
+                tables: override.tables || m.tables || [m.table],
+                dropWeight: override.dropWeight !== undefined ? override.dropWeight : m.dropWeight
             };
         });
 
@@ -97,9 +98,24 @@ class SummonService {
         if (pool.length === 0) pool = database.filter(c => c.tier === tier);
         if (pool.length === 0) pool = [...database];
 
+        let totalWeight = 0;
+        const weightedPool = pool.map(c => {
+            const weight = typeof c.dropWeight === 'number' ? c.dropWeight : 100;
+            totalWeight += weight;
+            return { card: c, weight, accumulatedWeight: totalWeight };
+        });
+
         const results = [];
         for (let i = 0; i < count; i++) {
-            const pick = pool[Math.floor(Math.random() * pool.length)];
+            if (totalWeight <= 0) {
+                const pick = pool[Math.floor(Math.random() * pool.length)];
+                results.push({ ...pick });
+                continue;
+            }
+
+            const rand = Math.random() * totalWeight;
+            const pickData = weightedPool.find(item => rand <= item.accumulatedWeight);
+            const pick = pickData ? pickData.card : pool[0];
             results.push({ ...pick });
         }
         return results;

@@ -46,8 +46,9 @@
   <div class="screen-overlay" id="overlayTableC"></div>
   <div class="screen-overlay" id="overlayTierB"></div>
   <div class="screen-overlay" id="overlayTierA"></div>
+  <div class="screen-overlay" id="overlayTierAB"></div>
+  <div class="screen-overlay" id="overlayTierS"></div>
   <div class="screen-overlay" id="overlayCritical"></div>
-
   <!-- Fog / Mist Layer -->
   <div class="fog-layer" aria-hidden="true">
     <div class="fog-layer__wisp"></div>
@@ -283,9 +284,10 @@
         tableC: $("overlayTableC"),
         tierB: $("overlayTierB"),
         tierA: $("overlayTierA"),
+        tierAB: $("overlayTierAB"),
+        tierS: $("overlayTierS"),
         critical: $("overlayCritical"),
       };
-
       // --- State ---
       let currentExpansionId = "dnd5e"; // Temporary mock unitl Wave 6 adds the world selector
       let state = PlayerSession.createGameState(currentExpansionId);
@@ -421,6 +423,14 @@
       window.addEventListener("langchange", applyCustomSummonExperience);
       applyCustomSummonExperience(); // Call once on load
 
+      // --- Config-based text resolver with i18n fallback ---
+      const resolveConfigText = (configObj, i18nKey, replacements) => {
+        const lang = I18n.getLang() || "pt-BR";
+        const configText = configObj?.[lang] || configObj?.["pt-BR"];
+        if (configText) return configText;
+        return I18n.t(i18nKey, replacements);
+      };
+
       // --- Helpers ---
       const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -457,6 +467,7 @@
       // --- Screen Effects ---
       const fireOverlay = (key, cssClass) => {
         const el = overlays[key];
+        if (!el) { console.warn("Overlay missing:", key); return; }
         el.className = `screen-overlay screen-overlay--${cssClass} active`;
         el.addEventListener(
           "animationend",
@@ -788,6 +799,8 @@
           shakeScreen(true);
           SoundEngine.tierS();
 
+          const se = gameConfig?.summonExperience || {};
+
           if (tierResult.criticalData.type === "Z") {
             resultCritical.textContent = I18n.t("narration.criticalZ");
             spawnParticles(100, ["#ffffff", "#fff68f", "#ffeaa7", "#ff33ff"]);
@@ -797,7 +810,10 @@
             resultCritical.textContent = I18n.t("narration.criticalSBanner");
             spawnParticles(80, ["#ffd700", "#fff68f", "#ffeaa7", "#ffffff"]);
             narration.className = "narration parchment tier-s-text";
-            await typeNarration(I18n.t("narration.criticalS"), 42);
+            await typeNarration(
+              resolveConfigText(se.critSingle, "narration.criticalS"),
+              42,
+            );
           } else {
             resultCritical.textContent = I18n.t("narration.criticalMulti", {
               count: tierResult.criticalData.count,
@@ -805,34 +821,40 @@
             spawnParticles(60, ["#ffd700", "#ffaa00", "#fff68f", "#ffffff"]);
             narration.className = "narration parchment tier-s-text";
             await typeNarration(
-              I18n.t("narration.criticalMultiNarration"),
+              resolveConfigText(se.critMulti, "narration.criticalMultiNarration"),
               40,
             );
           }
           resultD20.textContent = I18n.t("results.critical");
           resultCritical.classList.add("visible");
         } else if (tierData) {
-          // Dynamic Tier found in Configuration
+          // Dynamic Tier — interpolated visual effects (0–100 scale)
           const colors = tierData.colors || ["#ffd700", "#ffffff"];
-          const isHighDef = tierData.rateTarget <= 15; // Estimate visually heavy tier if rare
+          const vi = tierData.visualIntensity ?? tierData.rateTarget ?? 50;
+          const particles = Math.round(3 + (vi / 100) * 57); // 3 → 60
 
-          if (isHighDef) {
+          if (vi > 75) {
             fireOverlay("tierS", "tier-s");
             shakeScreen(true);
             SoundEngine.tierS();
-            spawnParticles(45, [colors[0], colors[1], "#ffffff"]);
-          } else {
+            spawnParticles(particles, [colors[0], colors[1], "#ffffff"]);
+          } else if (vi > 35) {
             fireOverlay("tierAB", "tier-ab");
             shakeScreen(false);
             SoundEngine.tierA();
-            spawnParticles(20, [colors[0], colors[1]]);
+            spawnParticles(particles, [colors[0], colors[1]]);
+          } else if (vi > 0) {
+            SoundEngine.tierC();
+            spawnParticles(particles, [colors[0], colors[1]]);
           }
 
           resultD20.textContent = getTierNickname(tierResult.tier);
           narration.className = `narration parchment tier-${tierResult.tier.toLowerCase()}-text`;
           await typeNarration(
-            I18n.t(`narration.tier${tierResult.tier}`) ||
-            `"Uma invocação de classe ${tierData.label} surge do portal!"`,
+            resolveConfigText(
+              tierData.narration,
+              `narration.tier${tierResult.tier}`,
+            ) || `"Uma invocação de classe ${tierData.label} surge do portal!"`,
             40,
           );
         } else {
