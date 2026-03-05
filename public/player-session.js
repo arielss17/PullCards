@@ -3,17 +3,19 @@
  * Interacts with the backend via ApiClient for the actual RNG resolution.
  */
 const PlayerSession = (() => {
-    const createGameState = () => ({
+    const createGameState = (expansionId = null) => ({
+        expansionId,
         collection: [],
         history: [],
         energy: {
             available: 0,
             max: 6,
-            nextSummonAt: null
+            nextSummonAt: null,
+            bonus: 0
         }
     });
 
-    const canSummon = (state) => state.energy.available > 0;
+    const canSummon = (state) => state.energy.available > 0 || state.energy.bonus > 0;
 
     const performSummon = async (state) => {
         if (!canSummon(state)) {
@@ -24,13 +26,20 @@ const PlayerSession = (() => {
             const user = AuthManager.getUser();
             if (!user) throw new Error("Usuário não autenticado.");
 
-            const response = await ApiClient.post(`/api/collection/${user.id}/roll`);
+            const response = await ApiClient.post(`/api/collection/${user.id}/roll`, {
+                expansionId: state.expansionId
+            });
 
             if (response.success) {
                 const result = response.rollData;
 
                 // Keep local UI state in sync
-                state.energy.available -= 1;
+                if (response.consumedBonus && state.energy.bonus > 0) {
+                    state.energy.bonus -= 1;
+                } else if (state.energy.available > 0) {
+                    state.energy.available -= 1;
+                }
+
                 state.collection.push(...result.cards);
                 state.history.push(result);
 

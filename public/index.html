@@ -1,22 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
-    content="PullCards - A medieval fantasy RPG card summoning ritual. Roll ancient dice to summon powerful creatures!">
+    content="PullCards - A medieval fantasy RPG card summoning ritual. Roll ancient dice to summon powerful creatures!" />
   <title>PullCards — RPG Card Summoning Ritual</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <script src="i18n.js"></script>
   <script src="api-client.js"></script>
   <script src="auth.js"></script>
 </head>
 
 <body>
-
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-overlay__content">
@@ -29,11 +28,15 @@
             stroke-width="1" />
         </svg>
       </div>
-      <h2 class="loading-overlay__title" data-i18n="loading.title">Invocando Criaturas...</h2>
+      <h2 class="loading-overlay__title" data-i18n="loading.title">
+        Invocando Criaturas...
+      </h2>
       <div class="loading-overlay__bar">
         <div class="loading-overlay__fill" id="loadingFill"></div>
       </div>
-      <p class="loading-overlay__text" id="loadingText" data-i18n="loading.text">Contatando o reino dos monstros...</p>
+      <p class="loading-overlay__text" id="loadingText" data-i18n="loading.text">
+        Contatando o reino dos monstros...
+      </p>
     </div>
   </div>
 
@@ -66,7 +69,8 @@
       <circle class="summoning-circle__ring" cx="250" cy="250" r="100" />
       <!-- Rune texts around the circle -->
       <text class="summoning-circle__runes">
-        <textPath href="#runePath" startOffset="0%">☽ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᛃ ᛈ ᛇ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ ☾ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ
+        <textPath href="#runePath" startOffset="0%">
+          ☽ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᛃ ᛈ ᛇ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ ☾ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ
         </textPath>
       </text>
       <defs>
@@ -85,18 +89,39 @@
       <span data-i18n="header.energy">Cargas:</span>
       <span class="header__coins-value" id="energyDisplay">? / 6</span>
     </div>
-    <div class="header__coins" aria-live="polite" id="timerContainer" style="display: none; margin-left: 10px;">
+    <div class="header__coins" aria-live="polite" id="bonusContainer" style="
+          display: none;
+          margin-left: 10px;
+          color: var(--gold);
+          border-color: rgba(201, 162, 39, 0.4);
+          background: rgba(201, 162, 39, 0.05);
+        ">
+      <span class="header__coins-icon">🎁</span>
+      <span data-i18n="header.bonus">Bônus:</span>
+      <span class="header__coins-value" id="bonusDisplay">0</span>
+    </div>
+    <div class="header__coins" aria-live="polite" id="timerContainer" style="display: none; margin-left: 10px">
       <span class="header__coins-icon">⌛</span>
       <span class="header__coins-value" id="timerDisplay">00:00:00</span>
     </div>
 
-    <div class="header__nav" style="display:flex; gap:10px; align-items:center;">
-      <a href="/collection.html" data-i18n="header.bestiary"
-        style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; padding:4px 10px; border:1px solid rgba(201,162,39,0.15); border-radius:4px; transition:all 0.2s;"
-        onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'"
-        onmouseout="this.style.color='var(--text-secondary)';this.style.borderColor='rgba(201,162,39,0.15)'">📖
-        Bestiário</a>
-      <span id="headerUserInfo" style="font-size:0.8rem; color:var(--text-secondary);"></span>
+    <div class="header__nav" style="display: flex; gap: 10px; align-items: center">
+      <a href="/collection.html" data-i18n="header.bestiary" style="
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border: 1px solid rgba(201, 162, 39, 0.15);
+            border-radius: 4px;
+            transition: all 0.2s;
+          " onmouseover="
+            this.style.color = 'var(--gold)';
+            this.style.borderColor = 'var(--gold)';
+          " onmouseout="
+            this.style.color = 'var(--text-secondary)';
+            this.style.borderColor = 'rgba(201,162,39,0.15)';
+          ">📖 Bestiário</a>
+      <span id="headerUserInfo" style="font-size: 0.8rem; color: var(--text-secondary)"></span>
       <div class="header__lang">
         <select id="langSelect" class="lang-select">
           <option value="pt-BR">🇧🇷 PT-BR</option>
@@ -108,7 +133,6 @@
 
   <!-- Main Stage -->
   <main class="stage" id="stage">
-
     <!-- Controls Zone (top area) -->
     <div class="stage__controls">
       <!-- Narration (always visible at top) -->
@@ -165,12 +189,13 @@
 
     <!-- Card Reveal Area (centered independently) -->
     <div class="multi-card-area" id="cardArea"></div>
-
   </main>
 
   <!-- Collection Tray -->
   <section class="collection" id="collectionSection">
-    <h2 class="collection__title" data-i18n="collection.title">🗃️ Sua Coleção</h2>
+    <h2 class="collection__title" data-i18n="collection.title">
+      🗃️ Sua Coleção
+    </h2>
     <div class="collection__grid" id="collectionGrid">
       <span class="collection__empty" data-i18n="collection.empty">O círculo de invocação aguarda sua primeira
         oferenda...</span>
@@ -190,9 +215,9 @@
       if (!AuthManager.requireAuth()) return;
 
       // --- Load Database from D&D 5e API ---
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      const loadingFill = document.getElementById('loadingFill');
-      const loadingText = document.getElementById('loadingText');
+      const loadingOverlay = document.getElementById("loadingOverlay");
+      const loadingFill = document.getElementById("loadingFill");
+      const loadingText = document.getElementById("loadingText");
 
       let cardsDB = [];
       let gameConfig = {};
@@ -202,79 +227,84 @@
 
         // Load Admin Config
         try {
-          gameConfig = await ApiClient.get('/api/config');
+          gameConfig = await ApiClient.get("/api/config");
         } catch (e) {
-          console.warn('Could not load config', e);
+          console.warn("Could not load config", e);
         }
 
         cardsDB = await MonsterAPI.loadAll((done, total) => {
           const pct = Math.round((done / total) * 100);
-          loadingFill.style.width = pct + '%';
+          loadingFill.style.width = pct + "%";
           loadingText.textContent = `${done} / ${total}`;
         });
         loadingText.textContent = `${cardsDB.length} ✅`;
       } catch (e) {
-        console.error('Failed to load monsters', e);
-        loadingText.textContent = '❌';
+        console.error("Failed to load monsters", e);
+        loadingText.textContent = "❌";
       }
 
       // Hide loading overlay
-      await new Promise(r => setTimeout(r, 600));
-      loadingOverlay.classList.add('hidden');
-      loadingOverlay.addEventListener('transitionend', () => loadingOverlay.remove(), { once: true });
+      await new Promise((r) => setTimeout(r, 600));
+      loadingOverlay.classList.add("hidden");
+      loadingOverlay.addEventListener(
+        "transitionend",
+        () => loadingOverlay.remove(),
+        { once: true },
+      );
 
       // --- DOM ---
       const $ = (id) => document.getElementById(id);
-      const energyDisplay = $('energyDisplay');
-      const timerContainer = $('timerContainer');
-      const timerDisplay = $('timerDisplay');
-      const stage = $('stage');
-      const btnBegin = $('btnBegin');
-      const btnRollD100 = $('btnRollD100');
-      const btnRollD20 = $('btnRollD20');
-      const narration = $('narration');
-      const diceArena = $('diceArena');
-      const diceGroupD100 = $('diceGroupD100');
-      const diceGroupD20 = $('diceGroupD20');
-      const diceD100 = $('diceD100');
-      const diceD20 = $('diceD20');
-      const resultD100 = $('resultD100');
-      const resultD20 = $('resultD20');
-      const resultCritical = $('resultCritical');
-      const cardArea = $('cardArea');
-      const collectionGrid = $('collectionGrid');
-      const stepIndicator = $('stepIndicator');
-      const stepDots = [$('stepDot1'), $('stepDot2'), $('stepDot3')];
-      const stepLines = [$('stepLine1'), $('stepLine2')];
-      const summoningCircle = $('summoningCircle');
+      const energyDisplay = $("energyDisplay");
+      const timerContainer = $("timerContainer");
+      const timerDisplay = $("timerDisplay");
+      const stage = $("stage");
+      const btnBegin = $("btnBegin");
+      const btnRollD100 = $("btnRollD100");
+      const btnRollD20 = $("btnRollD20");
+      const narration = $("narration");
+      const diceArena = $("diceArena");
+      const diceGroupD100 = $("diceGroupD100");
+      const diceGroupD20 = $("diceGroupD20");
+      const diceD100 = $("diceD100");
+      const diceD20 = $("diceD20");
+      const resultD100 = $("resultD100");
+      const resultD20 = $("resultD20");
+      const resultCritical = $("resultCritical");
+      const cardArea = $("cardArea");
+      const collectionGrid = $("collectionGrid");
+      const stepIndicator = $("stepIndicator");
+      const stepDots = [$("stepDot1"), $("stepDot2"), $("stepDot3")];
+      const stepLines = [$("stepLine1"), $("stepLine2")];
+      const summoningCircle = $("summoningCircle");
 
       const overlays = {
-        tableA: $('overlayTableA'),
-        tableB: $('overlayTableB'),
-        tableC: $('overlayTableC'),
-        tierB: $('overlayTierB'),
-        tierA: $('overlayTierA'),
-        critical: $('overlayCritical'),
+        tableA: $("overlayTableA"),
+        tableB: $("overlayTableB"),
+        tableC: $("overlayTableC"),
+        tierB: $("overlayTierB"),
+        tierA: $("overlayTierA"),
+        critical: $("overlayCritical"),
       };
 
       // --- State ---
-      let state = PlayerSession.createGameState();
+      let currentExpansionId = "dnd5e"; // Temporary mock unitl Wave 6 adds the world selector
+      let state = PlayerSession.createGameState(currentExpansionId);
       let countdownInterval = null;
       const tierNames = {}; // Populated dynamically
       const getTierNickname = (tierId) => {
         const custom = gameConfig.customTiers?.[tierId];
-        return custom ? custom.nickname : (tierNames[tierId] || tierId);
+        return custom ? custom.nickname : tierNames[tierId] || tierId;
       };
       let currentTable = null;
       let ritualHum = null;
 
       // --- UI Updaters ---
       const formatTime = (ms) => {
-        if (ms <= 0) return '00:00:00';
+        if (ms <= 0) return "00:00:00";
         const h = Math.floor(ms / (1000 * 60 * 60));
         const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((ms % (1000 * 60)) / 1000);
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
       };
 
       const syncEnergyState = async () => {
@@ -282,10 +312,13 @@
         if (!user) return; // Guard already handles redirect
 
         try {
-          const data = await ApiClient.get(`/api/collection/${user.id}/status`);
+          const data = await ApiClient.get(
+            `/api/collection/${user.id}/status?expansionId=${currentExpansionId}`,
+          );
           state.energy.available = data.availableSummons;
           state.energy.max = data.maxSummons;
           state.energy.nextSummonAt = data.nextSummonAt;
+          state.energy.bonus = data.bonusCharges || 0;
           updateEnergyUI();
         } catch (e) {
           console.error("Failed to sync energy", e);
@@ -295,11 +328,23 @@
       const updateEnergyUI = () => {
         energyDisplay.textContent = `${state.energy.available} / ${state.energy.max}`;
 
+        const bonusContainer = $("bonusContainer");
+        const bonusDisplay = $("bonusDisplay");
+        if (state.energy.bonus > 0) {
+          bonusContainer.style.display = "flex";
+          bonusDisplay.textContent = state.energy.bonus;
+        } else {
+          bonusContainer.style.display = "none";
+        }
+
         // Handle Timer
         if (countdownInterval) clearInterval(countdownInterval);
 
-        if (state.energy.available < state.energy.max && state.energy.nextSummonAt) {
-          timerContainer.style.display = 'flex';
+        if (
+          state.energy.available < state.energy.max &&
+          state.energy.nextSummonAt
+        ) {
+          timerContainer.style.display = "flex";
 
           countdownInterval = setInterval(() => {
             const now = Date.now();
@@ -308,45 +353,82 @@
 
             if (diff <= 0) {
               clearInterval(countdownInterval);
-              timerDisplay.textContent = '00:00:00';
+              timerDisplay.textContent = "00:00:00";
               syncEnergyState(); // Fetch new charge!
             } else {
               timerDisplay.textContent = formatTime(diff);
             }
           }, 1000);
         } else {
-          timerContainer.style.display = 'none';
+          timerContainer.style.display = "none";
         }
 
         if (!PlayerSession.canSummon(state)) {
-          btnBegin.classList.add('disabled');
-          btnBegin.style.opacity = '0.5';
-          btnBegin.style.pointerEvents = 'none';
-          btnBegin.querySelector('.ritual-btn__sub').textContent = "Sem energia. Aguarde...";
+          btnBegin.classList.add("disabled");
+          btnBegin.style.opacity = "0.5";
+          btnBegin.style.pointerEvents = "none";
+          btnBegin.querySelector(".ritual-btn__sub").textContent =
+            "Sem cargas sagradas. Aguarde...";
         } else {
-          btnBegin.classList.remove('disabled');
-          btnBegin.style.opacity = '1';
-          btnBegin.style.pointerEvents = 'auto';
-          btnBegin.querySelector('.ritual-btn__sub').textContent = "🔮 Consome 1 carga de energia";
+          btnBegin.classList.remove("disabled");
+          btnBegin.style.opacity = "1";
+          btnBegin.style.pointerEvents = "auto";
+          const costText =
+            state.energy.bonus > 0
+              ? "🎁 Consome 1 Carga Bônus"
+              : "🔮 Consome 1 carga comum";
+          btnBegin.querySelector(".ritual-btn__sub").textContent = costText;
         }
       };
 
       const shakeEnergy = () => {
-        energyDisplay.parentElement.classList.add('shake');
-        setTimeout(() => energyDisplay.parentElement.classList.remove('shake'), 400);
+        energyDisplay.parentElement.classList.add("shake");
+        setTimeout(
+          () => energyDisplay.parentElement.classList.remove("shake"),
+          400,
+        );
       };
 
       // Initial Sync
       syncEnergyState();
 
+      // --- Studio i18n Sync ---
+      const applyCustomSummonExperience = () => {
+        const cfg = gameConfig?.summonExperience;
+        if (!cfg) return;
+
+        const lang = I18n.getLang() || "pt-BR";
+
+        const mapText = (propertyKey) => {
+          if (cfg[propertyKey] && cfg[propertyKey][lang]) return cfg[propertyKey][lang];
+          if (cfg[propertyKey] && cfg[propertyKey]["pt-BR"]) return cfg[propertyKey]["pt-BR"];
+          return null;
+        };
+
+        const sBtn100 = mapText("btnD100");
+        if (sBtn100) btnRollD100.querySelector("span:first-child").textContent = sBtn100;
+
+        const sSub100 = mapText("subD100");
+        if (sSub100) btnRollD100.querySelector(".ritual-btn__sub").textContent = sSub100;
+
+        const sBtn20 = mapText("btnD20");
+        if (sBtn20) btnRollD20.querySelector("span:first-child").textContent = sBtn20;
+
+        const sSub20 = mapText("subD20");
+        if (sSub20) btnRollD20.querySelector(".ritual-btn__sub").textContent = sSub20;
+      };
+
+      window.addEventListener("langchange", applyCustomSummonExperience);
+      applyCustomSummonExperience(); // Call once on load
+
       // --- Helpers ---
-      const wait = (ms) => new Promise(r => setTimeout(r, ms));
+      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
       // --- Typewriter Narration WITH sound ---
       const typeNarration = (text, speed = 35) => {
-        return new Promise(resolve => {
-          narration.textContent = '';
-          narration.classList.add('visible');
+        return new Promise((resolve) => {
+          narration.textContent = "";
+          narration.classList.add("visible");
           let i = 0;
           const interval = setInterval(() => {
             narration.textContent += text[i];
@@ -361,42 +443,64 @@
       };
 
       const clearNarration = () => {
-        narration.textContent = '';
-        narration.classList.remove('visible', 'parchment', 'dramatic', 'tier-b-text', 'tier-a-text', 'tier-s-text');
+        narration.textContent = "";
+        narration.classList.remove(
+          "visible",
+          "parchment",
+          "dramatic",
+          "tier-b-text",
+          "tier-a-text",
+          "tier-s-text",
+        );
       };
 
       // --- Screen Effects ---
       const fireOverlay = (key, cssClass) => {
         const el = overlays[key];
         el.className = `screen-overlay screen-overlay--${cssClass} active`;
-        el.addEventListener('animationend', () => {
-          el.className = 'screen-overlay';
-        }, { once: true });
+        el.addEventListener(
+          "animationend",
+          () => {
+            el.className = "screen-overlay";
+          },
+          { once: true },
+        );
       };
 
       const shakeScreen = (heavy = false) => {
-        stage.classList.add(heavy ? 'screen-shake--heavy' : 'screen-shake');
-        setTimeout(() => stage.classList.remove('screen-shake', 'screen-shake--heavy'), heavy ? 700 : 500);
+        stage.classList.add(heavy ? "screen-shake--heavy" : "screen-shake");
+        setTimeout(
+          () => stage.classList.remove("screen-shake", "screen-shake--heavy"),
+          heavy ? 700 : 500,
+        );
       };
 
       // --- Particles ---
       const spawnParticles = (count = 30, colors = null) => {
         const cx = window.innerWidth / 2;
         const cy = window.innerHeight / 2;
-        const palette = colors || ['#ffd700', '#ffaa00', '#ff6600', '#ffffff', '#c9a227'];
+        const palette = colors || [
+          "#ffd700",
+          "#ffaa00",
+          "#ff6600",
+          "#ffffff",
+          "#c9a227",
+        ];
         for (let i = 0; i < count; i++) {
-          const el = document.createElement('div');
-          el.className = 'particle';
-          const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.5 - 0.25);
+          const el = document.createElement("div");
+          el.className = "particle";
+          const angle =
+            (Math.PI * 2 * i) / count + (Math.random() * 0.5 - 0.25);
           const dist = 120 + Math.random() * 280;
-          el.style.left = cx + 'px';
-          el.style.top = cy + 'px';
-          el.style.background = palette[Math.floor(Math.random() * palette.length)];
-          el.style.setProperty('--px', Math.cos(angle) * dist + 'px');
-          el.style.setProperty('--py', Math.sin(angle) * dist + 'px');
-          const size = (3 + Math.random() * 7);
-          el.style.width = size + 'px';
-          el.style.height = size + 'px';
+          el.style.left = cx + "px";
+          el.style.top = cy + "px";
+          el.style.background =
+            palette[Math.floor(Math.random() * palette.length)];
+          el.style.setProperty("--px", Math.cos(angle) * dist + "px");
+          el.style.setProperty("--py", Math.sin(angle) * dist + "px");
+          const size = 3 + Math.random() * 7;
+          el.style.width = size + "px";
+          el.style.height = size + "px";
           document.body.appendChild(el);
           setTimeout(() => el.remove(), 1200);
         }
@@ -404,57 +508,59 @@
 
       // --- Summoning Circle ---
       const activateCircle = (tableClass = null) => {
-        summoningCircle.classList.add('active');
-        summoningCircle.classList.remove('table-c');
+        summoningCircle.classList.add("active");
+        summoningCircle.classList.remove("table-c");
         if (tableClass) summoningCircle.classList.add(tableClass);
       };
 
       const deactivateCircle = () => {
-        summoningCircle.classList.remove('active', 'table-c');
+        summoningCircle.classList.remove("active", "table-c");
       };
 
       // --- Step Indicator ---
       const setStep = (n) => {
-        stepIndicator.classList.add('visible');
+        stepIndicator.classList.add("visible");
         stepDots.forEach((d, i) => {
-          d.classList.remove('active', 'done');
-          if (i < n - 1) d.classList.add('done');
-          else if (i === n - 1) d.classList.add('active');
+          d.classList.remove("active", "done");
+          if (i < n - 1) d.classList.add("done");
+          else if (i === n - 1) d.classList.add("active");
         });
         stepLines.forEach((l, i) => {
-          l.classList.remove('done');
-          if (i < n - 1) l.classList.add('done');
+          l.classList.remove("done");
+          if (i < n - 1) l.classList.add("done");
         });
       };
 
       const hideSteps = () => {
-        stepIndicator.classList.remove('visible');
-        stepDots.forEach(d => d.classList.remove('active', 'done'));
-        stepLines.forEach(l => l.classList.remove('done'));
+        stepIndicator.classList.remove("visible");
+        stepDots.forEach((d) => d.classList.remove("active", "done"));
+        stepLines.forEach((l) => l.classList.remove("done"));
       };
 
       // --- Buttons ---
-      const showBtn = (b) => b.classList.add('visible');
-      const hideBtn = (b) => b.classList.remove('visible');
+      const showBtn = (b) => b.classList.add("visible");
+      const hideBtn = (b) => b.classList.remove("visible");
 
       // --- Card Builder (Original Game Card Design) ---
       const createCardElement = (card, tier) => {
-        const w = document.createElement('div');
+        const w = document.createElement("div");
         w.className = `card card--tier-${tier}`;
-        const imgSrc = card.image || card.imageUrl || '';
-        const typeName = card.type || '???';
-        const crLabel = card.cr ?? '?';
-        const hp = card.hp ?? '?';
-        const ac = card.armorClass ?? card.ac ?? '?';
+        const imgSrc = card.image || card.imageUrl || "";
+        const typeName = card.type || "???";
+        const crLabel = card.cr ?? "?";
+        const hp = card.hp ?? "?";
+        const ac = card.armorClass ?? card.ac ?? "?";
         const s = card.stats || {};
-        const statCells = ['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => {
-          const st = s[k] || { score: 10, modifier: '+0' };
-          return `<div class="stat-cell">
+        const statCells = ["str", "dex", "con", "int", "wis", "cha"]
+          .map((k) => {
+            const st = s[k] || { score: 10, modifier: "+0" };
+            return `<div class="stat-cell">
             <span class="stat-label">${k.toUpperCase()}</span>
             <span class="stat-value">${st.score}</span>
             <span class="stat-mod">${st.modifier}</span>
           </div>`;
-        }).join('');
+          })
+          .join("");
 
         w.innerHTML = `
           <div class="card__face card__back">
@@ -488,11 +594,11 @@
       };
 
       const addToCollection = (card, tier) => {
-        const empty = collectionGrid.querySelector('.collection__empty');
+        const empty = collectionGrid.querySelector(".collection__empty");
         if (empty) empty.remove();
-        const m = document.createElement('div');
+        const m = document.createElement("div");
         m.className = `collection__mini-card collection__mini-card--tier-${tier}`;
-        const imgSrc = card.image || card.imageUrl || '';
+        const imgSrc = card.image || card.imageUrl || "";
         m.title = `${card.name} (${card.type}) — HP:${card.hp} CA:${card.armorClass ?? card.ac} CR:${card.cr}`;
         m.innerHTML = `
           <img src="${imgSrc}" alt="${card.name}" loading="lazy">
@@ -503,25 +609,28 @@
 
       // --- Reset ---
       const resetStage = () => {
-        diceD100.querySelector('.dice__face').textContent = '?';
-        diceD20.querySelector('.dice__face').textContent = '?';
-        resultD100.textContent = '';
-        resultD20.textContent = '';
-        resultCritical.classList.remove('visible');
-        resultCritical.textContent = '';
+        diceD100.querySelector(".dice__face").textContent = "?";
+        diceD20.querySelector(".dice__face").textContent = "?";
+        resultD100.textContent = "";
+        resultD20.textContent = "";
+        resultCritical.classList.remove("visible");
+        resultCritical.textContent = "";
         // Clear cards and auras
-        cardArea.innerHTML = '';
+        cardArea.innerHTML = "";
         clearNarration();
-        diceArena.classList.remove('active');
-        diceGroupD100.classList.remove('visible');
-        diceGroupD20.classList.remove('visible');
+        diceArena.classList.remove("active");
+        diceGroupD100.classList.remove("visible");
+        diceGroupD20.classList.remove("visible");
         hideBtn(btnRollD100);
         hideBtn(btnRollD20);
         hideSteps();
         deactivateCircle();
         currentTable = null;
-        if (ritualHum) { ritualHum.stop(); ritualHum = null; }
-        stage.classList.remove('stage--showcase');
+        if (ritualHum) {
+          ritualHum.stop();
+          ritualHum = null;
+        }
+        stage.classList.remove("stage--showcase");
       };
 
       let resolvedRollData = null;
@@ -529,9 +638,9 @@
       // ============================================================
       // PHASE 1: Begin Summoning
       // ============================================================
-      btnBegin.addEventListener('click', async () => {
+      btnBegin.addEventListener("click", async () => {
         if (!AuthManager.getUser()) {
-          alert(I18n.t('auth.loginRequired'));
+          alert(I18n.t("auth.loginRequired"));
           return;
         }
         if (!PlayerSession.canSummon(state)) return;
@@ -548,8 +657,16 @@
 
         setStep(1);
 
-        narration.className = 'narration parchment';
-        await typeNarration(I18n.t('narration.circleAwakens'), 38);
+        narration.className = "narration parchment";
+
+        const cfg = MonsterAPI.getConfig();
+        let introText = I18n.t("narration.circleAwakens");
+        if (cfg?.summonExperience?.introText) {
+          const lang = I18n.getLang() || "pt-BR";
+          introText = cfg.summonExperience.introText[lang] || cfg.summonExperience.introText["pt-BR"] || introText;
+        }
+
+        await typeNarration(introText, 38);
         await wait(800);
 
         showBtn(btnRollD100);
@@ -558,12 +675,13 @@
       // ============================================================
       // PHASE 2: Roll d100 (Table)
       // ============================================================
-      btnRollD100.addEventListener('click', async () => {
+      btnRollD100.addEventListener("click", async () => {
         hideBtn(btnRollD100);
 
-        // --- BACKEND API CALL --- 
+        // --- BACKEND API CALL ---
         // Execute the entire roll on the backend now to lock in the destiny
-        const { success, result, reason } = await PlayerSession.performSummon(state);
+        const { success, result, reason } =
+          await PlayerSession.performSummon(state);
 
         if (!success) {
           alert(reason || "A invocação falhou.");
@@ -576,13 +694,14 @@
         resolvedRollData = result; // Save for phase 3!
         syncEnergyState(); // Update UI energy now that backend deducted it
 
-        diceArena.classList.add('active');
-        diceGroupD100.classList.add('visible');
-        diceD100.classList.add('rolling');
+        diceArena.classList.add("active");
+        diceGroupD100.classList.add("visible");
+        diceD100.classList.add("rolling");
         SoundEngine.diceRoll();
 
         const flash = setInterval(() => {
-          diceD100.querySelector('.dice__face').textContent = Math.floor(Math.random() * 100) + 1;
+          diceD100.querySelector(".dice__face").textContent =
+            Math.floor(Math.random() * 100) + 1;
         }, 80);
 
         await wait(2000);
@@ -591,36 +710,42 @@
         const tableResult = resolvedRollData;
         currentTable = tableResult.table;
 
-        diceD100.classList.remove('rolling');
-        diceD100.querySelector('.dice__face').textContent = tableResult.d100;
-        resultD100.textContent = I18n.t('dice.table', { table: tableResult.table });
+        diceD100.classList.remove("rolling");
+        diceD100.querySelector(".dice__face").textContent = tableResult.d100;
+        resultD100.textContent = I18n.t("dice.table", {
+          table: tableResult.table,
+        });
         SoundEngine.diceLand();
 
         await wait(400);
         setStep(2);
 
         // --- Table Dramatization ---
-        if (tableResult.table === 'A') {
-          fireOverlay('tableA', 'table-a');
+        if (tableResult.table === "A") {
+          fireOverlay("tableA", "table-a");
           SoundEngine.tableA();
-          narration.className = 'narration parchment';
-          await typeNarration(I18n.t('narration.tableA'), 40);
-
-        } else if (tableResult.table === 'B') {
-          fireOverlay('tableB', 'table-b');
+          narration.className = "narration parchment";
+          await typeNarration(I18n.t("narration.tableA"), 40);
+        } else if (tableResult.table === "B") {
+          fireOverlay("tableB", "table-b");
           shakeScreen(false);
           SoundEngine.tableB();
-          narration.className = 'narration parchment';
-          await typeNarration(I18n.t('narration.tableB'), 42);
-
+          narration.className = "narration parchment";
+          await typeNarration(I18n.t("narration.tableB"), 42);
         } else {
-          activateCircle('table-c');
-          fireOverlay('tableC', 'table-c');
+          activateCircle("table-c");
+          fireOverlay("tableC", "table-c");
           shakeScreen(true);
           SoundEngine.tableC();
-          spawnParticles(25, ['#9b59b6', '#c39bd3', '#bb8fce', '#ffffff', '#d2b4de']);
-          narration.className = 'narration parchment dramatic';
-          await typeNarration(I18n.t('narration.tableC'), 38);
+          spawnParticles(25, [
+            "#9b59b6",
+            "#c39bd3",
+            "#bb8fce",
+            "#ffffff",
+            "#d2b4de",
+          ]);
+          narration.className = "narration parchment dramatic";
+          await typeNarration(I18n.t("narration.tableC"), 38);
         }
 
         await wait(1200);
@@ -630,121 +755,133 @@
       // ============================================================
       // PHASE 3: Roll d20 (Tier)
       // ============================================================
-      btnRollD20.addEventListener('click', async () => {
+      btnRollD20.addEventListener("click", async () => {
         hideBtn(btnRollD20);
 
-        diceGroupD20.classList.add('visible');
-        diceD20.classList.add('rolling');
+        diceGroupD20.classList.add("visible");
+        diceD20.classList.add("rolling");
         SoundEngine.diceRoll();
 
         const flash = setInterval(() => {
-          diceD20.querySelector('.dice__face').textContent = Math.floor(Math.random() * 20) + 1;
+          diceD20.querySelector(".dice__face").textContent =
+            Math.floor(Math.random() * 20) + 1;
         }, 80);
 
         await wait(2000);
         clearInterval(flash);
 
         const tierResult = resolvedRollData;
-        diceD20.classList.remove('rolling');
-        diceD20.querySelector('.dice__face').textContent = tierResult.d20;
+        diceD20.classList.remove("rolling");
+        diceD20.querySelector(".dice__face").textContent = tierResult.d20;
         SoundEngine.diceLand();
 
         await wait(400);
         setStep(3);
 
         // --- Tier Dramatization ---
+        const cfg = MonsterAPI.getConfig();
+        const customTiers = cfg?.customTiers || {};
+        const tierData = customTiers[tierResult.tier];
+
         if (tierResult.isCritical) {
-          fireOverlay('critical', 'critical');
+          fireOverlay("critical", "critical");
           shakeScreen(true);
           SoundEngine.tierS();
-          spawnParticles(60, ['#ffd700', '#ffaa00', '#fff68f', '#ffffff']);
 
-          resultD20.textContent = I18n.t('results.critical');
-          narration.className = 'narration parchment tier-s-text';
-          await typeNarration(I18n.t('narration.criticalDice'), 50);
-          await wait(600);
-          clearNarration();
-
-          if (tierResult.criticalData.type === 'Z') {
-            resultCritical.textContent = I18n.t('narration.criticalZ');
-            spawnParticles(100, ['#ffffff', '#fff68f', '#ffeaa7', '#ff33ff']);
-            narration.className = 'narration parchment tier-z-text dramatic';
-            await typeNarration(I18n.t('narration.tierZ'), 42);
-          } else if (tierResult.criticalData.type === 'S') {
-            resultCritical.textContent = I18n.t('narration.criticalSBanner');
-            spawnParticles(80, ['#ffd700', '#fff68f', '#ffeaa7', '#ffffff']);
-            narration.className = 'narration parchment tier-s-text';
-            await typeNarration(I18n.t('narration.criticalS'), 42);
+          if (tierResult.criticalData.type === "Z") {
+            resultCritical.textContent = I18n.t("narration.criticalZ");
+            spawnParticles(100, ["#ffffff", "#fff68f", "#ffeaa7", "#ff33ff"]);
+            narration.className = "narration parchment tier-z-text dramatic";
+            await typeNarration(I18n.t("narration.tierZ"), 42);
+          } else if (tierResult.criticalData.type === "S") {
+            resultCritical.textContent = I18n.t("narration.criticalSBanner");
+            spawnParticles(80, ["#ffd700", "#fff68f", "#ffeaa7", "#ffffff"]);
+            narration.className = "narration parchment tier-s-text";
+            await typeNarration(I18n.t("narration.criticalS"), 42);
           } else {
-            resultCritical.textContent = I18n.t('narration.criticalMulti', { count: tierResult.criticalData.count });
-            narration.className = 'narration parchment tier-s-text';
-            await typeNarration(I18n.t('narration.criticalMultiNarration'), 40);
+            resultCritical.textContent = I18n.t("narration.criticalMulti", {
+              count: tierResult.criticalData.count,
+            });
+            spawnParticles(60, ["#ffd700", "#ffaa00", "#fff68f", "#ffffff"]);
+            narration.className = "narration parchment tier-s-text";
+            await typeNarration(
+              I18n.t("narration.criticalMultiNarration"),
+              40,
+            );
           }
-          resultCritical.classList.add('visible');
+          resultD20.textContent = I18n.t("results.critical");
+          resultCritical.classList.add("visible");
+        } else if (tierData) {
+          // Dynamic Tier found in Configuration
+          const colors = tierData.colors || ["#ffd700", "#ffffff"];
+          const isHighDef = tierData.rateTarget <= 15; // Estimate visually heavy tier if rare
 
-        } else if (tierResult.tier === 'C') {
+          if (isHighDef) {
+            fireOverlay("tierS", "tier-s");
+            shakeScreen(true);
+            SoundEngine.tierS();
+            spawnParticles(45, [colors[0], colors[1], "#ffffff"]);
+          } else {
+            fireOverlay("tierAB", "tier-ab");
+            shakeScreen(false);
+            SoundEngine.tierA();
+            spawnParticles(20, [colors[0], colors[1]]);
+          }
+
+          resultD20.textContent = getTierNickname(tierResult.tier);
+          narration.className = `narration parchment tier-${tierResult.tier.toLowerCase()}-text`;
+          await typeNarration(
+            I18n.t(`narration.tier${tierResult.tier}`) ||
+            `"Uma invocação de classe ${tierData.label} surge do portal!"`,
+            40,
+          );
+        } else {
+          // Safe fallback for old hardcoded logic not mapped in Studio
           SoundEngine.tierC();
-          resultD20.textContent = getTierNickname('C');
-          narration.className = 'narration parchment';
-          await typeNarration(I18n.t('narration.tierC'), 40);
-
-        } else if (tierResult.tier === 'B') {
-          fireOverlay('tierB', 'tier-b');
-          SoundEngine.tierB();
-          resultD20.textContent = getTierNickname('B');
-          narration.className = 'narration parchment tier-b-text';
-          await typeNarration(I18n.t('narration.tierB'), 40);
-
-        } else if (tierResult.tier === 'S') {
-          fireOverlay('critical', 'critical');
-          SoundEngine.tierS();
-          spawnParticles(40, ['#ffd700', '#ffaa00', '#fff68f', '#ffffff']);
-          resultD20.textContent = getTierNickname('S');
-          narration.className = 'narration parchment tier-s-text';
-          await typeNarration(I18n.t('narration.tierS'), 40);
-
-        } else if (tierResult.tier === 'A') {
-          fireOverlay('tierA', 'tier-a');
-          shakeScreen(false);
-          SoundEngine.tierA();
-          spawnParticles(18, ['#4a9eff', '#85c1e9', '#aed6f1', '#ffffff']);
-          resultD20.textContent = getTierNickname('A');
-          narration.className = 'narration parchment tier-a-text';
-          await typeNarration(I18n.t('narration.tierA'), 40);
-
-        } else if (tierResult.tier === 'D') {
-          SoundEngine.tierC();
-          resultD20.textContent = getTierNickname('D');
-          narration.className = 'narration parchment tier-d-text';
-          await typeNarration(I18n.t('narration.tierD'), 40);
-
-        } else if (tierResult.tier === 'E') {
-          SoundEngine.tierC();
-          resultD20.textContent = getTierNickname('E');
-          narration.className = 'narration parchment tier-e-text';
-          await typeNarration(I18n.t('narration.tierE'), 40);
+          resultD20.textContent = getTierNickname(tierResult.tier);
+          narration.className = "narration parchment";
+          await typeNarration(
+            I18n.t(`narration.tier${tierResult.tier}`) ||
+            '"A criatura responde ao chamado."',
+            40,
+          );
         }
 
         await wait(1200);
 
         // Stop ritual hum before card reveal
-        if (ritualHum) { ritualHum.stop(); ritualHum = null; }
+        if (ritualHum) {
+          ritualHum.stop();
+          ritualHum = null;
+        }
 
         // Hide dice area for card focus
-        diceArena.classList.remove('active');
+        diceArena.classList.remove("active");
         hideSteps();
 
         // ============================================================
         // PHASE 4: Card Reveal (card stays on screen!)
         // ============================================================
         const revealParticles = {
-          E: { count: 4, colors: ['#424242', '#616161'] },
-          D: { count: 6, colors: ['#8d6e63', '#a1887f'] },
-          C: { count: 8, colors: ['#8a8a8a', '#aaaaaa', '#cccccc'] },
-          B: { count: 20, colors: ['#2ecc71', '#27ae60', '#58d68d', '#ffffff'] },
-          A: { count: 35, colors: ['#4a9eff', '#85c1e9', '#aed6f1', '#d4e6f1', '#ffffff'] },
-          S: { count: 60, colors: ['#ffd700', '#ffaa00', '#fff68f', '#ffeaa7', '#ffffff'] },
-          Z: { count: 100, colors: ['#ffffff', '#ff33ff', '#fff68f', '#ffeaa7'] },
+          E: { count: 4, colors: ["#424242", "#616161"] },
+          D: { count: 6, colors: ["#8d6e63", "#a1887f"] },
+          C: { count: 8, colors: ["#8a8a8a", "#aaaaaa", "#cccccc"] },
+          B: {
+            count: 20,
+            colors: ["#2ecc71", "#27ae60", "#58d68d", "#ffffff"],
+          },
+          A: {
+            count: 35,
+            colors: ["#4a9eff", "#85c1e9", "#aed6f1", "#d4e6f1", "#ffffff"],
+          },
+          S: {
+            count: 60,
+            colors: ["#ffd700", "#ffaa00", "#fff68f", "#ffeaa7", "#ffffff"],
+          },
+          Z: {
+            count: 100,
+            colors: ["#ffffff", "#ff33ff", "#fff68f", "#ffeaa7"],
+          },
         };
 
         for (const card of tierResult.cards) {
@@ -752,17 +889,17 @@
           cardArea.appendChild(cardEl);
 
           // Create tier-specific aura behind card
-          const aura = document.createElement('div');
+          const aura = document.createElement("div");
           aura.className = `card-aura card-aura--${tierResult.tier}`;
           cardArea.appendChild(aura);
 
           void cardEl.offsetWidth;
-          cardEl.classList.add('visible');
+          cardEl.classList.add("visible");
           await wait(600);
 
           // Flip card
           SoundEngine.cardFlip();
-          cardEl.classList.add('flipped');
+          cardEl.classList.add("flipped");
           await wait(800);
 
           // Tier-specific reveal burst
@@ -771,17 +908,17 @@
           SoundEngine.cardReveal(tierResult.tier);
 
           // Activate aura
-          aura.classList.add('visible');
+          aura.classList.add("visible");
 
           // Enter showcase mode (card scales up + floats)
           await wait(300);
-          cardEl.classList.add('showcase');
+          cardEl.classList.add("showcase");
 
           // Tier S: extra screen flash
-          if (tierResult.tier === 'S') {
-            fireOverlay('critical', 'critical');
+          if (tierResult.tier === "S") {
+            fireOverlay("critical", "critical");
             shakeScreen(true);
-            spawnParticles(40, ['#ffd700', '#ffffff', '#ffee88']);
+            spawnParticles(40, ["#ffd700", "#ffffff", "#ffee88"]);
           }
 
           addToCollection(card, tierResult.tier);
@@ -790,22 +927,27 @@
           // Persist to server if logged in
           const currentUser = AuthManager.getUser();
           if (currentUser) {
-            ApiClient.post(`/api/collection/${currentUser.id}/add`, { cardId: card.id, tier: tierResult.tier })
-              .catch(err => console.error('Failed to persist card:', err));
+            ApiClient.post(`/api/collection/${currentUser.id}/add`, {
+              cardId: card.id,
+              tier: tierResult.tier,
+            }).catch((err) => console.error("Failed to persist card:", err));
           }
         }
 
         await wait(400);
 
         // Show narration for the summoned creature
-        const creatureName = tierResult.cards[0]?.name || 'a creature';
-        narration.className = 'narration parchment';
-        await typeNarration(I18n.t('narration.boundToCollection', { name: creatureName }), 35);
+        const creatureName = tierResult.cards[0]?.name || "a creature";
+        narration.className = "narration parchment";
+        await typeNarration(
+          I18n.t("narration.boundToCollection", { name: creatureName }),
+          35,
+        );
 
         // Cleanup dice but KEEP card on screen — show Begin Summoning
         deactivateCircle();
-        resultCritical.classList.remove('visible');
-        stage.classList.add('stage--showcase');
+        resultCritical.classList.remove("visible");
+        stage.classList.add("stage--showcase");
         showBtn(btnBegin);
         // Ensure UI is accurate using local state if fetch somehow failed, or just a redraw
         updateEnergyUI();
@@ -815,27 +957,27 @@
       updateEnergyUI();
 
       // --- Auth Header ---
-      const headerUserInfo = document.getElementById('headerUserInfo');
+      const headerUserInfo = document.getElementById("headerUserInfo");
       const currentUser = AuthManager.getUser();
-      let adminLink = '';
+      let adminLink = "";
       if (currentUser.isAdmin) {
         adminLink = `<a href="/admin.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem; margin-right: 8px;">⚙️ Admin</a>`;
       }
       headerUserInfo.innerHTML = `${adminLink}<a href="/profile.html" style="color:var(--text-secondary); text-decoration:none; font-size:0.8rem;">🧙 ${currentUser.name}</a> <a href="#" onclick="AuthManager.logout(); return false;" style="color:var(--text-muted); font-size:0.7rem; margin-left:6px; text-decoration:underline;">sair</a>`;
 
       // --- Language Selector ---
-      const langSelect = document.getElementById('langSelect');
+      const langSelect = document.getElementById("langSelect");
       langSelect.value = I18n.getLang();
-      langSelect.addEventListener('change', async (e) => {
+      langSelect.addEventListener("change", async (e) => {
         await I18n.setLang(e.target.value);
         // Reload monsters for new locale
         cardsDB = await MonsterAPI.loadAll();
-        console.log(`🌐 Reloaded ${cardsDB.length} monsters for ${e.target.value}`);
+        console.log(
+          `🌐 Reloaded ${cardsDB.length} monsters for ${e.target.value}`,
+        );
       });
-
     })();
   </script>
-
 </body>
 
 </html>

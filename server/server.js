@@ -5,6 +5,7 @@ const path = require('path');
 
 const authRoutes = require('./routes/auth');
 const collectionRoutes = require('./routes/collection');
+const expansionsRoutes = require('./routes/expansions');
 const { readJSON, writeJSON, dataDir } = require('./helpers/json-store');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -34,13 +35,41 @@ const requireAdmin = (req, res, next) => {
     next();
 };
 
+const ExpansionRepository = require('./repositories/ExpansionRepository');
+const MonsterRepository = require('./repositories/MonsterRepository');
+
+// Mount expansions with conditional protection
+app.use('/api/expansions', (req, res, next) => {
+    if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+        return requireAdmin(req, res, next);
+    }
+    next();
+}, expansionsRoutes);
+
 app.get('/api/config', async (req, res) => {
     try {
-        const data = await readJSON('admin_config.json');
-        res.json(data);
+        let expansionId = req.query.expansionId;
+        if (!expansionId) {
+            const featured = await ExpansionRepository.getFeatured();
+            if (featured) expansionId = featured.id;
+        }
+
+        if (!expansionId) return res.json({});
+
+        const payload = await MonsterRepository.getExpansionPayload(expansionId);
+        const configData = payload.config || {};
+
+        // Migrate legacy root-level summonExperience to unified config if it exists
+        if (payload.summonExperience && Object.keys(payload.summonExperience).length > 0 && !configData.summonExperience) {
+            configData.summonExperience = payload.summonExperience;
+        } else if (!configData.summonExperience) {
+            configData.summonExperience = {};
+        }
+
+        res.json(configData);
     } catch (error) {
         console.error('Error reading config:', error);
-        res.status(500).json({ error: 'Failed to read config' });
+        res.status(500).json({ error: 'Failed to read config from expansion' });
     }
 });
 
@@ -50,11 +79,43 @@ app.post('/api/config', requireAdmin, async (req, res) => {
         if (!newConfig.tables || !newConfig.customTiers) {
             return res.status(400).json({ error: 'Invalid config payload' });
         }
-        await writeJSON('admin_config.json', newConfig);
-        res.json({ success: true, message: 'Configuration saved successfully' });
+
+        let expansionId = req.query.expansionId;
+        if (!expansionId) {
+            const featured = await ExpansionRepository.getFeatured();
+            if (featured) expansionId = featured.id;
+        }
+        if (!expansionId) return res.status(400).json({ error: 'No expansion active' });
+
+        const expansion = await ExpansionRepository.findById(expansionId);
+        const payload = await MonsterRepository.getExpansionPayload(expansionId);
+
+        // Keep newConfig unified (do not strip summonExperience out)
+        payload.config = newConfig;
+
+        await writeJSON(expansion.file, payload);
+        res.json({ success: true, message: 'Configuration saved directly to the active expansion file' });
     } catch (error) {
         console.error('Error saving config:', error);
-        res.status(500).json({ error: 'Failed to save config' });
+        res.status(500).json({ error: 'Failed to save config into expansion file' });
+    }
+});
+
+app.get('/api/monsters', async (req, res) => {
+    try {
+        let expansionId = req.query.expansionId;
+        if (!expansionId) {
+            const featured = await ExpansionRepository.getFeatured();
+            if (featured) expansionId = featured.id;
+        }
+
+        if (!expansionId) return res.json([]);
+
+        const payload = await MonsterRepository.getExpansionPayload(expansionId);
+        res.json(payload.cards || []);
+    } catch (error) {
+        console.error('Error reading monsters:', error);
+        res.status(500).json({ error: 'Failed to read monsters from expansion' });
     }
 });
 

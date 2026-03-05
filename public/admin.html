@@ -167,8 +167,14 @@
             <button class="admin-nav__item active" data-tab="config">
                 <span class="admin-nav__icon">⚙️</span> Configuração
             </button>
+            <button class="admin-nav__item" data-tab="studio">
+                <span class="admin-nav__icon">🎨</span> Estúdio (Visual)
+            </button>
             <button class="admin-nav__item" data-tab="bestiary">
                 <span class="admin-nav__icon">📖</span> Bestiário
+            </button>
+            <button class="admin-nav__item" data-tab="expansions">
+                <span class="admin-nav__icon">🌍</span> Expansões
             </button>
             <button class="admin-nav__item" data-tab="i18n">
                 <span class="admin-nav__icon">📜</span> Traduções
@@ -178,8 +184,172 @@
         <!-- Content Panels -->
         <div class="admin-panel">
 
+            <!-- Tab 5: Studio (Visuals & Experience) -->
+            <div class="admin-tab-content" id="tab-studio">
+                <section class="admin-card" style="margin-bottom: 24px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h2 class="admin-title">Estúdio de Invocação</h2>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                                Ajuste as cores, partículas e os textos narrativos da roleta para a expansão
+                                selecionada.
+                            </p>
+                        </div>
+                        <select id="studioExpansionSelect" class="admin-input" style="width: 250px;">
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </section>
+
+                <div class="admin-config-grid" style="grid-template-columns: 1fr;">
+                    <section class="admin-card" style="grid-column: 1 / -1;">
+                        <h2 class="admin-title">Experiência de Invocação (Summon Experience)</h2>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items:flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 15px;">
+                            <p
+                                style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin:0; max-width: 600px;">
+                                Personalize os textos e botões narrativos da invocação para cada idioma. As traduções em
+                                branco usarão o texto padrão do VTT (Fallback).
+                            </p>
+                            <div style="display:flex; align-items:center; gap: 10px;">
+                                <label
+                                    style="font-size: 0.75rem; color: var(--gold-bright); font-family: var(--font-display);">IDIOMA
+                                    DOS TEXTOS:</label>
+                                <select id="studioLangSelect" class="admin-input"
+                                    style="width: auto; font-size: 0.85rem; padding: 4px 8px; border-color: var(--gold);">
+                                    <!-- Injected via JS based on locales -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <!-- Fase 1: Introdução d100 -->
+                            <div
+                                style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                                <h3
+                                    style="font-size: 0.85rem; color: var(--gold); margin-bottom: 12px; font-family:var(--font-display);">
+                                    Fase 1: Preparação do Círculo</h3>
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Botão
+                                            de Rolar o d100 (Primary)</label>
+                                        <input type="text" id="summonBtnD100" class="admin-input" style="width: 100%;"
+                                            placeholder="Lançar os Ossos">
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Subtexto
+                                            do Botão (Secundário)</label>
+                                        <input type="text" id="summonSubD100" class="admin-input"
+                                            style="width: 100%; font-size: 0.8rem;"
+                                            placeholder="d100 — Determine qual reino responde">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fase 2: Introdução d20 -->
+                            <div
+                                style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                                <h3
+                                    style="font-size: 0.85rem; color: var(--gold); margin-bottom: 12px; font-family:var(--font-display);">
+                                    Fase 2: Identificação da Essência</h3>
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Botão
+                                            de Rolar o d20 (Primary)</label>
+                                        <input type="text" id="summonBtnD20" class="admin-input" style="width: 100%;"
+                                            placeholder="Rolar Qualidade">
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Subtexto
+                                            do Botão (Secundário)</label>
+                                        <input type="text" id="summonSubD20" class="admin-input"
+                                            style="width: 100%; font-size: 0.8rem;"
+                                            placeholder="d20 — Que nível de poder atende seu chamado?">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Narrativa D20 (Máquina de Escrever) -->
+                        <div
+                            style="margin-top: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px dashed rgba(201,162,39, 0.2);">
+                            <label
+                                style="display: block; font-size: 0.75rem; color: var(--gold-bright); margin-bottom: 8px; font-weight:700;">Texto
+                                Narrativo da Fenda (Typewriter Effect na Fase 3)</label>
+                            <textarea id="studioIntroText" class="admin-input"
+                                style="width: 100%; min-height: 50px; resize: vertical; background: rgba(0,0,0,0.5);"
+                                placeholder="O antigo círculo desperta... sua oferenda foi aceita."></textarea>
+                        </div>
+                    </section>
+
+                    <section class="admin-card">
+                        <h2 class="admin-title">Cores do Palco</h2>
+                        <div style="display: flex; flex-wrap: wrap; gap: 24px;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <label
+                                    style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Cor
+                                    de Fundo (Aura principal)</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="color" id="studioBgColor" value="#050508"
+                                        style="background: none; border: none; cursor: pointer; width: 40px; height: 40px; padding: 0;">
+                                    <input type="text" id="studioBgColorHex" class="admin-input" style="flex: 1;"
+                                        placeholder="#050508" readonly>
+                                </div>
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <label
+                                    style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Centro
+                                    do Círculo de Invocação</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="color" id="studioAuraColor" value="#1a1a2e"
+                                        style="background: none; border: none; cursor: pointer; width: 40px; height: 40px; padding: 0;">
+                                    <input type="text" id="studioAuraColorHex" class="admin-input" style="flex: 1;"
+                                        placeholder="#1a1a2e" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="admin-card">
+                        <h2 class="admin-title">Estética das Tiers (Raridades)</h2>
+                        <p
+                            style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
+                            Edite as mecânicas customizadas e a estética que pipocará na tela para cada nível de
+                            raridade. As Tiers criadas aqui precisam estar mapeadas no monstro.
+                        </p>
+                        <div id="studioTiersConfig" class="tables-grid" style="grid-template-columns: 1fr;">
+                            <!-- Injected via JS -->
+                        </div>
+                        <button id="btnStudioAddTier" class="admin-btn" style="width: 100%; margin-top: 1rem;">Adicionar
+                            Raridade Estética +</button>
+                    </section>
+                </div>
+            </div>
+
             <!-- Tab 1: Configuration (Tables + Tiers) -->
             <div class="admin-tab-content active" id="tab-config">
+
+                <section class="admin-card" style="margin-bottom: 24px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h2 class="admin-title">Gerenciar Módulo (Configuração)</h2>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                                Selecione qual módulo (expansão) você está editando as regras estéticas e as tabelas de
+                                invocação.
+                            </p>
+                        </div>
+                        <select id="configExpansionSelect" class="admin-input" style="width: 250px;">
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </section>
+
                 <div class="admin-config-grid">
                     <section class="admin-card">
                         <h2 class="admin-title">Dimensões (Mesas)</h2>
@@ -266,6 +436,9 @@
                             </div>
                         </div>
                     </section>
+
+
+
                 </div>
             </div>
 
@@ -349,6 +522,25 @@
                     </div>
 
                     <div id="i18nEditor" style="display: none;">
+                        <!-- Injected via JS -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab 4: Expansions -->
+            <div class="admin-tab-content" id="tab-expansions">
+                <section class="admin-card">
+                    <h2 class="admin-title">Gerenciador de Módulos (Expansões)</h2>
+                    <p
+                        style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.4;">
+                        Cadastre novos universos, gerencie pacotes de cartas e crie drops promocionais de invocação.
+                    </p>
+
+                    <button id="btnNewExpansion" class="admin-btn admin-btn--primary" style="margin-bottom: 20px;">+
+                        Nova Expansão</button>
+
+                    <div id="expansionsList" class="expansions-list"
+                        style="display: flex; flex-direction: column; gap: 10px;">
                         <!-- Injected via JS -->
                     </div>
                 </section>

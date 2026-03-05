@@ -18,14 +18,21 @@ Implementar o Sistema de Expansões para o PullCards de acordo com o `brainstorm
 
 ### 🌊 Onda 3: Sistema de Expansões (Fundação)
 A infraestrutura básica para suportar múltiplos "jogos" dentro do PullCards.
-- [ ] **DB/Schema**: Criar `data/expansions.json` contendo um array de expansões.
-    - Campos obrigatórios: `id`, `name`, `file` (ex: `monsters_dnd5e.json`), `featured` (boolean), `createdAt`.
-    - Campos de Configuração: `config` (tables de probabilidade, cores de tiers customizados).
-    - Metadados: `summonExperience` (falas dinâmicas) e `bonus` (qtd cargas bônus + `expiresAt`).
-- [ ] **Módulo Base**: Extrair o atual `data/monsters_game.json` e cadastrá-lo internamente como a expansão padrão (D&D 5e).
-- [ ] **Backend (Admin)**: Criar arquivo e rota separada `server/routes/expansions.js` contendo o CRUD (Create, Read, Update, Delete).
-- [ ] **Frontend (Admin)**: Criar uma nova aba no Painel Admin (`admin.html` / `admin.js`) dedicada exclusivamente ao gerenciamento visual das expansões.
-- [ ] **Backend (User)**: Atualizar a modelagem/Repository do `User` com o campo `expansionBonus` aninhado. (Ex: `{"dnd5e": { charges: 3, claimedAt: ... }}`).
+- [X] **DB/Schema**: Criar `data/expansions.json` contendo um array (o Registro de Expansões).
+    - Campos obrigatórios no Registro: `id`, `name`, `file` (ex: `monsters_dnd5e.json`), `featured` (boolean).
+    - Campos de Bônus no Registro: `bonusSummonsQty` (qtd de cargas) e `loginDeadline` (data limite para resgate).
+- [X] **Arquivo Dedicado da Expansão (`{file}.json`)**: Além do array de `cards`, este arquivo passará a ser a fonte da verdade de sua própria expansão, contendo os nós de metadados:
+    - `"config"`: (tables de probabilidade, customTiers).
+    - `"summonExperience"`: (falas dinâmicas, cores, introText).
+- [X] **Módulo Base**: Extrair o atual `data/monsters_game.json` e cadastrá-lo internamente como a expansão padrão (D&D 5e).
+- [X] **Backend (Admin)**: Criar arquivo e rota separada `server/routes/expansions.js` contendo o CRUD (Create, Read, Update, Delete).
+- [X] **Frontend (Admin)**: Criar uma nova aba no Painel Admin (`admin.html` / `admin.js`) dedicada exclusivamente ao gerenciamento visual das expansões.
+- [X] **Backend (User)**: Atualizar a modelagem/Repository do `User` com o campo `expansionBonus` aninhado. (Ex: `{"dnd5e": { charges: 3, claimedAt: ... }}`).
+
+## Patch Onda 3.6 — Contexto Frontend (API e Bestiário Admin)
+Apesar do backend já separar por expansões, o frontend (`api.js`) ainda está fixo no arquivo padrão.
+- [ ] Frontend `api.js`: Remover hardcode de `LOCAL_DATA` e passar a receber o objeto da expansão atual para construir o link dinamicamente.
+- [ ] Frontend Admin: Fazer a aba "Bestiário" também respeitar o Dropdown de Expansões (recarregar a lista de monstros correta).
 
 ### 🌊 Onda 4: Cargas Bônus por Expansão (Dual Currency)
 A moeda secundária que prioriza descontar o bônus antes da energia de 8h.
@@ -37,33 +44,39 @@ A moeda secundária que prioriza descontar o bônus antes da energia de 8h.
 - [ ] **Frontend (Header UI)**: Adicionar um widget dinâmico 🎁 ao lado da contagem normal ⚡: "🎁 X Bônus".
     - Regra: O widget só aparece se a expansão atual no dropdown do usuário possuir bônus para ele. Ocultar caso zero.
 
-### 🌊 Onda 5: Summon Experience Dinâmico
-Metadados estéticos que controlam a roleta. As cores de Incomum a Lendário não serão mais hardcoded.
-- [ ] **SummonEngine/Config**: Garantir que as lógicas dinâmicas contidas em `logic.js` consumam o objeto `config` extraido do `expansions.json` em vez do servidor monolítico atual.
-- [ ] **UI Aesthetics**: Mapear as variáveis CSS do front (`--table-color`, etc.) via Javascript lendo as definições da expansão escolhida na chamada da API.
-- [ ] **Narrativa**: No `logic.js`, extrair a string da animação inicial (`typeNarration()`) de `/locales` (i18n) e permitir overwrite via campo `expansion.summonExperience.introText`.
+### 🌊 Onda 5: Summon Experience Dinâmico e "Aba Estúdio"
+Metadados estéticos que controlam a roleta. As cores de Incomum a Lendário e textos narrativos serão customizáveis via Admin UI.
+- [ ] **Admin UI (Aba Estúdio)**: Criar uma 5ª aba no painel Admin (Estúdio) dedicada ao visual da expansão.
+    - Seleção de expansão via dropdown.
+    - Campos de texto nativo para o Texto de Introdução (`introText`).
+    - Gerenciamento dinâmico de Cores do Palco (Fundo Geral, Aura de Invocação).
+    - Sub-tabela para gerenciar Tiers Customizadas (Nome, Chance %, Cores de Partículas Ouro/Prata).
+- [ ] **Backend (Update Config)**: Criar ou expandir rotas do `api/config` para salvar as propriedades estéticas no arquivo `.json` da expansão selecionada (dentro do nó `summonExperience` e `config`).
+- [ ] **Engine Aesthetics**: Mapear as variáveis CSS do front (`--table-color`, partículas) via Javascript lendo as definições da expansão atual na chamada da API, sem usar CSS/JS hardcoded.
+- [ ] **Narrativa**: No `logic.js` (ou `index.html`), extrair a string da animação inicial (`typeNarration()`) permitindo overwrite via campo `expansion.summonExperience.introText`.
 
 ### 🌊 Onda 6: Experiência do Jogador (Player UX)
 O funil de entrada e organização da coleção final.
-- [ ] **Frontend (Index)**: Tela de Boot. Adicionar um modal inicial no menu que obrigue o jogador a escolher uma expansão entre as ativas (pré-selecionando a `featured = true`), antes de ir pro altar de invocação.
+- [ ] **Frontend (Index)**: Tela Inicial (Summon). O jogador precisa ter um seletor (dropdown ou cover flow) para escolher em qual expansão ele vai gastar sua energia. (Garante que o rolar consuma do Silo correto).
+- [ ] **Frontend (Collection)**: Refatorar o renderizador da `collection.html`. As cartas precisam ser navegadas com base na expansão escolhida num dropdown no topo (exibindo o "Silo" isolado).
 - [ ] **Frontend (Collection)**: Refatorar o renderizador da `collection.html`. As cartas precisam ser quebradas por sessões (`<div class="expansion-block">`).
 - [ ] **Mistério (Missings)**: Todas as cartas das expansões ativas que o jogador não obteve devem aparecer opacas. As que ele possui, visíveis.
 
 ---
 
 ## ✅ Socratic Gate (Validações para Iniciarmos)
-Antes de iniciarmos o `/create`, eu preciso esclarecer dois pontos arquiteturais cruciais baseados em `[nodejs-best-practices]`:
+Antes de iniciarmos o desenvolvimento da Onda 3, esclarecendo pontos baseados em `@[nodejs-best-practices]`:
 
-1. No Banco de Dados atual temos uma separação brutal entre "Onde estão os arquivos de cartas" vs "Onde está o config global da mesa". Hoje as probabilidades e _Tiers_ estão em `admin_config.json`. Com esse novo plano (Onda 3), devemos:
-   - **Opção A:** Mover toda as Configurações de Mesas, Probabilidades e Cores pro novo arquivo modular `expansions.json` deixando o Admin gerenciar probabilidade **por expansão**.
-   - **Opção B:** Centralizar o `admin_config.json` valendo para TODAS as expansões universalmente, e o `expansions.json` guardar apenas o caminho das cartas e o bônus.
+1. ~~**[RESOLVIDO] Onde guardar as configurações (Tiers/Mesas)?**~~
+   - **Decisão Arquitetural:** Abordagem descentralizada. O `expansions.json` servirá apenas como um catálogo/índice (contendo a referência do arquivo, qual é a 'featured', e os dados de bônus/deadline). Todo o payload pesado (Probabilidades, Tiers, Textos de Invocação e Cartas) residirá exclusivamente no arquivo `{file}.json` de cada expansão.
 
-2. Ao invocar, o jogador terá selecionado uma expansão. As cartas geradas no backend e inseridas em seu perfil no disco devem receber um "Carimbo" invisível dessa expansão (`source: "dnd5e"`) e gravadas num array único da coleção, ou devemos apartar os arrays no arquivo da coleção (ex: `colecao_usuario { dnd5e: [cartas], pokemon: [cartas] }`)?
+2. ~~**[RESOLVIDO] Como estruturar o armazenamento das cartas conquistadas pelo usuário?**~~
+   - **Decisão Arquitetural:** Silos Isolados. Cada expansão terá o seu próprio array dentro de `collection.cards`. (ex: `colecao_usuario: { "dnd5e": [cartas], "pokemon": [cartas] }`).
 
 ---
 
-**[OK] Plan created: docs/PLAN-expansions-system.md**
+**[OK] Plan updated: docs/PLAN-expansions-system.md**
 
 Next steps:
-- Revise o plano e responda às duas perguntas metodológicas acima (A/B e Carimbo/Silos).
-- Execute `/create` especificando as suas decisões.
+- Responda sobre a estrutura da coleção (Pergunta 2: Array Único Carimbado vs Silos Isolados).
+- Após essa resposta, iniciaremos imediatamente a execução (Onda 3).

@@ -1,9 +1,10 @@
 const MonsterRepository = require('../repositories/MonsterRepository');
-const { readJSON } = require('../helpers/json-store');
 
 class SummonService {
-    static async getConfig() {
-        return (await readJSON('admin_config.json')) || {};
+    static async getConfig(expansionId) {
+        // Now it fetches from the decentralized Expansion Payload directly
+        const payload = await MonsterRepository.getExpansionPayload(expansionId);
+        return payload.config || {};
     }
 
     static rollD100() {
@@ -14,8 +15,8 @@ class SummonService {
         return Math.floor(Math.random() * 20) + 1;
     }
 
-    static async getTableFromRoll(d100) {
-        const config = await this.getConfig();
+    static async getTableFromRoll(d100, expansionId) {
+        const config = await this.getConfig(expansionId);
         if (!config || !config.tables) return "C";
 
         const sortedTables = Object.entries(config.tables).sort((a, b) => a[1].maxD100 - b[1].maxD100);
@@ -25,7 +26,7 @@ class SummonService {
         return sortedTables[sortedTables.length - 1]?.[0] || "C";
     }
 
-    static async getTierFromRoll(d20) {
+    static async getTierFromRoll(d20, expansionId) {
         const fallback = (roll) => {
             if (roll === 1) return "E";
             if (roll <= 5) return "D";
@@ -36,7 +37,7 @@ class SummonService {
             return "CRITICAL";
         };
 
-        const config = await this.getConfig();
+        const config = await this.getConfig(expansionId);
         if (!config || !config.customTiers) return fallback(d20);
 
         const tiersArray = Object.entries(config.customTiers)
@@ -56,9 +57,9 @@ class SummonService {
         return fallback(d20);
     }
 
-    static async handleCritical() {
+    static async handleCritical(expansionId) {
         const innerRoll = Math.max(this.rollD20(), this.rollD20());
-        const config = await this.getConfig();
+        const config = await this.getConfig(expansionId);
         const rules = config.criticalRules || {
             baseRewardTier: "S",
             baseRewardCount: 2,
@@ -66,15 +67,20 @@ class SummonService {
             innerCriticalCount: 1
         };
 
+        let pickedTier = rules.baseRewardTier;
+        let pickedCount = rules.baseRewardCount;
+
         if (innerRoll === 20) {
-            return { type: rules.innerCriticalTier, count: rules.innerCriticalCount, innerRoll };
+            pickedTier = rules.innerCriticalTier;
+            pickedCount = rules.innerCriticalCount;
         }
-        return { type: rules.baseRewardTier, count: rules.baseRewardCount, innerRoll };
+
+        return { type: pickedTier, count: pickedCount, innerRoll };
     }
 
-    static async findCards(table, tier, count = 1) {
-        const config = await this.getConfig();
-        const monsters = await MonsterRepository.findAll();
+    static async findCards(expansionId, table, tier, count = 1) {
+        const config = await this.getConfig(expansionId);
+        const monsters = await MonsterRepository.findAllByExpansion(expansionId);
 
         // Apply config overrides in memory (equivalent to frontend logic)
         const database = monsters.map(m => {
@@ -99,14 +105,14 @@ class SummonService {
         return results;
     }
 
-    static async performSummon() {
+    static async performSummon(expansionId) {
         // Step 1: Roll for Table
         const d100 = this.rollD100();
-        const table = await this.getTableFromRoll(d100);
+        const table = await this.getTableFromRoll(d100, expansionId);
 
         // Step 2: Roll for Tier + resolve cards
         const d20 = this.rollD20();
-        const tierResult = await this.getTierFromRoll(d20);
+        const tierResult = await this.getTierFromRoll(d20, expansionId);
 
         let cards = [];
         let isCritical = false;
@@ -115,11 +121,11 @@ class SummonService {
 
         if (tierResult === "CRITICAL") {
             isCritical = true;
-            criticalData = await this.handleCritical();
+            criticalData = await this.handleCritical(expansionId);
             finalTier = criticalData.type;
-            cards = await this.findCards(table, criticalData.type, criticalData.count);
+            cards = await this.findCards(expansionId, table, criticalData.type, criticalData.count);
         } else {
-            cards = await this.findCards(table, tierResult);
+            cards = await this.findCards(expansionId, table, tierResult);
         }
 
         return {
@@ -129,7 +135,8 @@ class SummonService {
             tier: finalTier,
             isCritical,
             criticalData,
-            cards
+            cards,
+            sourceMap: expansionId
         };
     }
 }

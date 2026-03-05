@@ -2,6 +2,7 @@ const { Router } = require('express');
 const crypto = require('crypto');
 const UserRepository = require('../repositories/UserRepository');
 const AppError = require('../helpers/AppError');
+const EnergyService = require('../services/EnergyService');
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.post('/register', async (req, res, next) => {
             throw new AppError('Este email já está registrado.', 409);
         }
 
-        const newUser = {
+        let newUser = {
             id: crypto.randomUUID(),
             email: email.toLowerCase().trim(),
             password,
@@ -33,6 +34,8 @@ router.post('/register', async (req, res, next) => {
             lastSummonAt: null
         };
 
+        // Grants any active expansion bonuses before saving
+        newUser = await EnergyService.checkAndGrantBonuses(newUser);
         await UserRepository.save(newUser);
         console.log(`[AUTH] Usuário registrado com sucesso: ${email}`);
 
@@ -53,11 +56,14 @@ router.post('/login', async (req, res, next) => {
             throw new AppError('Email e senha são obrigatórios.', 400);
         }
 
-        const user = await UserRepository.findByEmail(email);
+        let user = await UserRepository.findByEmail(email);
 
         if (!user || user.password !== password) {
             throw new AppError('Email ou senha incorretos.', 401);
         }
+
+        // Grant missing expansion bonuses on login
+        user = await EnergyService.checkAndGrantBonuses(user);
 
         const { password: _, ...safeUser } = user;
         const isAdmin = safeUser.email === 'arielssilva@hotmail.com';
@@ -70,11 +76,14 @@ router.post('/login', async (req, res, next) => {
 // GET /api/auth/me/:userId
 router.get('/me/:userId', async (req, res, next) => {
     try {
-        const user = await UserRepository.findById(req.params.userId);
+        let user = await UserRepository.findById(req.params.userId);
 
         if (!user) {
             throw new AppError('Usuário não encontrado.', 404);
         }
+
+        // Keep bonuses updated when fetching me
+        user = await EnergyService.checkAndGrantBonuses(user);
 
         const { password: _, ...safeUser } = user;
         const isAdmin = safeUser.email === 'arielssilva@hotmail.com';

@@ -36,7 +36,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sortConfig = document.getElementById('sortConfig');
     const btnAddTable = document.getElementById('btnAddTable');
     const btnAddTier = document.getElementById('btnAddTier');
-    const loadingBestiary = document.getElementById('loadingBestiary');
+    const configExpansionSelect = document.getElementById('configExpansionSelect');
+    const studioIntroText = document.getElementById('studioIntroText');
+    const summonBtnD100 = document.getElementById('summonBtnD100');
+    const summonSubD100 = document.getElementById('summonSubD100');
+    const summonBtnD20 = document.getElementById('summonBtnD20');
+    const summonSubD20 = document.getElementById('summonSubD20');
+    const studioLangSelect = document.getElementById('studioLangSelect');
+
+    // Studio Elements
+    const studioExpansionSelect = document.getElementById('studioExpansionSelect');
+    const studioBgColor = document.getElementById('studioBgColor');
+    const studioBgColorHex = document.getElementById('studioBgColorHex');
+    const studioAuraColor = document.getElementById('studioAuraColor');
+    const studioAuraColorHex = document.getElementById('studioAuraColorHex');
+    const studioTiersConfig = document.getElementById('studioTiersConfig');
+    const btnStudioAddTier = document.getElementById('btnStudioAddTier');
 
     // Critical Rules inputs
     const critBaseTier = document.getElementById('critBaseTier');
@@ -44,7 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const critInnerTier = document.getElementById('critInnerTier');
     const critInnerCount = document.getElementById('critInnerCount');
 
-    let config = { tables: {}, customTiers: {}, monsterOverrides: {} };
+    let config = { tables: {}, customTiers: {}, monsterOverrides: {}, summonExperience: {} };
+    let currentExpansionId = null;
     let monsters = [];
 
     // --- Helper: Populate Tables Filter ---
@@ -143,6 +159,79 @@ document.addEventListener('DOMContentLoaded', async () => {
         populateTierFilter();
         renderCriticalRules();
     };
+
+    // --- Render Studio Tiers Configuration ---
+    const renderStudioTiers = () => {
+        studioTiersConfig.innerHTML = '';
+        Object.entries(config.customTiers).forEach(([tierId, tData]) => {
+            const div = document.createElement('div');
+            div.className = 'table-item';
+            div.style.flexDirection = 'column';
+            div.style.alignItems = 'flex-start';
+            div.style.gap = '15px';
+
+            // Extract colors safely
+            const colors = tData.colors || ['#ffd700', '#ffffff'];
+            const color1 = colors[0] || '#ffd700';
+            const color2 = colors[1] || '#ffffff';
+
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                    <div style="font-family: var(--font-display); color: var(--gold); font-size: 1.1rem;">
+                        ${tData.label} <span style="font-size: 0.7rem; color: var(--text-muted);">(${tierId})</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; width: 100%;">
+                    <div>
+                        <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Chance Base (%)</span>
+                        <input type="number" min="0" max="100" step="0.1" value="${tData.rateTarget || 0}" 
+                            class="admin-input" style="width: 80px;"
+                            onchange="updateTierRateTarget('${tierId}', this.value)">
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Cor Primária (Card/Aura)</span>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="color" value="${color1}" 
+                                style="background: none; border: none; cursor: pointer; width: 30px; height: 30px; padding: 0;"
+                                onchange="updateTierColor('${tierId}', 0, this.value)">
+                        </div>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Cor Secundária (Raio/Brilho)</span>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <input type="color" value="${color2}" 
+                                style="background: none; border: none; cursor: pointer; width: 30px; height: 30px; padding: 0;"
+                                onchange="updateTierColor('${tierId}', 1, this.value)">
+                        </div>
+                    </div>
+                </div>
+            `;
+            studioTiersConfig.appendChild(div);
+        });
+    };
+
+    window.updateTierRateTarget = (id, val) => { config.customTiers[id].rateTarget = parseFloat(val) || 0; };
+    window.updateTierColor = (id, index, val) => {
+        if (!config.customTiers[id].colors) config.customTiers[id].colors = ['#ffffff', '#ffffff'];
+        config.customTiers[id].colors[index] = val;
+    };
+
+    btnStudioAddTier.addEventListener('click', () => {
+        const char = prompt("Letra Identificadora da Raridade (Ex: C, B, A, S):");
+        if (!char) return;
+        const id = char.toUpperCase();
+        if (config.customTiers[id]) { alert("Esta raridade já existe."); return; }
+
+        config.customTiers[id] = {
+            label: "Nova Raridade",
+            nickname: "Incomum",
+            maxD20: 5,
+            rateTarget: 5.0,
+            colors: ['#ffffff', '#aaaaaa']
+        };
+        renderTiers();
+        renderStudioTiers();
+    });
 
     // --- Render Critical Rules Configuration ---
     const renderCriticalRules = () => {
@@ -427,7 +516,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const user = AuthManager.getUser(); // Safe because it's validated on load
 
-            await ApiClient.post('/api/config', config);
+            // Merging both Tabs (Config and Studio) to save at once
+            if (!config.summonExperience) config.summonExperience = {};
+            config.summonExperience.bgColor = studioBgColor.value;
+            config.summonExperience.auraColor = studioAuraColor.value;
+
+            const endpoint = currentExpansionId ? `/api/config?expansionId=${currentExpansionId}` : '/api/config';
+            await ApiClient.post(endpoint, config);
+
             btnSaveConfig.innerHTML = "✅ Pactos Feitos!";
             btnSaveConfig.style.background = "#2ecc71";
             btnSaveConfig.style.color = "#000";
@@ -448,42 +544,127 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await I18n.init();
 
-    try {
-        config = await ApiClient.get('/api/config');
-        if (!config.monsterOverrides) config.monsterOverrides = {};
-        if (!config.customTiers) config.customTiers = {};
-        if (!config.criticalRules) {
-            config.criticalRules = {
-                baseRewardTier: "S",
-                baseRewardCount: 2,
-                innerCriticalTier: "Z",
-                innerCriticalCount: 1
+    const loadAdminConfig = async (expansionId = '') => {
+        try {
+            const endpoint = expansionId ? `/api/config?expansionId=${expansionId}` : '/api/config';
+            config = await ApiClient.get(endpoint);
+
+            if (!config.monsterOverrides) config.monsterOverrides = {};
+            if (!config.customTiers) config.customTiers = {};
+            if (!config.summonExperience) config.summonExperience = {};
+            if (!config.criticalRules) {
+                config.criticalRules = {
+                    baseRewardTier: "S",
+                    baseRewardCount: 2,
+                    innerCriticalTier: "Z",
+                    innerCriticalCount: 1
+                };
+            }
+
+            // Backward compatibility logic (string to obj)
+            const mapLocales = (val) => {
+                if (typeof val === 'string') return { "pt-BR": val };
+                if (!val) return {};
+                return val;
             };
+
+            config.summonExperience.introText = mapLocales(config.summonExperience.introText);
+            config.summonExperience.btnD100 = mapLocales(config.summonExperience.btnD100);
+            config.summonExperience.subD100 = mapLocales(config.summonExperience.subD100);
+            config.summonExperience.btnD20 = mapLocales(config.summonExperience.btnD20);
+            config.summonExperience.subD20 = mapLocales(config.summonExperience.subD20);
+
+            renderStudioTexts();
+
+            // Map colors to both the picker and text input
+            const bgC = config.summonExperience.bgColor || '#050508';
+            studioBgColor.value = bgC;
+            studioBgColorHex.value = bgC;
+
+            const auraC = config.summonExperience.auraColor || '#1a1a2e';
+            studioAuraColor.value = auraC;
+            studioAuraColorHex.value = auraC;
+
+            currentExpansionId = expansionId;
+            configExpansionSelect.value = expansionId;
+            studioExpansionSelect.value = expansionId;
+        } catch (e) {
+            console.error("Error loading config for expansion", e);
         }
-    } catch (e) {
-        console.error("Error loading config", e);
-    }
 
-    try {
-        monsters = await MonsterAPI.loadAll();
-        loadingBestiary.style.display = 'none';
-        monsterListings.style.display = 'grid';
+        try {
+            loadingBestiary.style.display = 'block';
+            monsterListings.style.display = 'none';
 
-        const types = [...new Set(monsters.map(m => m.type))].sort();
-        types.forEach(type => {
-            const opt = document.createElement('option');
-            opt.value = type;
-            opt.textContent = type;
-            filterType.appendChild(opt);
+            MonsterAPI.setExpansion(expansionId);
+            monsters = await MonsterAPI.loadAll();
+
+            loadingBestiary.style.display = 'none';
+            monsterListings.style.display = 'grid';
+
+            filterType.innerHTML = '<option value="">Todos Tipos</option>';
+            const types = [...new Set(monsters.map(m => m.type))].sort();
+            types.forEach(type => {
+                const opt = document.createElement('option');
+                opt.value = type;
+                opt.textContent = type;
+                filterType.appendChild(opt);
+            });
+
+            renderTables();
+            renderTiers();
+            renderStudioTiers();
+            renderMonsters();
+        } catch (e) {
+            console.error("Error loading monsters", e);
+            loadingBestiary.innerHTML = "❌ Erro ao despertar bestiário.";
+        }
+    };
+
+    const handleColorSync = (picker, input) => {
+        picker.addEventListener('input', (e) => input.value = e.target.value);
+        input.addEventListener('change', (e) => {
+            if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                picker.value = e.target.value;
+            } else {
+                e.target.value = picker.value; // Revert if invalid
+            }
         });
+    };
 
-        renderTables();
-        renderTiers();
-        renderMonsters();
-    } catch (e) {
-        console.error("Error loading monsters", e);
-        loadingBestiary.innerHTML = "❌ Erro ao despertar bestiário.";
-    }
+    handleColorSync(studioBgColor, studioBgColorHex);
+    handleColorSync(studioAuraColor, studioAuraColorHex);
+
+    configExpansionSelect.addEventListener('change', (e) => loadAdminConfig(e.target.value));
+    studioExpansionSelect.addEventListener('change', (e) => loadAdminConfig(e.target.value));
+
+    // --- Studio i18n Sync ---
+    const renderStudioTexts = () => {
+        const lang = studioLangSelect.value || 'pt-BR';
+        if (!config.summonExperience) return;
+
+        studioIntroText.value = config.summonExperience.introText?.[lang] || '';
+        summonBtnD100.value = config.summonExperience.btnD100[lang] || '';
+        summonSubD100.value = config.summonExperience.subD100[lang] || '';
+        summonBtnD20.value = config.summonExperience.btnD20[lang] || '';
+        summonSubD20.value = config.summonExperience.subD20[lang] || '';
+    };
+
+    const bindStudioTextInput = (inputEl, stateKey) => {
+        inputEl.addEventListener('input', (e) => {
+            const lang = studioLangSelect.value || 'pt-BR';
+            if (!config.summonExperience[stateKey]) config.summonExperience[stateKey] = {};
+            config.summonExperience[stateKey][lang] = e.target.value;
+        });
+    };
+
+    bindStudioTextInput(studioIntroText, 'introText');
+    bindStudioTextInput(summonBtnD100, 'btnD100');
+    bindStudioTextInput(summonSubD100, 'subD100');
+    bindStudioTextInput(summonBtnD20, 'btnD20');
+    bindStudioTextInput(summonSubD20, 'subD20');
+
+    studioLangSelect.addEventListener('change', renderStudioTexts);
 
     // ============================================================
     // i18n Editor
@@ -504,14 +685,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const data = await ApiClient.get('/api/locales');
             i18nLangSelect.innerHTML = '<option value="">Selecione um idioma...</option>';
-            data.locales
-                .filter(l => l !== 'pt-BR')
-                .forEach(l => {
+            studioLangSelect.innerHTML = '';
+
+            data.locales.forEach(l => {
+                const isPt = l === 'pt-BR';
+                const label = isPt ? 'Português (BR)' : (l === 'en' ? 'English (EN)' : l);
+
+                // Studio
+                const optStudio = document.createElement('option');
+                optStudio.value = l;
+                optStudio.textContent = label;
+                studioLangSelect.appendChild(optStudio);
+
+                // Standard i18n Translator Tab
+                if (!isPt) {
                     const opt = document.createElement('option');
                     opt.value = l;
                     opt.textContent = l;
                     i18nLangSelect.appendChild(opt);
-                });
+                }
+            });
+            studioLangSelect.value = 'pt-BR';
         } catch (err) {
             console.error('Error loading locales:', err);
         }
@@ -644,6 +838,168 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Language selector change
     i18nLangSelect.addEventListener('change', (e) => loadMissing(e.target.value));
 
+    // --- EXPANSIONS LOGIC ---
+    const loadExpansions = async () => {
+        try {
+            // Populate config & studio tabs dropdown
+            configExpansionSelect.innerHTML = '';
+            studioExpansionSelect.innerHTML = '';
+            let featuredId = '';
+
+            const list = document.getElementById('expansionsList');
+            const data = await ApiClient.get('/api/expansions');
+
+            if (list) list.innerHTML = '';
+
+            data.forEach(exp => {
+                if (exp.featured) featuredId = exp.id;
+
+                // Add to Dropdown
+                const opt1 = document.createElement('option');
+                opt1.value = exp.id;
+                opt1.textContent = exp.name + (exp.featured ? ' (Ativa)' : '');
+                configExpansionSelect.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = exp.id;
+                opt2.textContent = exp.name + (exp.featured ? ' (Ativa)' : '');
+                studioExpansionSelect.appendChild(opt2);
+
+                // Add to List
+                if (list) {
+                    const card = document.createElement('div');
+                    card.style.cssText = `display:flex; justify-content:space-between; align-items:center; padding:15px; background:rgba(255,255,255,0.03); border:1px solid rgba(201,162,39,0.2); border-radius:8px;`;
+                    card.innerHTML = `
+                        <div>
+                            <div style="font-family:var(--font-display); font-size:1.1rem; color:var(--gold); margin-bottom:5px;">
+                                ${exp.name} ${exp.featured ? '<span style="font-size:0.7rem; background:var(--gold); color:#000; padding:2px 6px; border-radius:4px; margin-left:10px;">FEATURED</span>' : ''}
+                            </div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">
+                                ID: <code>${exp.id}</code> | Arquivo: <code>${exp.file}</code> | Bônus: ${exp.bonusSummonsQty || 0} ${exp.loginDeadline ? `(Expira: ${new Date(exp.loginDeadline).toLocaleString('pt-BR')})` : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="admin-btn btn-edit-exp" data-id="${exp.id}">Editar</button>
+                            <button class="admin-btn btn-del-exp" data-id="${exp.id}" style="color:var(--danger); border-color:var(--danger);">Deletar</button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                }
+            });
+
+            if (list) {
+                document.querySelectorAll('.btn-edit-exp').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const exp = data.find(e => e.id === btn.dataset.id);
+                        openExpansionModal(exp);
+                    });
+                });
+
+                document.querySelectorAll('.btn-del-exp').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if (confirm('Tem certeza que deseja deletar este módulo? Isso pode corromper saves existentes se não for migrado corretamente.')) {
+                            await ApiClient.delete('/api/expansions/' + btn.dataset.id);
+                            loadExpansions();
+                        }
+                    });
+                });
+            }
+
+            // After loading expansions list, load the initial Config payload for the dropdown selected match
+            if (configExpansionSelect.value) {
+                loadAdminConfig(configExpansionSelect.value);
+            } else if (featuredId) {
+                configExpansionSelect.value = featuredId;
+                loadAdminConfig(featuredId);
+            } else {
+                loadAdminConfig();
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    let expModal = null;
+    const openExpansionModal = (exp = null) => {
+        if (!expModal) {
+            expModal = document.createElement('div');
+            expModal.style.cssText = 'display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center;';
+            expModal.innerHTML = `
+                <div class="admin-card" style="width:400px; max-width:90%;">
+                    <h3 id="expModalTitle" class="admin-title">Nova Expansão</h3>
+                    <input id="expId" class="admin-input" placeholder="ID (ex: dnd5e)" style="margin-top:10px;">
+                    <input id="expName" class="admin-input" placeholder="Nome (ex: D&D 5e)" style="margin-top:10px;">
+                    <input id="expFile" class="admin-input" placeholder="Arquivo (ex: monsters_dnd5e.json)" style="margin-top:10px;">
+                    <label style="display:block; margin-top:10px; color:var(--text-secondary); font-size:0.8rem;">
+                        <input type="checkbox" id="expFeatured"> Tornar Expansão Ativa (Featured)
+                    </label>
+                    <label style="display:block; margin-top:15px; color:var(--text-secondary); font-size:0.8rem;">Cartas Bônus no Login Inicial:</label>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:5px;">
+                        <input id="expBonus" type="number" class="admin-input" placeholder="Bônus Inicial (ex: 5)">
+                        <input id="expDeadline" type="datetime-local" class="admin-input">
+                    </div>
+                    
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                        <button class="admin-btn" id="btnCancelExp">Cancelar</button>
+                        <button class="admin-btn admin-btn--primary" id="btnSaveExp">Salvar Registro</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(expModal);
+
+            document.getElementById('btnCancelExp').addEventListener('click', () => {
+                expModal.style.display = 'none';
+            });
+
+            document.getElementById('btnSaveExp').addEventListener('click', async () => {
+                const id = document.getElementById('expId').value;
+                const name = document.getElementById('expName').value;
+                const file = document.getElementById('expFile').value;
+                const featured = document.getElementById('expFeatured').checked;
+                const bonusSummonsQty = parseInt(document.getElementById('expBonus').value) || 0;
+
+                let loginDeadline = document.getElementById('expDeadline').value;
+                if (loginDeadline) {
+                    loginDeadline = new Date(loginDeadline).toISOString();
+                } else {
+                    loginDeadline = null;
+                }
+
+                try {
+                    await ApiClient.post('/api/expansions', { id, name, file, featured, bonusSummonsQty, loginDeadline });
+                    expModal.style.display = 'none';
+                    loadExpansions();
+                } catch (e) {
+                    alert(e.message);
+                }
+            });
+        }
+
+        document.getElementById('expModalTitle').textContent = exp ? "Editar Expansão" : "Nova Expansão";
+        document.getElementById('expId').value = exp ? exp.id : "";
+        document.getElementById('expId').disabled = !!exp; // Block ID changes for safety
+        document.getElementById('expName').value = exp ? exp.name : "";
+        document.getElementById('expFile').value = exp ? exp.file : "";
+        document.getElementById('expFeatured').checked = exp ? exp.featured : false;
+        document.getElementById('expBonus').value = exp ? (exp.bonusSummonsQty || 0) : "";
+
+        let localDeadline = "";
+        if (exp && exp.loginDeadline) {
+            // Need to convert ISO string to YYYY-MM-DDThh:mm for datetime-local
+            const d = new Date(exp.loginDeadline);
+            // shift timezone offset
+            const offset = d.getTimezoneOffset() * 60000;
+            localDeadline = (new Date(d - offset)).toISOString().slice(0, 16);
+        }
+        document.getElementById('expDeadline').value = localDeadline;
+
+        expModal.style.display = 'flex';
+    };
+
+    document.getElementById('btnNewExpansion')?.addEventListener('click', () => openExpansionModal(null));
+
     // Initialize
     loadLocales();
+    loadExpansions();
 });

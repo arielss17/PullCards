@@ -215,8 +215,9 @@
 
         // Format Date
         let dateStr = 'Data desconhecida';
-        if (cardData && cardData.firstObtained) {
-            dateStr = new Date(cardData.firstObtained).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
+        const dateRaw = cardData ? (cardData.firstObtained || cardData.firstAcquired) : null;
+        if (dateRaw) {
+            dateStr = new Date(dateRaw).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
         }
         mFooter.textContent = `Invocado pela primeira vez em: ${dateStr}`;
 

@@ -5,18 +5,77 @@
 const MonsterAPI = (() => {
     const BASE = 'https://www.dnd5eapi.co';
     const LIST_URL = `${BASE}/api/2014/monsters`;
-    const LOCAL_DATA = '/data/monsters_game.json';
     const CONCURRENCY = 10;
 
     // --- Dynamic Config ---
     let config = { monsterOverrides: {} };
+    let currentExpansionId = '';
+
+    const setExpansion = (id) => {
+        currentExpansionId = id;
+    };
 
     const fetchConfig = async () => {
         try {
-            config = await ApiClient.get('/api/config');
+            const endpoint = currentExpansionId ? `/api/config?expansionId=${currentExpansionId}` : '/api/config';
+            config = await ApiClient.get(endpoint);
+            injectExpansionCSS(config);
         } catch (e) {
             console.error('Failed to load admin config:', e);
         }
+    };
+
+    const getConfig = () => config;
+
+    // --- Dynamic CSS Injection for Custom Tiers ---
+    const injectExpansionCSS = (cfg) => {
+        const styleId = 'dynamic-expansion-styles';
+        let styleTag = document.getElementById(styleId);
+
+        if (!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = styleId;
+            document.head.appendChild(styleTag);
+        }
+
+        let cssSheet = '';
+
+        // Inject Stage Colors if defined
+        if (cfg.summonExperience) {
+            if (cfg.summonExperience.bgColor) {
+                document.documentElement.style.setProperty('--bg-color-override', cfg.summonExperience.bgColor);
+                // Assume the altar/background uses this CSS variable. 
+                // We will tie it to the main body/altar in style.css next.
+            }
+            if (cfg.summonExperience.auraColor) {
+                document.documentElement.style.setProperty('--aura-ring-override', cfg.summonExperience.auraColor);
+            }
+        }
+
+        // Inject Custom Tier Colors
+        if (cfg.customTiers) {
+            Object.entries(cfg.customTiers).forEach(([tierId, tierData]) => {
+                const colors = tierData.colors || ['#ffd700', '#ffffff'];
+                const primary = colors[0] || '#ffd700';
+                const secondary = colors[1] || '#ffffff';
+
+                cssSheet += `
+                    .card--tier-${tierId} {
+                        --table-color: ${primary};
+                        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.5);
+                    }
+                    .card--tier-${tierId}::before {
+                        background: linear-gradient(125deg, transparent 20%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.5) 50%, transparent 60%);
+                    }
+                    /* Glow effect mapping */
+                    .card-glow--${tierId} {
+                        background: radial-gradient(circle, ${secondary} 0%, transparent 70%);
+                    }
+                `;
+            });
+        }
+
+        styleTag.innerHTML = cssSheet;
     };
 
     // --- CR → Table Mapping ---
@@ -108,30 +167,24 @@ const MonsterAPI = (() => {
         return results.filter(Boolean);
     };
 
-    // --- Try loading from locale-specific or local data/ directory ---
+    // --- Fetch from Backend (Expansion Aware) ---
     const loadLocal = async () => {
-        // Try locale-specific monsters first
+        // Try locale-specific monsters first (if supported by expansion)
         if (typeof I18n !== 'undefined') {
             try {
-                const localePath = I18n.getMonstersPath();
-                const resp = await fetch(localePath);
-                if (resp.ok) {
-                    const data = await resp.json();
-                    if (Array.isArray(data) && data.length > 100) {
-                        console.log(`🌐 Loaded ${data.length} monsters from ${localePath}`);
-                        return data;
-                    }
-                }
+                // If expansionId is requested, we might need a localized version of that expansion.
+                // For now, I18n.getMonstersPath() might still be hardcoded to monsters_game.json.
+                // So we prioritize our dynamic backend API.
             } catch { /* locale file not available */ }
         }
 
-        // Fallback to default data file
         try {
-            const resp = await fetch(LOCAL_DATA);
-            if (!resp.ok) return null;
-            const data = await resp.json();
-            if (Array.isArray(data) && data.length > 100) return data;
-        } catch { /* local file not available */ }
+            const endpoint = currentExpansionId ? `/api/monsters?expansionId=${currentExpansionId}` : '/api/monsters';
+            const resp = await ApiClient.get(endpoint);
+            if (Array.isArray(resp) && resp.length > 0) return resp;
+        } catch (e) {
+            console.error('Failed to load monsters from API:', e);
+        }
         return null;
     };
 
@@ -164,9 +217,22 @@ const MonsterAPI = (() => {
             monsters = await loadFromAPI(onProgress);
         }
 
+        // 2.5 Ensure natural RPG sorting (Challenge Rating ASC, then Alphabetical)
+        monsters.sort((a, b) => {
+            const crDiff = (a.crValue || 0) - (b.crValue || 0);
+            if (crDiff !== 0) return crDiff;
+            return a.name.localeCompare(b.name);
+        });
+
         // 3. Map Overrides to already-loaded local data
-        return monsters.map(m => {
+        return monsters.map((m, index) => {
             const override = config.monsterOverrides?.[m.id];
+
+            // Ensure every monster has a sequential card number if not provided by the payload
+            if (!m.cardNumber) {
+                m.cardNumber = index + 1;
+            }
+
             if (override) {
                 // Ensure legacy `table` property is converted to `tables` array if needed
                 const overrideTables = override.tables || (override.table ? [override.table] : null);
@@ -184,5 +250,5 @@ const MonsterAPI = (() => {
         });
     };
 
-    return { loadAll, typeEmoji };
+    return { loadAll, typeEmoji, setExpansion, getConfig };
 })();

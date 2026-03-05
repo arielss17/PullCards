@@ -3,13 +3,15 @@ const AppError = require('../helpers/AppError');
 const CollectionRepository = require('../repositories/CollectionRepository');
 const EnergyService = require('../services/EnergyService');
 const SummonService = require('../services/SummonService');
+const ExpansionRepository = require('../repositories/ExpansionRepository');
 
 const router = Router();
 
 // GET /api/collection/:userId/status
 router.get('/:userId/status', async (req, res, next) => {
     try {
-        const status = await EnergyService.getUserStatus(req.params.userId);
+        const expansionId = req.query.expansionId;
+        const status = await EnergyService.getUserStatus(req.params.userId, expansionId);
         res.json(status);
     } catch (error) {
         next(error);
@@ -30,7 +32,8 @@ router.get('/:userId', async (req, res, next) => {
 // [DEPRECATION WARNING] - This should ideally be replaced by the roll endpoint entirely, keeping for now to avoid breaking UI abruptly
 router.post('/:userId/deduct-summon', async (req, res, next) => {
     try {
-        const result = await EnergyService.consumeEnergy(req.params.userId);
+        const expansionId = req.body?.expansionId;
+        const result = await EnergyService.consumeEnergy(req.params.userId, expansionId);
         res.json({ success: true, message: 'Energia consumida com sucesso.', ...result });
     } catch (error) {
         next(error);
@@ -41,15 +44,28 @@ router.post('/:userId/deduct-summon', async (req, res, next) => {
 // New ALL-IN-ONE endpoint for clean code separation
 router.post('/:userId/roll', async (req, res, next) => {
     try {
+        // Find Expansion
+        let expansionId = req.body?.expansionId;
+        if (!expansionId) {
+            const featured = await ExpansionRepository.getFeatured();
+            if (!featured) throw new AppError('Nenhuma expansão ativa encontrada.', 400);
+            expansionId = featured.id;
+        }
+
         // 1. Consume energy
-        await EnergyService.consumeEnergy(req.params.userId);
+        const consumeResult = await EnergyService.consumeEnergy(req.params.userId, expansionId);
 
         // 2. Roll the RNG securely in the backend
-        const rollResult = await SummonService.performSummon();
+        const rollResult = await SummonService.performSummon(expansionId);
 
-        // 3. Save directly to Collection
+        // 3. Save directly to Collection (Silo structure)
         const userCollection = await CollectionRepository.findByUserId(req.params.userId);
-        const userCards = userCollection.cards;
+        if (!userCollection[expansionId]) userCollection[expansionId] = {};
+
+        // Ensure "cards" exists in the nested silod object for backwards compatibility or structural sanity
+        if (!userCollection[expansionId].cards) userCollection[expansionId].cards = {};
+
+        const userCards = userCollection[expansionId].cards;
 
         rollResult.cards.forEach(card => {
             if (userCards[card.id]) {
@@ -57,7 +73,8 @@ router.post('/:userId/roll', async (req, res, next) => {
             } else {
                 userCards[card.id] = {
                     quantity: 1,
-                    firstAcquired: new Date().toISOString()
+                    firstObtained: new Date().toISOString(),
+                    tier: card.tier || rollResult.tier
                 };
             }
         });
@@ -65,7 +82,7 @@ router.post('/:userId/roll', async (req, res, next) => {
         await CollectionRepository.saveForUser(req.params.userId, userCollection);
 
         // 4. Send back the rolled cards (and RNG stats for the UI)
-        res.json({ success: true, message: 'Summon completo!', rollData: rollResult });
+        res.json({ success: true, message: 'Summon completo!', rollData: rollResult, consumedBonus: consumeResult.consumedBonus });
     } catch (error) {
         next(error);
     }
